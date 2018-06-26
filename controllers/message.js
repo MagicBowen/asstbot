@@ -7,10 +7,16 @@ const talkToChatBot = async(userId, type, data) => {
                 to : {
                     id : userId
                 },
-                type : 'text',
-                data : {
-                    replies : ['你好，主人', '感谢领养我哦']
-                }
+                msgs: [
+                    {
+                        type : 'text',
+                        reply: '你好，主人'
+                    },
+                    {
+                        type : 'text',
+                        reply: '感谢领养我哦~'
+                    }                    
+                ]
             };
         
         case 'text':
@@ -18,25 +24,35 @@ const talkToChatBot = async(userId, type, data) => {
                 to : {
                     id : userId
                 },
-                type : 'radio',
-                data : {
-                    items : [
-                        {caption : '男', value : '我是男的'},
-                        {caption : '女', value : '我是女的'},
-                    ]
-                }
+                msgs: [
+                    {
+                        type : 'radio',
+                        title : '您是男的还是女的呢？',
+                        items : [
+                            {caption : '男', value : '我是男的'},
+                            {caption : '女', value : '我是女的'},
+                        ]
+                    }
+                ]
             };
         case 'image':
             return {
                 to : {
                     id : userId
                 },
-                type : 'image',
-                data : {
-                    url : data.url,
-                    width : 150,
-                    height: 100
-                }
+                msgs : [
+                    {
+                        type : 'text',
+                        reply: '这是您上传的头像：'
+                    },
+                    {
+                        type : 'image',
+                        title : '头像',
+                        url : data.url,
+                        width : 150,
+                        height: 100
+                    }
+                ]
             };
         default:
             logger.error(`receive unknown msg type(${type}) from client`);
@@ -46,7 +62,7 @@ const talkToChatBot = async(userId, type, data) => {
 const handleMessage = async (ctx) => {
     const msg = ctx.request.body;
 
-    logger.debug(`receive msg from client: ${msg}`);
+    logger.debug(`receive msg from client: ${JSON.stringify(msg)}`);
 
     const userId = msg.from.id;
     const type = msg.type;
