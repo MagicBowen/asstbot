@@ -2,6 +2,7 @@ const Koa = require('koa');
 const serve = require('koa-static');
 const koaBody = require('koa-body');
 const views = require('koa-views');
+// var busboy = require('connect-busboy');
 const session = require('koa-session');
 
 const responseTime = require('./middlewares/response-time');
@@ -23,6 +24,7 @@ app.use(serve('./static'));
 app.use(views(__dirname + '/views', { map: {html: 'nunjucks' }}));
 app.use(koaBody());
 app.use(controllerRouter(__dirname + '/controllers'));
+// app.use(busboy());
 
 ///////////////////////////////////////////////////////////
 app.listen(port, host);
