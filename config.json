@@ -1,4 +1,6 @@
 {
+    "host"   : "127.0.0.1",
+    "port"   : 8000,
     "appid"  : "",
     "secret" : "",
     "agent"  : "jx3-qiuyeqing",
