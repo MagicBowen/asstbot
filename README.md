@@ -53,6 +53,7 @@ const radioMsg = {
     },
     type : 'radio',
     data : {
+        title : '请选择你的性别：',
         items : [
             {caption : '男', value : '我是男的'},
             {caption : '女', value : '我是女的'},
@@ -66,6 +67,7 @@ const numberListMsg = {
     },
     type : 'numberList',
     data : {
+        title : '请选择你的名词',
         min : 1,
         max : 70,
         prefix : '第',
@@ -80,6 +82,7 @@ const imageMsg = {
     },
     type : 'image',
     data : {
+        title : '图片',
         url : 'http://localhost:8000/test.jpg',
         width : 150,
         height: 100

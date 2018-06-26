@@ -20,6 +20,7 @@ const talkToChatBot = async(userId, type, data) => {
                 },
                 type : 'radio',
                 data : {
+                    title : '您是男的还是女的呢？',
                     items : [
                         {caption : '男', value : '我是男的'},
                         {caption : '女', value : '我是女的'},
@@ -33,6 +34,7 @@ const talkToChatBot = async(userId, type, data) => {
                 },
                 type : 'image',
                 data : {
+                    title : '这是您的新头像哦',
                     url : data.url,
                     width : 150,
                     height: 100
