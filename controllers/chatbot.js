@@ -14,6 +14,7 @@ class Chatbot {
                      agent   : this.agent, 
                      userContext : user };
 
+        console.log("reply url is " + this.uri)
         const response = await postJson(this.uri, data);
         return this.formatResponse(user, response);
     }
@@ -38,8 +39,8 @@ class Chatbot {
                 result.msgs.push({type : 'text', reply : response.reply[i]});
             }
         } 
-        if (response.hasOwnProperty('reply-data')) {
-            result.msgs.push(response['reply-data']);
+        if (response.hasOwnProperty('data')) {
+            result.msgs.push(...response['data']);
         }
         return result;
     }
