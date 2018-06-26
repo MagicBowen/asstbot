@@ -89,7 +89,6 @@ var postImage = async (ctx, next) => {
     ctx.body = result
 };
 
-
 module.exports = {
     'GET /image': getImage,
     'POST /image' : postImage
