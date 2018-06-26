@@ -37,55 +37,54 @@ const loginMsg = {
 ### msg to client
 
 ```js
-const textMsg = {
+const reply = {
     to : {
         id : userId
     },
-    type : 'text',
-    data : {
-        replies : ['你好，主人', '感谢领养我哦']
-    }
-};
-        
-const radioMsg = {
-    to : {
-        id : userId
-    },
-    type : 'radio',
-    data : {
-        title : '请选择你的性别：',
-        items : [
-            {caption : '男', value : '我是男的'},
-            {caption : '女', value : '我是女的'},
-        ]
-    }
-};
+    msgs : [
+        // msg defined in below
+    ]    
+}
+```
 
-const numberListMsg = {
-    to : {
-        id : userId
-    },
-    type : 'numberList',
-    data : {
-        title : '请选择你的名词',
-        min : 1,
-        max : 70,
-        prefix : '第',
-        postfix: '名',
-        toChinese: true
-    }    
+```js
+// msgs
+
+{
+    type : 'text',
+    reply: '你好，主人'
 }
 
-const imageMsg = {
-    to : {
-        id : userId
-    },
+{
+    type : 'radio',
+    title : '您是男的还是女的呢？',  // optional
+    items : [
+        { caption : '男', 
+          value : '我是男的'  // optional
+        },
+        { caption : '女', 
+          value : '我是女的' // optional
+        }
+    ]
+}
+
+{
     type : 'image',
-    data : {
-        title : '图片',
-        url : 'http://localhost:8000/test.jpg',
-        width : 150,
-        height: 100
-    }
-};
+    title : '头像',
+    url : data.url,
+    width : 150, // optional
+    height: 100 // optional
+}
+
+
+{
+    type : 'numberList',
+    title : '你是第几名？',  // optional
+    min   : 0,
+    max   : 100,
+    prefix: '第',  // optional
+    prefix: '名',  // optional
+    chinese: true, // optional
+}
+
 ```
