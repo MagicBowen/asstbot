@@ -1,4 +1,5 @@
 const request = require('request');
+const logger = require('./logger').logger('postjson');
 
 module.exports = (uri, data) => {
     return new Promise( (resolve, reject) => { 
