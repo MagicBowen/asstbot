@@ -52,13 +52,15 @@ const getUserInfo = async (userId) => {
     try {
         const user = await User.getInfo(userId);
         const userContext = { id : userId };
-        if (user.wechat.nickName) {
+        logger.error("user is " + user)
+
+        if (user.wechat && user.wechat.nickName) {
             userContext.wechatName = user.wechat.nickName;
         }
-        if (user.asstBot.nickName) {
+        if (user.asstBot && user.asstBot.nickName) {
             userContext.asstBotName = user.asstBot.nickName;
         }
-        if (user.asstBot.masterTitle) {
+        if (user.asstBot && user.asstBot.masterTitle) {
             userContext.masterName = user.asstBot.masterTitle;
         }
         return userContext;
