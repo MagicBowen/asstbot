@@ -80,7 +80,6 @@ function uploadFile( ctx, filePath) {
 
     req.pipe(busboy)
   })
-
 } 
 
 var postImage = async (ctx, next) => {
