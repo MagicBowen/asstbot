@@ -1,4 +1,6 @@
 {
+    "host":"127.0.0.1",
+    "port"   : 8000,
     "appid"  : "wxc5ac60a9e76b7be5",
     "secret" : "23db09c4bbb41fe52666f63d29db3a31",
     "agent"  : "assistant",

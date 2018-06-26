@@ -62,7 +62,7 @@ const talkToChatBot = async(userId, type, data) => {
 const handleMessage = async (ctx) => {
     const msg = ctx.request.body;
 
-    logger.debug(`receive msg from client: ${msg}`);
+    logger.debug(`receive msg from client: ${JSON.stringify(msg)}`);
 
     const userId = msg.from.id;
     const type = msg.type;
