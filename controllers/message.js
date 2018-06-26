@@ -1,33 +1,3 @@
-const textMsg = {
-    from : {
-        id : 'xxxxx'
-    },
-    type : 'text',
-    data : {
-        query : 'hello'
-    }
-};
-
-const imageMsg = {
-    from : {
-        id : 'xxxxx'
-    },
-    type : 'image',
-    data : {
-        url : 'http://localhost:8000/test.jpg'
-    }
-};
-
-const loginMsg = {
-    from : {
-        id : 'xxxxx'
-    },
-    type : 'login',
-    data : {
-        code : '12345'
-    }
-}
-
 const logger = require('../utils/logger').logger('message');
 
 const talkToChatBot = async(userId, type, data) => {
@@ -63,7 +33,7 @@ const talkToChatBot = async(userId, type, data) => {
                 },
                 type : 'image',
                 data : {
-                    url : 'http://localhost:8000/test.jpg',
+                    url : data.url,
                     width : 150,
                     height: 100
                 }
@@ -74,7 +44,10 @@ const talkToChatBot = async(userId, type, data) => {
 }
 
 const handleMessage = async (ctx) => {
-    const msg = ctx.query;
+    const msg = ctx.request.body;
+
+    logger.debug(`receive msg from client: ${msg}`);
+
     const userId = msg.from.id;
     const type = msg.type;
 
