@@ -1,6 +1,6 @@
 {
     "appid"  : "",
     "secret" : "",
-    "agent"  : "assistant",
+    "agent"  : "jx3-qiuyeqing",
     "chatbot_url" : "http://xiaoda.ai/kingsoft-demo/query"
 }

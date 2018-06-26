@@ -15,7 +15,7 @@ class Chatbot {
                      userContext : user };
 
         const response = await postJson(this.uri, data);
-        return this.formatResponse(response);
+        return this.formatResponse(user, response);
     }
     
     async replyToEvent(user, eventType, params) {
@@ -25,7 +25,7 @@ class Chatbot {
                      userContext : user };
 
         const response = await postJson(this.uri, data);
-        return this.formatResponse(response);
+        return this.formatResponse(user, response);
     }
 
     formatResponse(user, response) {
@@ -50,10 +50,10 @@ const getUserInfo = async (userId) => {
 }
 
 const talkToChatBot = async (userId, type, params) => {
-    const user = getUserInfo(userId);
+    const user = await getUserInfo(userId);
     const chatbot = new Chatbot(config.agent, config.chatbot_url);
     if (type === 'text') {
-            return await chatbot.replyToText(user, params.query);
+        return await chatbot.replyToText(user, params.query);
     }
     return await chatbot.replyToEvent(user, type, params);
 }
@@ -61,7 +61,7 @@ const talkToChatBot = async (userId, type, params) => {
 const handleMessage = async (ctx) => {
     const msg = ctx.request.body;
 
-    logger.debug(`receive chat msg from client: ${msg}`);
+    logger.debug(`receive chat msg from client: ${JSON.stringify(msg)}`);
 
     const userId = msg.from.id;
     const type = msg.type;
