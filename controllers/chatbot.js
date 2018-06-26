@@ -52,11 +52,9 @@ const getUserInfo = async (userId) => {
     try {
         const user = await User.getInfo(userId);
         const userContext = { id : userId };
-        logger.error("user is " + user)
         if(user == null ) {
             return userContext
         }
-
         if (user.wechat && user.wechat.nickName) {
             userContext.wechatName = user.wechat.nickName;
         }
