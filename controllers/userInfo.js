@@ -66,7 +66,6 @@ const updateAsstBotNickName = async (ctx) => {
         ctx.response.status = 404;
         ctx.response.body = {result : 'failed'};
         logger.error('update user asstbot nickname error: ' + err);
-        logger.debug(err.stack);
     }
 }
 

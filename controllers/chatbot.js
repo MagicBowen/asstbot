@@ -1,5 +1,6 @@
 const postJson = require('../utils/postjson');
-const config = require('../config')
+const config = require('../config');
+const User = require('../models/user');
 const logger = require('../utils/logger').logger('chatbot');
 
 class Chatbot {
@@ -14,7 +15,8 @@ class Chatbot {
                      agent   : this.agent, 
                      userContext : user };
 
-        console.log("reply url is " + this.uri)
+        logger.debug('send to chatbot : ' + JSON.stringify(data));
+
         const response = await postJson(this.uri, data);
         return this.formatResponse(user, response);
     }
@@ -47,7 +49,22 @@ class Chatbot {
 }
 
 const getUserInfo = async (userId) => {
-    return { id : userId };
+    try {
+        const user = await User.getInfo(userId);
+        const userContext = { id : userId };
+        if (user.wechat.nickName) {
+            userContext.wechatName = user.wechat.nickName;
+        }
+        if (user.asstBot.nickName) {
+            userContext.asstBotName = user.asstBot.nickName;
+        }
+        if (user.asstBot.masterTitle) {
+            userContext.masterName = user.asstBot.masterTitle;
+        }
+        return userContext;
+    } catch (err) {
+        logger.error(`get user info of ${userId} error: ` + err);
+    }
 }
 
 const talkToChatBot = async (userId, type, params) => {
