@@ -27,10 +27,15 @@ const getUserId = async (ctx) => {
 
 const getUserInfo = async (ctx) => {
     try {
-        const info = await user.getInfo(ctx.query.userId);
-        ctx.response.type = "application/json";
-        ctx.response.status = 200;
-        ctx.response.body = info;
+        const info = await user.getInfo(ctx.query.id);
+        if (info) {
+            ctx.response.type = "application/json";
+            ctx.response.status = 200;
+            ctx.response.body = info;
+        } else {
+            ctx.response.status = 404;
+            logger.warn(`user ${ctx.query.id} is not exist!`);
+        }
     } catch(err) {
         ctx.response.status = 404;
         logger.error('get user info error: ' + err);
@@ -39,7 +44,8 @@ const getUserInfo = async (ctx) => {
 
 const updateWechatInfo = async (ctx) => {
     try {
-        await user.updateWechatInfo(ctx.request.body.userId, ctx.request.body.wechatInfo);
+        logger.debug(`receive user wechat update : ${JSON.stringify(ctx.request.body)}`);
+        await user.updateWechatInfo(ctx.request.body.id, ctx.request.body.wechat);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success'};
@@ -52,7 +58,7 @@ const updateWechatInfo = async (ctx) => {
 
 const updateAsstBotNickName = async (ctx) => {
     try {
-        await user.updateAsstBotNickName(ctx.request.body.userId, ctx.request.body.nickname);
+        await user.updateAsstBotNickName(ctx.request.body.id, ctx.request.body.nickName);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success'};
@@ -60,12 +66,13 @@ const updateAsstBotNickName = async (ctx) => {
         ctx.response.status = 404;
         ctx.response.body = {result : 'failed'};
         logger.error('update user asstbot nickname error: ' + err);
+        logger.debug(err.stack);
     }
 }
 
 const updateAsstBotGender = async (ctx) => {
     try {
-        await user.updateAsstBotGender(ctx.request.body.userId, ctx.request.body.gender);
+        await user.updateAsstBotGender(ctx.request.body.id, ctx.request.body.gender);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success'};
@@ -78,7 +85,7 @@ const updateAsstBotGender = async (ctx) => {
 
 const updateAsstBotAvatarUrl = async (ctx) => {
     try {
-        await user.updateAsstBotAvatarUrl(ctx.request.body.userId, ctx.request.body.avatarUrl);
+        await user.updateAsstBotAvatarUrl(ctx.request.body.id, ctx.request.body.avatarUrl);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success'};
@@ -91,7 +98,7 @@ const updateAsstBotAvatarUrl = async (ctx) => {
 
 const updateAsstBotMasterTitle = async (ctx) => {
     try {
-        await user.updateAsstBotMasterTitle(ctx.request.body.userId, ctx.request.body.masterTitle);
+        await user.updateAsstBotMasterTitle(ctx.request.body.id, ctx.request.body.masterTitle);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success'};

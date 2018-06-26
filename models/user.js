@@ -28,7 +28,7 @@ const model = {};
 model.getInfo = async (userId) => {
     logger.debug(`Looking up user ${userId}`);
 
-    const condition = {id : UserId};
+    const condition = {id : userId};
     return await User.findOne(condition).exec();
 };
 
@@ -39,6 +39,8 @@ model.updateWechatInfo = async (userId, wechatInfo) => {
         let newUser = { id : userId, wechat : wechatInfo };
         if (oriUser.hasOwnProperty('asstBot')) {
             newUser.asstBot = oriUser.oriUser;
+        } else {
+            newUser.asstBot = {masterTitle : wechatInfo.nickName};
         }
         oriUser.set(newUser);
         await oriUser.save();
@@ -48,7 +50,8 @@ model.updateWechatInfo = async (userId, wechatInfo) => {
 
     const user = new User({
         id : userId,
-        wechat : wechatInfo,
+        wechat  : wechatInfo,
+        asstBot : {masterTitle : wechatInfo.nickName}
     });
     await user.save();
     logger.debug(`Add new user ${userId}:${wechatInfo.nickName} successful!`);
