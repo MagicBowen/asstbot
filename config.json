@@ -3,6 +3,6 @@
     "port"   : 8000,
     "appid"  : "",
     "secret" : "",
-    "agent"  : "jx3-qiuyeqing",
-    "chatbot_url" : "http://xiaoda.ai/kingsoft-demo/query"
+    "agent"  : "assistant",
+    "chatbot_url" : "http://localhost:8080/query"
 }
