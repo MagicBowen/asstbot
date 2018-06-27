@@ -90,7 +90,7 @@ const reply = {
     min   : 0,
     max   : 100,
     prefix: '第',  // optional
-    prefix: '名',  // optional
+    postfix: '名',  // optional
     chinese: true, // optional
 }
 
