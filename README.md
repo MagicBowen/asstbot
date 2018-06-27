@@ -86,7 +86,7 @@ const reply = {
 
 {
     type : 'numberList',
-    title : '你是第几名？',  // optional
+    title : '请选择名次：',  // optional
     min   : 0,
     max   : 100,
     prefix: '第',  // optional
