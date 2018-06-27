@@ -19,7 +19,8 @@ const imageMsg = {
     },
     type : 'image',
     data : {
-        url : 'http://localhost:8000/test.jpg'
+        url : 'http://localhost:8000/test.jpg',
+        Indicator : 'profile'
     }
 };
 
@@ -76,6 +77,12 @@ const reply = {
     height: 100 // optional
 }
 
+{
+    type : 'imageUploader',
+    title: '请上传您的背景图', // optional
+    Indicator : 'profile',
+    explicit  : false // optional
+}
 
 {
     type : 'numberList',
