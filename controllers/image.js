@@ -2,6 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const logger = require('../utils/logger').logger('image');
 const Busboy = require('busboy')
+const uuidv1 = require('uuid/v1');
 const static_picture_path = 'static/image'
 
 async function fillImageToCtx(ctx, image) {
@@ -50,7 +51,7 @@ function uploadFile( ctx, filePath) {
 
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
       logger.debug("fileName:" + filename)
-      let fileName = Math.random().toString(16).substr(2) + '.' + getSuffixName(filename)
+      let fileName = uuidv1() + '.' + getSuffixName(filename)
       let _uploadFilePath = path.join( filePath, fileName )
       let saveTo = path.join(_uploadFilePath)
 
@@ -79,7 +80,6 @@ function uploadFile( ctx, filePath) {
 
     req.pipe(busboy)
   })
-
 } 
 
 var postImage = async (ctx, next) => {

@@ -19,7 +19,8 @@ const imageMsg = {
     },
     type : 'image',
     data : {
-        url : 'http://localhost:8000/test.jpg'
+        url : 'http://localhost:8000/test.jpg',
+        indicator : 'profile'
     }
 };
 
@@ -70,20 +71,26 @@ const reply = {
 
 {
     type : 'image',
-    title : '头像',
-    url : data.url,
+    title : '头像', // optional
+    url : 'http://localhost:8000/test.jpg',
     width : 150, // optional
     height: 100 // optional
 }
 
+{
+    type : 'imageUploader',
+    title: '请上传您的背景图', // optional
+    indicator : 'profile',
+    explicit  : false // optional
+}
 
 {
     type : 'numberList',
-    title : '你是第几名？',  // optional
+    title : '请选择名次：',  // optional
     min   : 0,
     max   : 100,
     prefix: '第',  // optional
-    prefix: '名',  // optional
+    postfix: '名',  // optional
     chinese: true, // optional
 }
 
