@@ -62,6 +62,9 @@ model.updateAsstBotNickName = async (userId,  nickName) => {
     
     if (oriUser) {
         let newUser = oriUser.toObject();
+        if(!newUser.asstBot){
+            newUser.asstBot = {}
+        }
         newUser.asstBot.nickName = nickName;
         oriUser.set(newUser);
         await oriUser.save();
@@ -82,6 +85,9 @@ model.updateAsstBotGender = async (userId,  gender) => {
     
     if (oriUser) {
         let newUser = oriUser.toObject();
+        if(!newUser.asstBot){
+            newUser.asstBot = {}
+        }
         newUser.asstBot.gender = gender;
         oriUser.set(newUser);
         await oriUser.save();
@@ -102,6 +108,9 @@ model.updateAsstBotAvatarUrl = async (userId,  avatarUrl) => {
     
     if (oriUser) {
         let newUser = oriUser.toObject();
+        if(!newUser.asstBot){
+            newUser.asstBot = {}
+        }
         newUser.asstBot.avatarUrl = avatarUrl;
         oriUser.set(newUser);
         await oriUser.save();
@@ -122,6 +131,9 @@ model.updateAsstBotMasterTitle = async (userId,  masterTitle) => {
     
     if (oriUser) {
         let newUser = oriUser.toObject();
+        if(!newUser.asstBot){
+            newUser.asstBot = {}
+        }
         newUser.asstBot.masterTitle = masterTitle;
         oriUser.set(newUser);
         await oriUser.save();
