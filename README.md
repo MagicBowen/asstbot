@@ -71,8 +71,8 @@ const reply = {
 
 {
     type : 'image',
-    title : '头像',
-    url : data.url,
+    title : '头像', // optional
+    url : 'http://localhost:8000/test.jpg',
     width : 150, // optional
     height: 100 // optional
 }
