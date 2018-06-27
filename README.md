@@ -20,7 +20,7 @@ const imageMsg = {
     type : 'image',
     data : {
         url : 'http://localhost:8000/test.jpg',
-        Indicator : 'profile'
+        indicator : 'profile'
     }
 };
 
@@ -80,7 +80,7 @@ const reply = {
 {
     type : 'imageUploader',
     title: '请上传您的背景图', // optional
-    Indicator : 'profile',
+    indicator : 'profile',
     explicit  : false // optional
 }
 
