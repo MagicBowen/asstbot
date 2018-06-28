@@ -7,7 +7,7 @@ const getSurvey = async (ctx) => {
         if (ctx.query.id) {
             survey = await Survey.getSurveyById(ctx.query.id);
         } else if (ctx.query.userId) {
-            survey = await Survey.getSurveyByUser(ctx.query.id);
+            survey = await Survey.getSurveyByUser(ctx.query.userId);
         }
         if (survey) {
             ctx.response.type = "application/json";
@@ -25,7 +25,7 @@ const getSurvey = async (ctx) => {
 
 const addSurvey = async (ctx) => {
     try {
-        await Survey.addSurvey(ctx.request.body.userId, ctx.request.body.survey);
+        await Survey.addSurvey(ctx.request.body.survey.userId, ctx.request.body.survey);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success'};
@@ -38,7 +38,7 @@ const addSurvey = async (ctx) => {
 
 const updateSurvey = async (ctx) => {
     try {
-        await Survey.updateSurvey(ctx.request.body.userId, ctx.request.body.survey);
+        await Survey.updateSurvey(ctx.request.body.survey.userId, ctx.request.body.survey);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success'};
@@ -51,7 +51,7 @@ const updateSurvey = async (ctx) => {
 
 const deleteSurvey = async (ctx) => {
     try {
-        await Survey.deleteSurvey(ctx.request.body.id);
+        await Survey.deleteSurvey(ctx.query.id);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success'};

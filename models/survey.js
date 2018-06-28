@@ -25,7 +25,7 @@ const ConclusionSchema = new Schema({
 
 mongoose.model('Surveys', new Schema({
     id      : { type: String, unique: true, required: true},
-    userId  : { type: String, unique: true, required: true},
+    userId  : { type: String, required: true},
     type    : { type: String, required: true }, // inquiry | poll | exam
     title   : { type: String, required: true},
     subjects: [SubjectSchema],
@@ -40,7 +40,7 @@ mongoose.model('SurveysResults', new Schema({
 }, { timestamps: { createdAt: 'created_at' } }));
 
 const Survey = mongoose.model('Surveys');
-const SurveyResult = mongoose.model('SurveyResults');
+// const SurveyResult = mongoose.model('SurveyResults');
 
 const model = {};
 
@@ -79,14 +79,13 @@ model.updateSurvey = async (userId, survey) => {
     if (!oriSurvey) {
         throw Error(`update unexisted survey ${survey.id} of user ${userId}`);
     }
-    logger.debug(`update survey ${newSurvey.id} for user ${userId}`);
     oriSurvey.set(survey);
     await oriSurvey.save();
-    logger.debug(`update survey ${newSurvey.id} for user ${userId} successful!`);    
+    logger.debug(`update survey ${survey.id} for user ${userId} successful!`); 
 };
 
 model.deleteSurvey = async (id) => {
-    await Survey.deleteOne({id : Id});
+    await Survey.deleteOne({id : id});
     logger.debug(`delete survey ${id} successful!`);    
 }
 
