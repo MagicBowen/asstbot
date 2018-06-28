@@ -85,4 +85,9 @@ model.updateSurvey = async (userId, survey) => {
     logger.debug(`update survey ${newSurvey.id} for user ${userId} successful!`);    
 };
 
+model.deleteSurvey = async (id) => {
+    await Survey.deleteOne({id : Id});
+    logger.debug(`delete survey ${id} successful!`);    
+}
+
 module.exports = model;
