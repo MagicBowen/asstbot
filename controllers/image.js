@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const logger = require('../utils/logger').logger('image');
 const Busboy = require('busboy')
-const uuidv1 = require('uuid/v1');
+const uuid = require('node-uuid');
 const static_picture_path = 'static/image'
 
 async function fillImageToCtx(ctx, image) {
@@ -13,7 +13,7 @@ async function fillImageToCtx(ctx, image) {
     } else {
         logger.warn("file is un exsited")
         ctx.response.status = 404;
-    }    
+    }
 }
 
 var getImage = async (ctx, next) => {
@@ -51,7 +51,7 @@ function uploadFile( ctx, filePath) {
 
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
       logger.debug("fileName:" + filename)
-      let fileName = uuidv1() + '.' + getSuffixName(filename)
+      let fileName = uuid.v1() + '.' + getSuffixName(filename)
       let _uploadFilePath = path.join( filePath, fileName )
       let saveTo = path.join(_uploadFilePath)
 

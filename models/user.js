@@ -1,6 +1,6 @@
 const logger = require('../utils/logger').logger('mongo-user');
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 mongoose.model('Users', new Schema({
     id: { type: String, unique: true, required: true},
