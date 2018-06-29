@@ -32,15 +32,16 @@ mongoose.model('Surveys', new Schema({
     conclusions : [ConclusionSchema]
 }, { timestamps: { createdAt: 'created_at' } }));
 
-mongoose.model('SurveysResults', new Schema({
+mongoose.model('SurveyResults', new Schema({
     id      : { type: String, unique: true, required: true},
-    userId  : { type: String, unique: true, required: true},
+    surveyId: { type: String, required: true},
+    responder  : { type: String, required: true},
     answers : [AnswerSchema],
     score   : Number
 }, { timestamps: { createdAt: 'created_at' } }));
 
 const Survey = mongoose.model('Surveys');
-// const SurveyResult = mongoose.model('SurveyResults');
+const SurveyResult = mongoose.model('SurveyResults');
 
 const model = {};
 
@@ -57,7 +58,7 @@ model.getSurveyByUser = async (userId) => {
 model.addSurvey = async (userId, survey) => {
     logger.debug(`add new survey for user ${userId}`);
     const newSurvey = new Survey({
-        id : uuid.v1(),
+        id : 'survey' + uuid.v1(),
         userId : userId,
         type : survey.type,
         title: survey.title,
@@ -87,6 +88,50 @@ model.updateSurvey = async (userId, survey) => {
 model.deleteSurvey = async (id) => {
     await Survey.deleteOne({id : id});
     logger.debug(`delete survey ${id} successful!`);    
+}
+
+model.getSurveyResultById = async (id) => {
+    logger.debug(`get survey result ${id}`);
+    return await SurveyResult.findOne({id : id}).exec();    
+}
+
+model.getSurveyResults = async (surveyId) => {
+    logger.debug(`find results of survey ${id}`);
+    return await SurveyResult.find({surveyId : surveyId}).exec();
+}
+
+model.addSurveyResult = async (userId, surveyResult) => {
+    logger.debug(`add new survey result of user ${userId}`);
+    const newSurveyResult = new SurveyResult({
+        id : 'survey-result-' + uuid.v1(),
+        surveyId : surveyResult.surveyId,
+        responder : userId,
+        answers : surveyResult.answers,
+        score: surveyResult.score
+    });
+    await newSurveyResult.save();
+    logger.debug(`Add new survey result of survey ${surveyResult.surveyId} successful!`);        
+}
+
+model.updateSurveyResult = async (userId, surveyResult) => {
+    if (!surveyResult.id) {
+        model.addSurveyResult(userId, survey);
+        return;
+    }
+
+    logger.debug(`update survey result ${surveyResult.id} of user ${userId}`);
+    const oriSurveyResult = await SurveyResult.findOne({id : surveyResult.id}).exec();
+    if (!oriSurveyResult) {
+        throw Error(`update unexisted survey result ${oriSurveyResult.id} of user ${userId}`);
+    }
+    oriSurveyResult.set(surveyResult);
+    await oriSurveyResult.save();
+    logger.debug(`update survey result ${surveyResult.id} of user ${userId} successful!`); 
+};
+
+model.deleteSurveyResult = async (id) => {
+    await SurveyResult.deleteOne({id : id});
+    logger.debug(`delete survey result ${id} successful!`); 
 }
 
 module.exports = model;

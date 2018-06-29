@@ -153,7 +153,15 @@ const reply = {
     		{ 
     			"id" : 3,
     			"type" : "text",
-    			"question" : "用一个词语形容以下我吧"
+				"question" : "用一个词语形容以下我吧",
+    			"answers" : [
+    				{
+    					"value" : "天真"
+					},
+    				{
+    					"value" : "幼稚"
+					}
+				]				
     		}
     	],
     	"conclusions" : [
