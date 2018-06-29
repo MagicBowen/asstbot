@@ -25,10 +25,10 @@ const getSurvey = async (ctx) => {
 
 const addSurvey = async (ctx) => {
     try {
-        await Survey.addSurvey(ctx.request.body.survey.userId, ctx.request.body.survey);
+        const id = await Survey.addSurvey(ctx.request.body.survey.userId, ctx.request.body.survey);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
-        ctx.response.body = {result : 'success'};
+        ctx.response.body = {result : 'success', id : id};
     } catch(err) {
         ctx.response.status = 404;
         ctx.response.body = {result : 'failed'};
@@ -38,10 +38,10 @@ const addSurvey = async (ctx) => {
 
 const updateSurvey = async (ctx) => {
     try {
-        await Survey.updateSurvey(ctx.request.body.survey.userId, ctx.request.body.survey);
+        const id = await Survey.updateSurvey(ctx.request.body.survey.userId, ctx.request.body.survey);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
-        ctx.response.body = {result : 'success'};
+        ctx.response.body = {result : 'success', id : id};
     } catch(err) {
         ctx.response.status = 404;
         ctx.response.body = {result : 'failed'};

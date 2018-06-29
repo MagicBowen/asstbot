@@ -62,8 +62,9 @@ model.getSurveyByUser = async (userId) => {
 
 model.addSurvey = async (userId, survey) => {
     logger.debug(`add new survey for user ${userId}`);
+    const surveyId = 'survey-' + uuid.v1();
     const newSurvey = new Survey({
-        id : 'survey-' + uuid.v1(),
+        id : surveyId,
         userId : userId,
         type : survey.type,
         title: survey.title,
@@ -71,13 +72,13 @@ model.addSurvey = async (userId, survey) => {
         conclusions: survey.conclusions
     });
     await newSurvey.save();
-    logger.debug(`Add new survey ${newSurvey.id} for user ${userId} successful!`);    
+    logger.debug(`Add new survey ${surveyId} for user ${userId} successful!`);    
+    return surveyId;
 };
 
 model.updateSurvey = async (userId, survey) => {
     if (!survey.id) {
-        model.addSurvey(userId, survey);
-        return;
+        return model.addSurvey(userId, survey);
     }
 
     logger.debug(`update survey ${survey.id} for user ${userId}`);
@@ -88,6 +89,7 @@ model.updateSurvey = async (userId, survey) => {
     oriSurvey.set(survey);
     await oriSurvey.save();
     logger.debug(`update survey ${survey.id} for user ${userId} successful!`); 
+    return survey.id;
 };
 
 model.deleteSurvey = async (id) => {
@@ -107,21 +109,22 @@ model.getSurveyResults = async (surveyId) => {
 
 model.addSurveyResult = async (userId, surveyResult) => {
     logger.debug(`add new survey result of user ${userId}`);
+    const id = 'survey-result-' + uuid.v1();
     const newSurveyResult = new SurveyResult({
-        id : 'survey-result-' + uuid.v1(),
+        id : id,
         surveyId : surveyResult.surveyId,
         responder : userId,
         answers : surveyResult.answers,
         score: surveyResult.score
     });
     await newSurveyResult.save();
-    logger.debug(`Add new survey result of survey ${surveyResult.surveyId} successful!`);        
+    logger.debug(`Add new survey result ${id} of survey ${surveyResult.surveyId} successful!`); 
+    return id;       
 }
 
 model.updateSurveyResult = async (userId, surveyResult) => {
     if (!surveyResult.id) {
-        model.addSurveyResult(userId, surveyResult);
-        return;
+        return model.addSurveyResult(userId, surveyResult);
     }
 
     logger.debug(`update survey result ${surveyResult.id} of user ${userId}`);
@@ -132,6 +135,7 @@ model.updateSurveyResult = async (userId, surveyResult) => {
     oriSurveyResult.set(surveyResult);
     await oriSurveyResult.save();
     logger.debug(`update survey result ${surveyResult.id} of user ${userId} successful!`); 
+    return surveyResult.id;
 };
 
 model.deleteSurveyResult = async (id) => {
