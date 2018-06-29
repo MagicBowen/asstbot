@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Survey = require('../models/survey');
 const logger = require('../utils/logger').logger('gateway');
 
 const apiHandle = async (req) => {
@@ -22,6 +23,8 @@ const apiHandle = async (req) => {
         case 'updateA-asst-master-title':
             result = await User.updateAsstBotMasterTitle(userId, params.masterTitle);
             break;
+        case 'get-survey-by-id':
+            result = await Survey.getSurveyById(params.id);
         default:
             result = 'unknown gateway api : ' + api;
             logger.error(result);
