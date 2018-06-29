@@ -4,6 +4,6 @@
     "appid"  : "",
     "secret" : "",
     "agent"  : "assistant",
-    "surveyAgent" : "surveybot",
+    "surveyAgent" : "survey-bot",
     "chatbot_url" : "http://localhost:8080/query"
 }
