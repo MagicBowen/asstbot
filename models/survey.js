@@ -62,7 +62,7 @@ model.addSurvey = async (userId, survey) => {
         type : survey.type,
         title: survey.title,
         subjects: survey.subjects,
-        conclusions: survey.subjects
+        conclusions: survey.conclusions
     });
     await newSurvey.save();
     logger.debug(`Add new survey ${newSurvey.id} for user ${userId} successful!`);    
