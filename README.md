@@ -70,6 +70,21 @@ const reply = {
 }
 
 {
+    type  : 'checkbox',
+	title : '我爱吃以下哪些东东呢？',  // optional
+	prefix: '我爱吃：', // optional
+	split : '，', // optional, default : ','
+	postfix: '的呀！', // optional
+    items : [
+        { caption : '水饺'},
+        { caption : '牛排'},
+        { caption : '沙拉'},
+        { caption : '披萨'},
+        { caption : '凉皮'}
+    ]
+}
+
+{
     type : 'image',
     title : '头像', // optional
     url : 'http://localhost:8000/test.jpg',
@@ -153,7 +168,7 @@ const reply = {
     		{ 
     			"id" : 3,
     			"type" : "text",
-				"question" : "用一个词语形容以下我吧",
+				"question" : "用一个词语形容一下我吧",
     			"answers" : [
     				{
     					"value" : "天真"
