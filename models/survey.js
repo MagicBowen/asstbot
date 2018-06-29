@@ -9,7 +9,7 @@ const AnswerSchema = new Schema({
 });
 
 const SubjectSchema = new Schema({
-    id: Number,
+    id: { type : Number, required: true },
     type : String,   // single-choice | multiple-choice | text
     question : String,
     answers  : [AnswerSchema]
@@ -32,11 +32,16 @@ mongoose.model('Surveys', new Schema({
     conclusions : [ConclusionSchema]
 }, { timestamps: { createdAt: 'created_at' } }));
 
+const AnswerResultSchema = new Schema({
+    id    : {type : Number, required: true},
+    result: [AnswerSchema]
+});
+
 mongoose.model('SurveyResults', new Schema({
     id      : { type: String, unique: true, required: true},
     surveyId: { type: String, required: true},
     responder  : { type: String, required: true},
-    answers : [AnswerSchema],
+    answers : [AnswerResultSchema],
     score   : Number
 }, { timestamps: { createdAt: 'created_at' } }));
 
@@ -58,7 +63,7 @@ model.getSurveyByUser = async (userId) => {
 model.addSurvey = async (userId, survey) => {
     logger.debug(`add new survey for user ${userId}`);
     const newSurvey = new Survey({
-        id : 'survey' + uuid.v1(),
+        id : 'survey-' + uuid.v1(),
         userId : userId,
         type : survey.type,
         title: survey.title,
@@ -96,7 +101,7 @@ model.getSurveyResultById = async (id) => {
 }
 
 model.getSurveyResults = async (surveyId) => {
-    logger.debug(`find results of survey ${id}`);
+    logger.debug(`find results of survey ${surveyId}`);
     return await SurveyResult.find({surveyId : surveyId}).exec();
 }
 
@@ -115,7 +120,7 @@ model.addSurveyResult = async (userId, surveyResult) => {
 
 model.updateSurveyResult = async (userId, surveyResult) => {
     if (!surveyResult.id) {
-        model.addSurveyResult(userId, survey);
+        model.addSurveyResult(userId, surveyResult);
         return;
     }
 

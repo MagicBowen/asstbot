@@ -183,3 +183,29 @@ const reply = {
     }
 }
 ```
+
+## survey result
+
+```json
+{
+	"surveyResult" : {
+		"surveyId" : "survey-7d1ac5a0-7b65-11e8-93f9-5b2bd2535765",
+		"responder": "xiaowei",
+		"answers"  : [
+			{
+				"id"    : 1,
+				"result": [ {"value" : "白羊座", "correct" : true} ]
+			},
+			{
+				"id"    : 2,
+				"result": [ {"value" : "油泼面", "correct" : false}, {"value" : "牛排", "correct" : true} ]
+			},
+			{
+				"id"    : 3,
+				"result": [ {"value" : "天真", "correct" : true} ]
+			}			
+		],
+		"score"    : 2
+	}
+}
+```
