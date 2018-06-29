@@ -70,19 +70,19 @@ const getUserInfo = async (userId) => {
     }
 }
 
-const talkToChatBot = async (userId, type, params) => {
+const talkToChatBot = async (agent, userId, type, params) => {
     const user = await getUserInfo(userId);
-    const chatbot = new Chatbot(config.agent, config.chatbot_url);
+    const chatbot = new Chatbot(agent, config.chatbot_url);
     if (type === 'text') {
         return await chatbot.replyToText(user, params.query);
     }
     return await chatbot.replyToEvent(user, type, params);
 }
 
-const handleMessage = async (ctx) => {
+const handleMessage = async (ctx, agent = config.agent) => {
     const msg = ctx.request.body;
 
-    logger.debug(`receive chat msg from client: ${JSON.stringify(msg)}`);
+    logger.debug(`receive chat msg from client to agent ${agent}: ${JSON.stringify(msg)}`);
 
     const userId = msg.from.id;
     const type = msg.type;
@@ -94,7 +94,7 @@ const handleMessage = async (ctx) => {
     }
 
     try {
-        const response = await talkToChatBot(userId, type, msg.data);
+        const response = await talkToChatBot(agent, userId, type, msg.data);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = response;
@@ -104,6 +104,11 @@ const handleMessage = async (ctx) => {
     }
 }
 
+const handleSurveyMessage = async (ctx) => {
+    await handleMessage(ctx, config.surveyAgent);
+}
+
 module.exports = {
-    'POST /chatbot' : handleMessage
+    'POST /chatbot' : handleMessage,
+    'POST /chatbot/survey' : handleSurveyMessage,
 };
