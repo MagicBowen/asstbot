@@ -25,6 +25,16 @@ const apiHandle = async (req) => {
             break;
         case 'get-survey-by-id':
             result = await Survey.getSurveyById(params.id);
+            break;
+        case 'add-survey-result':
+            result = await Survey.addSurveyResult(userId, params.surveyResult);
+            break;
+        case 'update-survey-result':
+            result = await Survey.updateSurveyResult(userId, params.surveyResult);
+            break;                    
+        case 'delete-survey-result':
+            result = await Survey.deleteSurveyResult(params.id);
+            break;                    
         default:
             result = 'unknown gateway api : ' + api;
             logger.error(result);
