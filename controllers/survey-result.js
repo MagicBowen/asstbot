@@ -25,7 +25,7 @@ const getSurveyResult = async (ctx) => {
 
 const addSurveyResult = async (ctx) => {
     try {
-        const id = await Survey.addSurveyResult(ctx.request.body.surveyResult.responder, ctx.request.body.surveyResult);
+        const id = await Survey.addSurveyResult(ctx.request.body.surveyResult.responder.userId, ctx.request.body.surveyResult);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success', id : id};
@@ -38,7 +38,7 @@ const addSurveyResult = async (ctx) => {
 
 const updateSurveyResult = async (ctx) => {
     try {
-        const id = await Survey.updateSurveyResult(ctx.request.body.surveyResult.responder, ctx.request.body.surveyResult);
+        const id = await Survey.updateSurveyResult(ctx.request.body.surveyResult.responder.userId, ctx.request.body.surveyResult);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success', id : id};

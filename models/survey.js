@@ -28,6 +28,7 @@ mongoose.model('Surveys', new Schema({
     userId  : { type: String, required: true},
     type    : { type: String, required: true }, // inquiry | poll | exam
     title   : { type: String, required: true},
+    avatarUrl : { type: String },
     subjects: [SubjectSchema],
     conclusions : [ConclusionSchema]
 }, { timestamps: { createdAt: 'created_at' } }));
@@ -37,10 +38,16 @@ const AnswerResultSchema = new Schema({
     result: [AnswerSchema]
 });
 
+const ResponderSchema = new Schema({
+    userId    : {type : String, required: true},
+    nickName  : {type : String},
+    avatarUrl : {type : String}
+});
+
 mongoose.model('SurveyResults', new Schema({
     id      : { type: String, unique: true, required: true},
     surveyId: { type: String, required: true},
-    responder  : { type: String, required: true},
+    responder  : { type: ResponderSchema },
     answers : [AnswerResultSchema],
     score   : Number
 }, { timestamps: { createdAt: 'created_at' } }));
@@ -68,6 +75,7 @@ model.addSurvey = async (userId, survey) => {
         userId : userId,
         type : survey.type,
         title: survey.title,
+        avatarUrl : survey.avatarUrl,
         subjects: survey.subjects,
         conclusions: survey.conclusions
     });
@@ -113,7 +121,7 @@ model.addSurveyResult = async (userId, surveyResult) => {
     const newSurveyResult = new SurveyResult({
         id : id,
         surveyId : surveyResult.surveyId,
-        responder : userId,
+        responder : surveyResult.responder,
         answers : surveyResult.answers,
         score: surveyResult.score
     });

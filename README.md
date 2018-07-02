@@ -118,7 +118,8 @@ const reply = {
     "survey" : {
     	"userId" : "bowen",
     	"type"   : "exam",
-    	"title"  : "看看你有多了解我？",
+		"title"  : "看看你有多了解我？",
+		"avatarUrl" : "http://localhost:8000/profile.jpg",
     	"subjects" : [
     		{ 
     			"id" : 1,
@@ -204,8 +205,12 @@ const reply = {
 ```json
 {
 	"surveyResult" : {
-		"surveyId" : "survey-7d1ac5a0-7b65-11e8-93f9-5b2bd2535765",
-		"responder": "xiaowei",
+		"surveyId" : "survey-652ea4d0-7dad-11e8-abe8-abb0bd666421",
+		"responder": {
+			"userId" : "xxxxxxx",
+			"nickName" : "xiaowei",
+			"avatarUrl": "http://localhost:8000/profile.png"
+		},
 		"answers"  : [
 			{
 				"id"    : 1,
