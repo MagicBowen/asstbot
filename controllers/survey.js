@@ -19,7 +19,7 @@ const getSurvey = async (ctx) => {
         }
     } catch(err) {
         ctx.response.status = 404;
-        logger.error('get survey error: ' + err);
+        logger.error('get survey error: ' + err.stack);
     }
 };
 
@@ -31,8 +31,8 @@ const addSurvey = async (ctx) => {
         ctx.response.body = {result : 'success', id : id};
     } catch(err) {
         ctx.response.status = 404;
-        ctx.response.body = {result : 'failed', cause : err};
-        logger.error(`add survey error: ` + err);
+        ctx.response.body = {result : 'failed', cause : err.toString()};
+        logger.error(`add survey error: ` + err.stack);
     }
 };
 
@@ -44,8 +44,8 @@ const updateSurvey = async (ctx) => {
         ctx.response.body = {result : 'success', id : id};
     } catch(err) {
         ctx.response.status = 404;
-        ctx.response.body = {result : 'failed', cause : err};
-        logger.error(`update survey error: ` + err);
+        ctx.response.body = {result : 'failed', cause : err.toString()};
+        logger.error(`update survey error: ` + err.stack);
     }    
 };
 
@@ -57,7 +57,7 @@ const deleteSurvey = async (ctx) => {
         ctx.response.body = {result : 'success'};
     } catch(err) {
         ctx.response.status = 404;
-        logger.error(`delete survey error: ` + err);
+        logger.error(`delete survey error: ` + err.stack);
     }    
 };
 
