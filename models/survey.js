@@ -76,7 +76,7 @@ model.addSurvey = async (userId, survey) => {
         userId : userId,
         type : survey.type,
         title: survey.title,
-        intro: suvey.intro,
+        intro: survey.intro,
         avatarUrl : survey.avatarUrl,
         subjects: survey.subjects,
         conclusions: survey.conclusions

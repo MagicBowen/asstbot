@@ -31,7 +31,7 @@ const addSurveyResult = async (ctx) => {
         ctx.response.body = {result : 'success', id : id};
     } catch(err) {
         ctx.response.status = 404;
-        ctx.response.body = {result : 'failed'};
+        ctx.response.body = {result : 'failed', cause : err};
         logger.error(`add survey result error: ` + err);
     }
 };
@@ -44,7 +44,7 @@ const updateSurveyResult = async (ctx) => {
         ctx.response.body = {result : 'success', id : id};
     } catch(err) {
         ctx.response.status = 404;
-        ctx.response.body = {result : 'failed'};
+        ctx.response.body = {result : 'failed', cause : err};
         logger.error(`update survey result error: ` + err);
     }    
 };
