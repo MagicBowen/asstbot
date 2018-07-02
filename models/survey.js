@@ -28,6 +28,7 @@ mongoose.model('Surveys', new Schema({
     userId  : { type: String, required: true},
     type    : { type: String, required: true }, // inquiry | poll | exam
     title   : { type: String, required: true},
+    intro   : { type: String},
     avatarUrl : { type: String },
     subjects: [SubjectSchema],
     conclusions : [ConclusionSchema]
@@ -75,6 +76,7 @@ model.addSurvey = async (userId, survey) => {
         userId : userId,
         type : survey.type,
         title: survey.title,
+        intro: suvey.intro,
         avatarUrl : survey.avatarUrl,
         subjects: survey.subjects,
         conclusions: survey.conclusions

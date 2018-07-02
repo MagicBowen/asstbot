@@ -119,6 +119,7 @@ const reply = {
     	"userId" : "bowen",
     	"type"   : "exam",
 		"title"  : "看看你有多了解我？",
+		"intro"  : "Hello, 好朋友们，回答下面的问题，来看看你们有多了解我吧",
 		"avatarUrl" : "http://localhost:8000/profile.jpg",
     	"subjects" : [
     		{ 
