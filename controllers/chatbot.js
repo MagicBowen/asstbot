@@ -58,12 +58,10 @@ const getUserInfo = async (userId) => {
         if (user.wechat && user.wechat.nickName) {
             userContext.wechatName = user.wechat.nickName;
         }
-        if (user.asstBot && user.asstBot.nickName) {
-            userContext.asstBotName = user.asstBot.nickName;
+        if (user.wechat && user.wechat.avatarUrl) {
+            userContext.avatarUrl = user.wechat.avatarUrl;
         }
-        if (user.asstBot && user.asstBot.masterTitle) {
-            userContext.masterName = user.asstBot.masterTitle;
-        }
+
         return userContext;
     } catch (err) {
         logger.error(`get user info of ${userId} error: ` + err);
