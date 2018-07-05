@@ -109,6 +109,10 @@ const reply = {
     chinese: true, // optional
 }
 
+{
+	type : 'dialog-end'
+}
+
 ```
 
 ## Survey
