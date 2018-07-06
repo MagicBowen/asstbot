@@ -117,6 +117,8 @@ const reply = {
 
 ## Survey
 
+### exam
+
 ```json
 {
     "survey" : {
@@ -205,7 +207,7 @@ const reply = {
 }
 ```
 
-## survey result
+### exam result
 
 ```json
 {
@@ -231,6 +233,159 @@ const reply = {
 			}			
 		],
 		"score"    : 2
+	}
+}
+```
+
+### inquiry
+
+```json
+{
+    "survey" : {
+    	"userId" : "bowen",
+    	"type"   : "inquiry",
+		"title"  : "你希望公司为员工提供哪些福利？",
+		"intro"  : "公司为大家做福利计划，快来回答你希望公司提供的福利内容吧",
+		"avatarUrl" : "http://localhost:8000/profile.jpg",
+    	"subjects" : [
+    		{ 
+    			"id" : 1,
+    			"type" : "single-choice",
+    			"question" : "你来公司多久了？",
+    			"answers" : [
+    				{
+    					"value" : "少于1年",
+    				},
+    				{
+    					"value" : "1到3年"
+    				},
+    				{
+    					"value" : "3到5年"
+    				},
+    				{
+    					"value" : "5年以上"
+    				}     				
+    			]
+    		
+    		},
+    		{ 
+    			"id" : 2,
+    			"type" : "multiple-choice",
+    			"question" : "以下哪些方面的福利改进，你觉得会提升公司竞争力",
+    			"answers" : [
+    				{
+    					"value" : "零食",
+    				},
+    				{
+    					"value" : "活动",
+    				},
+    				{
+    					"value" : "奖励",
+    				},
+    				{
+    					"value" : "保险",
+    				}     				
+    			]
+    		
+    		},
+    		{ 
+    			"id" : 3,
+    			"type" : "text",
+				"question" : "说说你最希望公司提供的具体福利计划吧",
+    			"answers" : []				
+    		}
+    	],
+    	"conclusions" : [
+    		{
+    			"text" : "感谢您的回复，我们会认真考虑您的建议！"
+    		}
+    	]
+    }
+}
+```
+
+### inquiry result
+
+```json
+{
+	"surveyResult" : {
+		"surveyId" : "survey-652ea4d0-7dad-11e8-abe8-abb0bd666421",
+		"responder": {
+			"userId" : "xxxxxxx",
+			"nickName" : "xiaowei",
+			"avatarUrl": "http://localhost:8000/profile.png"
+		},
+		"answers"  : [
+			{
+				"id"    : 1,
+				"result": [ {"value" : "少于1年"} ]
+			},
+			{
+				"id"    : 2,
+				"result": [ {"value" : "零食"}, {"value" : "保险"} ]
+			},
+			{
+				"id"    : 3,
+				"result": [ {"value" : "我最希望公司能够提供住宿补贴"} ]
+			}			
+		]
+	}
+}
+```
+
+### poll
+
+```json
+{
+    "survey" : {
+    	"userId" : "bowen",
+    	"type"   : "poll",
+		"title"  : "公司秋游目的地投票",
+		"intro"  : "公司组织秋游，快来选选你最想去哪里吧",
+		"avatarUrl" : "http://localhost:8000/profile.jpg",
+    	"subjects" : [
+    		{ 
+    			"id" : 1,
+    			"type" : "single-choice",
+    			"question" : "以下目的地你最想去哪里呢？",
+    			"answers" : [
+    				{
+    					"value" : "张家界",
+    				},
+    				{
+    					"value" : "莫干山"
+    				},
+    				{
+    					"value" : "壶口瀑布"
+    				},
+    				{
+    					"value" : "东方明珠"
+    				}     				
+    			]
+    		
+    		}
+    	]
+    }
+}
+```
+
+### poll result
+
+```json
+{
+	"surveyResult" : {
+		"surveyId" : "survey-652ea4d0-7dad-11e8-abe8-abb0bd666421",
+		"responder": {
+			"userId" : "xxxxxxx",
+			"nickName" : "xiaowei",
+			"avatarUrl": "http://localhost:8000/profile.png"
+		},
+		"answers"  : [
+			{
+				"id"    : 1,
+				"result": [ {"value" : "东方明珠"} ]
+			}			
+		]
 	}
 }
 ```
