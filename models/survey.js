@@ -1,6 +1,6 @@
 const logger = require('../utils/logger').logger('mongo-survey');
 const mongoose = require('mongoose');
-const uuid = require('node-uuid');
+const globalId = require('../utils/global-id');
 const Schema = mongoose.Schema;
 
 const AnswerSchema = new Schema({
@@ -70,7 +70,7 @@ model.getSurveyByUser = async (userId) => {
 
 model.addSurvey = async (userId, survey) => {
     logger.debug(`add new survey for user ${userId}`);
-    const surveyId = 'survey-' + uuid.v1();
+    const surveyId = globalId();
     const newSurvey = new Survey({
         id : surveyId,
         userId : userId,
@@ -124,7 +124,7 @@ model.getSurveyResults = async (surveyId) => {
 
 model.addSurveyResult = async (userId, surveyResult) => {
     logger.debug(`add new survey result of user ${userId}`);
-    const id = 'survey-result-' + uuid.v1();
+    const id = globalId();
     const newSurveyResult = new SurveyResult({
         id : id,
         surveyId : surveyResult.surveyId,
