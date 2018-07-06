@@ -56,7 +56,7 @@ const getUserInfo = async (userId) => {
             return userContext
         }
         if (user.wechat && user.wechat.nickName) {
-            userContext.wechatName = user.wechat.nickName;
+            userContext.nickName = user.wechat.nickName;
         }
         if (user.wechat && user.wechat.avatarUrl) {
             userContext.avatarUrl = user.wechat.avatarUrl;

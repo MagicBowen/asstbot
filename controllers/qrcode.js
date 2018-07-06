@@ -1,32 +1,35 @@
 const accessTocken = require('../utils/access-tocken');
-const postJson = require('../utils/postjson');
+const request = require('request');
 const fs = require('fs');
-const path = require('path');
 const uuid = require('node-uuid');
 const logger = require('../utils/logger').logger('controller_qrcode');
 
 async function getQrCode(ctx) {
     try {
-        // const tocken = await accessTocken.getTocken();
-        const tocken = '11_cBcYlJZQpRTe_iZ7oPGA1b2jUGrDTxAnJJ9uzTuerq-PAe-sCwYPnGUwAbDoQU8dHmSdTNbMUVkZEAQGFkk4ZETLIsw7f6HobYFQL7xPvaUqi336eIu3vua-OXEQNSbABAHEJ';
-        const tocken = '11_cBcYlJZQpRTe_iZ7oPGA1b2jUGrDTxAnJJ9uzTuerq-PAe-sCwYPnGUwAbDoQU8dHmSdTNbMUVkZEAQGFkk4ZETLIsw7f6HobYFQL7xPvaUqi336eIu3vua-OXEQNSbABAHEJ';
-        const url_a = 'https://api.weixin.qq.com/wxa/getwxacode?access_token=';
-        const url_b = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=';
-        const result = await postJson(url_a + tocken,
-            {
-                // scene : ctx.query.scene,
-                // page : 'pages/home/main'
-                path : 'pages/home/main'
-            });
-        console.log(JSON.stringify(result));
-        const filename = uuid.v1() + '.jpg';
-        fs.writeFileSync('static/image/' + filename, result);
+        // const url = 'https://api.weixin.qq.com/wxa/getwxacode?access_token=';
+        // const tocken = '11_zIacgPwEIDkMaARLMe2b7zyaa8a2BFhc9fqft4ZUqFxJsOM0v6ONxa0niu0tNs4tBNSPxpe8nIgn68ZkgU1MLoOlgHazn8ZvNHdpGpbFeymodOiDag2vkAjBEiECQLbADAXLG';
+        const tocken = await accessTocken.getTocken();
+        const url = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=' + tocken;
+
+        const filename = uuid.v1() + '.png';
+        const filePath = 'static/image/' + filename;
+
+        request({
+            url: url,
+            method: "POST",
+            json: {
+                scene: ctx.query.scene,
+                page : 'pages/home/main' // ctx.query.page
+            }
+        }).pipe(fs.createWriteStream(filePath));
+
         ctx.response.type = "application/json";
         ctx.response.body = {url : "/image?name="+filename};
         ctx.response.status = 200;
     } catch(err) {
         ctx.response.status = 404;
         logger.error('get qrcode failed: ' + err);
+        logger.debug(err.stack);
     }
 }
 
