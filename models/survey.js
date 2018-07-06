@@ -114,7 +114,7 @@ model.getSurveyResultById = async (id) => {
 
 model.getSurveyResultsByUser = async (userId) => {
     logger.debug(`get survey result by user ${userId}`);
-    return await SurveyResult.find({responder : {userId : userId}}).exec();
+    return await SurveyResult.find({'responder.userId' : userId}).exec();
 }
 
 model.getSurveyResults = async (surveyId) => {

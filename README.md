@@ -254,7 +254,7 @@ const reply = {
     			"question" : "你来公司多久了？",
     			"answers" : [
     				{
-    					"value" : "少于1年",
+    					"value" : "少于1年"
     				},
     				{
     					"value" : "1到3年"
@@ -274,16 +274,16 @@ const reply = {
     			"question" : "以下哪些方面的福利改进，你觉得会提升公司竞争力",
     			"answers" : [
     				{
-    					"value" : "零食",
+    					"value" : "零食"
     				},
     				{
-    					"value" : "活动",
+    					"value" : "活动"
     				},
     				{
-    					"value" : "奖励",
+    					"value" : "奖励"
     				},
     				{
-    					"value" : "保险",
+    					"value" : "保险"
     				}     				
     			]
     		
