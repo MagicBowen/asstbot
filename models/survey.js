@@ -48,7 +48,7 @@ const ResponderSchema = new Schema({
 mongoose.model('SurveyResults', new Schema({
     id      : { type: String, unique: true, required: true},
     surveyId: { type: String, required: true},
-    responder  : { type: ResponderSchema },
+    responder  : { type: ResponderSchema, required: true},
     answers : [AnswerResultSchema],
     score   : Number
 }, { timestamps: { createdAt: 'created_at' } }));
@@ -110,6 +110,11 @@ model.deleteSurvey = async (id) => {
 model.getSurveyResultById = async (id) => {
     logger.debug(`get survey result ${id}`);
     return await SurveyResult.findOne({id : id}).exec();    
+}
+
+model.getSurveyResultsByUser = async (userId) => {
+    logger.debug(`get survey result by user ${userId}`);
+    return await SurveyResult.find({responder : {userId : userId}}).exec();
 }
 
 model.getSurveyResults = async (surveyId) => {
