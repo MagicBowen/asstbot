@@ -44,7 +44,7 @@ function uploadFile( ctx, filePath) {
   let busboy = new Busboy({headers: req.headers})
   return new Promise((resolve, reject) => {
     logger.debug('upload...')
-    let result = { 
+    let result = {
       success: false,
       formData: {},
     }
