@@ -6,8 +6,8 @@ const logger = require('../utils/logger').logger('controller_qrcode');
 
 async function getQrCode(ctx) {
     try {
-        const tocken = await accessTocken.getTocken();
-        // const tocken = '11_MbI479HLXaxijhZY2qxfzLQ2j9orhlf4kkLJNdIiDQjGILfNooE_EXAVWU9XUWOOb7Du8B4iFye9rvFd4ICYpXQ8EYVX3WJ60PwwH2Xoz2DCCPb4-DOdX0YuvPbXH7UpzaZPnLPjWgsNtg0DAXKbACAURE';
+        // const tocken = await accessTocken.getTocken();
+        const tocken = '11__a6XqIN_zezhS4RK-13c-iIO2FRN-cg4hEqU_f49_kyDxro0kiFAYfBy-9lf2Dm-CDm2JdLSfmj_gLV8Y1LV2ry_Q_jCWTXk_KcPFQmDUdah04udp4RtGx-a7V2rH10cXOS6FnPlB30pgtBJDXJbAAAHBN';
         const url = 'https://api.weixin.qq.com/wxa/getwxacode?access_token=' + tocken;
         // const url = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=' + tocken;
 
