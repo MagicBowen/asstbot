@@ -13,7 +13,6 @@ function drawImage() {
     const profileTargetWidth = (qrcodeTargetWidth)/2.2
     const portraitPath = path.join(__dirname, '../static/image/test-profile.png')
     const qrcodePath = path.join(__dirname, '../static/image/test-qrcode.png')
-    const title = '猜猜你有多了解我'
 
     // init canvas
     const canvas = new Canvas(canvasWidth, canvasHeight)
