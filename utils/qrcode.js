@@ -57,8 +57,8 @@ async function drawImage(targetFileName, qrcodeFileName, portraitFileName, title
     let profileImg = new Image()
     profileImg.src = fs.readFileSync(portraitPath)
     ctx.drawImage(profileImg, 
-        0,
-        0,
+        (canvasWidth - profileTargetWidth) /2,
+        (canvasHeight - profileTargetWidth)/2,
         profileTargetWidth, 
         profileTargetWidth)
     ctx.restore()
