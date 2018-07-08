@@ -13,7 +13,6 @@ function saveCanvasToPngFile(canvas, filePath) {
             out.write(chunk);  
         });
         stream.on('end', function(){
-            console.log('saved png');
             resolve();
         });        
     }); 
@@ -58,7 +57,6 @@ async function drawImage(targetFileName, qrcodeFileName, portraitFileName, title
     ctx.fill()
     ctx.save()
 
-    console.log('draw profile image')
     // draw new profile
     let profileImg = new Image()
     profileImg.src = fs.readFileSync(portraitPath)
@@ -86,9 +84,7 @@ async function drawImage(targetFileName, qrcodeFileName, portraitFileName, title
     // stream.on('data', function(chunk){
     //     out.write(chunk);  
     // })
-    console.log('wait to save to canvas');
     await saveCanvasToPngFile(canvas, path.join(__dirname, relativeImagePath, targetFileName));
-    console.log('finish to save to canvas');
 }
 
 module.exports = { draw : drawImage };

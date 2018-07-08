@@ -10,12 +10,9 @@ const logger = require('../utils/logger').logger('controller_qrcode');
 
 function getQrCodeImageFromWechat(savePath, url, scene) {
     return new Promise( (resolve, reject) => {
-        console.log('qr promise')
         const file = fs.createWriteStream(savePath);
         file.on('finish', () => {
-            console.log('file finish')
             file.close( ()=> {
-                console.log('file close')
                 resolve();
             });
         });
@@ -29,7 +26,7 @@ function getQrCodeImageFromWechat(savePath, url, scene) {
             }
         })
         .on('error', function(err) {
-            console.log('request error')
+            logger.error('download qrcode from wechat error: ' + err)
             reject(err)
         })        
         .pipe(file);   
@@ -51,17 +48,13 @@ async function getQrCode(ctx) {
 
         if (!fs.existsSync(targetQrCodeImagePath)) {
             if (!fs.existsSync(originalQrCodeImagePath)) {
-                console.log('original qrcode image un existed')
                 await getQrCodeImageFromWechat(originalQrCodeImagePath, url);
             }
             const survey = await Survey.getSurveyById(surveyId);
             const profileImageName = uuid.v1() + '.png';
-            console.log('await download profile')
             await download(path.join('static/image', profileImageName), survey.avatarUrl)
-            console.log('await to draw qrimage')
             await qrcode.draw(targetQrcodeImageName, originalQrcodeImageName, profileImageName, survey.title)
         }
-        console.log('generate response');
         ctx.response.type = "application/json";
         ctx.response.body = {url : '/image?name=' + targetQrcodeImageName};
         ctx.response.status = 200;
