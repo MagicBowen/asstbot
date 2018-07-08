@@ -26,7 +26,7 @@ async function drawImage(targetFileName, qrcodeFileName, portraitFileName, title
     const qrScale = 1.0
     const qrcodeTargetWidth = qrCodeWidth * qrScale
     const heightMargin = (canvasHeight - qrcodeTargetWidth)/2
-    const profileTargetWidth = (qrcodeTargetWidth)/2.2
+    const profileTargetWidth = (qrcodeTargetWidth)/2.5
     const portraitPath = path.join(__dirname, relativeImagePath, portraitFileName)
     const qrcodePath = path.join(__dirname, relativeImagePath, qrcodeFileName)
 
