@@ -49,23 +49,36 @@ async function drawImage(targetFileName, qrcodeFileName, portraitFileName, title
         qrcodeTargetWidth)
 
     ctx.save()
-    
-    // mask profile in qrcode
-    ctx.beginPath()
-    ctx.fillStyle = '#eeeeee'
-    ctx.arc(canvasWidth/2, canvasHeight/2, profileTargetWidth/2, 0, Math.PI * 2, true)
-    ctx.fill()
-    ctx.save()
 
-    // draw new profile
+    // draw circle profile to mask the original profile
+    ctx.beginPath()
+    ctx.arc(canvasWidth/2, canvasHeight/2, profileTargetWidth/2, 0, Math.PI * 2, true)
+    ctx.clip()
     let profileImg = new Image()
     profileImg.src = fs.readFileSync(portraitPath)
-
     ctx.drawImage(profileImg, 
         (canvasWidth - profileTargetWidth) /2,
         (canvasHeight - profileTargetWidth)/2, 
         profileTargetWidth, 
         profileTargetWidth)
+    ctx.restore()
+    
+    // mask profile in qrcode
+    // ctx.beginPath()
+    // ctx.fillStyle = '#eeeeee'
+    // ctx.arc(canvasWidth/2, canvasHeight/2, profileTargetWidth/2, 0, Math.PI * 2, true)
+    // ctx.fill()
+    // ctx.save()
+
+    // draw new profile
+    // let profileImg = new Image()
+    // profileImg.src = fs.readFileSync(portraitPath)
+
+    // ctx.drawImage(profileImg, 
+    //     (canvasWidth - profileTargetWidth) /2,
+    //     (canvasHeight - profileTargetWidth)/2, 
+    //     profileTargetWidth, 
+    //     profileTargetWidth)
 
     // // add title
     // ctx.font = `bold ${0.04 * canvasWidth}px pfennigFont`
