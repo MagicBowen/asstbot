@@ -57,7 +57,7 @@ async function getQrCode(ctx) {
             const survey = await Survey.getSurveyById(surveyId);
             const profileImageName = uuid.v1() + '.png';
             console.log('await download profile')
-            await download(profileImageName, survey.avatarUrl)
+            await download(path.join('static/image', profileImageName), survey.avatarUrl)
             console.log('await to draw qrimage')
             await qrcode.draw(targetQrcodeImageName, originalQrcodeImageName, profileImageName, survey.title)
         }
