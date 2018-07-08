@@ -130,7 +130,7 @@ const reply = {
     	"subjects" : [
     		{ 
     			"id" : 1,
-    			"type" : "single-choice",
+    			"type" : "radio",
     			"question" : "我是哪个星座的？",
     			"answers" : [
     				{
@@ -151,7 +151,7 @@ const reply = {
     		},
     		{ 
     			"id" : 2,
-    			"type" : "multiple-choice",
+    			"type" : "checkbox",
     			"question" : "我喜欢吃以下哪些东西？",
     			"answers" : [
     				{
@@ -250,7 +250,7 @@ const reply = {
     	"subjects" : [
     		{ 
     			"id" : 1,
-    			"type" : "single-choice",
+    			"type" : "radio",
     			"question" : "你来公司多久了？",
     			"answers" : [
     				{
@@ -270,7 +270,7 @@ const reply = {
     		},
     		{ 
     			"id" : 2,
-    			"type" : "multiple-choice",
+    			"type" : "checkbox",
     			"question" : "以下哪些方面的福利改进，你觉得会提升公司竞争力",
     			"answers" : [
     				{

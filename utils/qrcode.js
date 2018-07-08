@@ -3,16 +3,32 @@ const Image = Canvas.Image
 const fs = require('fs');
 const path = require('path');
 
-function drawImage() {
+const relativeImagePath = '../static/image'
+
+function saveCanvasToPngFile(canvas, filePath) {
+    return new Promise( (resolve, reject) => {
+        let out = fs.createWriteStream(filePath)    
+        let stream = canvas.createPNGStream();
+        stream.on('data', function(chunk){
+            out.write(chunk);  
+        });
+        stream.on('end', function(){
+            console.log('saved png');
+            resolve();
+        });        
+    }); 
+}
+
+async function drawImage(targetFileName, qrcodeFileName, portraitFileName, title, nickname) {
     const canvasWidth = 430
-    const canvasHeight = 600
+    const canvasHeight = 430
     const qrCodeWidth = 430
-    const qrScale = 0.9
+    const qrScale = 1.0
     const qrcodeTargetWidth = qrCodeWidth * qrScale
     const heightMargin = (canvasHeight - qrcodeTargetWidth)/2
     const profileTargetWidth = (qrcodeTargetWidth)/2.2
-    const portraitPath = path.join(__dirname, '../static/image/test-profile.png')
-    const qrcodePath = path.join(__dirname, '../static/image/test-qrcode.png')
+    const portraitPath = path.join(__dirname, relativeImagePath, portraitFileName)
+    const qrcodePath = path.join(__dirname, relativeImagePath, qrcodeFileName)
 
     // init canvas
     const canvas = new Canvas(canvasWidth, canvasHeight)
@@ -42,6 +58,7 @@ function drawImage() {
     ctx.fill()
     ctx.save()
 
+    console.log('draw profile image')
     // draw new profile
     let profileImg = new Image()
     profileImg.src = fs.readFileSync(portraitPath)
@@ -52,24 +69,26 @@ function drawImage() {
         profileTargetWidth, 
         profileTargetWidth)
 
-    // add title
-    ctx.font = `bold ${0.04 * canvasWidth}px pfennigFont`
-    ctx.fillStyle = '#000'
-    ctx.textAlign = 'center'
-    ctx.fillText('长按二维码，参与尉总发起的问卷吧', canvasWidth / 2, heightMargin / 2)
+    // // add title
+    // ctx.font = `bold ${0.04 * canvasWidth}px pfennigFont`
+    // ctx.fillStyle = '#000'
+    // ctx.textAlign = 'center'
+    // ctx.fillText(`长按二维码，参与${nickname}发起的问卷吧`, canvasWidth / 2, heightMargin / 2)
 
-    // add footer
-    ctx.font = `bold ${0.06 * canvasWidth}px pfennigFont`
-    ctx.fillStyle = '#000'
-    ctx.textAlign = 'center'
-    ctx.fillText('快来看看你有多了解我！', canvasWidth / 2, (canvasHeight +  qrcodeTargetWidth + heightMargin) / 2)
+    // // add footer
+    // ctx.font = `bold ${0.06 * canvasWidth}px pfennigFont`
+    // ctx.fillStyle = '#000'
+    // ctx.textAlign = 'center'
+    // ctx.fillText(title, canvasWidth / 2, (canvasHeight +  qrcodeTargetWidth + heightMargin) / 2)
 
-    let out = fs.createWriteStream(__dirname + '/test.png')
-    , stream = canvas.createPNGStream();
-  
-    stream.on('data', function(chunk){
-        out.write(chunk);  
-    })  
+    // let out = fs.createWriteStream(path.join(__dirname, relativeImagePath, targetFileName))
+    // let stream = canvas.createPNGStream();
+    // stream.on('data', function(chunk){
+    //     out.write(chunk);  
+    // })
+    console.log('wait to save to canvas');
+    await saveCanvasToPngFile(canvas, path.join(__dirname, relativeImagePath, targetFileName));
+    console.log('finish to save to canvas');
 }
 
-drawImage();
+module.exports = { draw : drawImage };
