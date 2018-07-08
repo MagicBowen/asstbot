@@ -1,6 +1,7 @@
 const logger = require('../utils/logger').logger('mongo-survey');
 const mongoose = require('mongoose');
 const globalId = require('../utils/global-id');
+const Statistic = require('./statistic')
 const Schema = mongoose.Schema;
 
 const AnswerSchema = new Schema({
@@ -82,7 +83,9 @@ model.addSurvey = async (userId, survey) => {
         conclusions: survey.conclusions
     });
     await newSurvey.save();
-    logger.debug(`Add new survey ${surveyId} for user ${userId} successful!`);    
+    await Statistic.addSurveyStatistic(newSurvey);
+    logger.debug(`Add new survey ${surveyId} for user ${userId} successful!`);
+    
     return surveyId;
 };
 
@@ -98,13 +101,16 @@ model.updateSurvey = async (userId, survey) => {
     }
     oriSurvey.set(survey);
     await oriSurvey.save();
+    await Statistic.deleteSurveyStatistic(survey.id);
+    await Statistic.addSurveyStatistic(oriSurvey);
     logger.debug(`update survey ${survey.id} for user ${userId} successful!`); 
     return survey.id;
 };
 
 model.deleteSurvey = async (id) => {
     await Survey.deleteOne({id : id});
-    logger.debug(`delete survey ${id} successful!`);    
+    await Statistic.deleteSurveyStatistic(id);
+    logger.debug(`delete survey ${id} successful!`);
 }
 
 model.getSurveyResultById = async (id) => {
@@ -133,6 +139,7 @@ model.addSurveyResult = async (userId, surveyResult) => {
         score: surveyResult.score
     });
     await newSurveyResult.save();
+    await Statistic.addSurveyResult(surveyResult);
     logger.debug(`Add new survey result ${id} of survey ${surveyResult.surveyId} successful!`); 
     return id;       
 }

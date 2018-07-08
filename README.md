@@ -390,6 +390,60 @@ const reply = {
 }
 ```
 
+### statistic
+
+```js
+{
+	"surveyId" : "survey-652ea4d0-7dad-11e8-abe8-abb0bd666421",
+	"subjects" : [
+    		{ 
+    			"id" : 1,
+    			"answers" : [
+    				{
+						"value" : "少于1年",
+						"count" : 5
+    				},
+    				{
+						"value" : "1到3年",
+						"count" : 10
+    				},
+    				{
+						"value" : "3到5年",
+						"count" : 0
+    				},
+    				{
+						"value" : "5年以上",
+						"count" : 2
+    				}     				
+    			]
+    		
+    		},
+    		{ 
+    			"id" : 2,
+    			"answers" : [
+    				{
+						"value" : "零食",
+						"count" : 0
+    				},
+    				{
+						"value" : "活动",
+						"count" : 1
+    				},
+    				{
+						"value" : "奖励",
+						"count" : 2
+    				},
+    				{
+						"value" : "保险",
+						"count" : 7
+    				}     				
+    			]
+    		
+    		}
+    	]	
+}
+```
+
 ## qrcode
 
 ### node-canvas install
