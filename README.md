@@ -395,7 +395,7 @@ const reply = {
 ### node-canvas install
 
 ```bash
-linux: sudo yum install cairo cairo-devel cairomm-devel libjpeg-turbo-devel pango pango-devel pangomm pangomm-devel giflib-devel
+ubuntu: sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++
 
 mac: brew install pkg-config cairo pango libpng jpeg giflib
 ```

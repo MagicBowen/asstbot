@@ -59,7 +59,7 @@ async function getQrCode(ctx) {
             console.log('await download profile')
             await download(profileImageName, survey.avatarUrl)
             console.log('await to draw qrimage')
-            await qrcode.draw(targetQrcodeImageName, originalQrcodeImageName, profileImageName, survey,title)
+            await qrcode.draw(targetQrcodeImageName, originalQrcodeImageName, profileImageName, survey.title)
         }
         console.log('generate response');
         ctx.response.type = "application/json";
