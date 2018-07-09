@@ -1,4 +1,5 @@
 const Statistic = require('../models/statistic');
+const Survey = require('../models/survey');
 const logger = require('../utils/logger').logger('survey-statistic');
 
 const getSurveyStatistic = async (ctx) => {
@@ -9,8 +10,17 @@ const getSurveyStatistic = async (ctx) => {
             ctx.response.status = 200;
             ctx.response.body = {result : surveyStatistic};
         } else {
-            ctx.response.status = 404;
-            logger.warn(`survey statistic is not exist!`);
+            let survey = await Survey.getSurveyById(ctx.query.surveyId);
+            if (survey) {
+                await Statistic.addSurveyStatistic(survey);
+                ctx.response.type = "application/json";
+                ctx.response.status = 200;
+                ctx.response.body = {result : Statistic.getEmptyStatisticBy(survey)};
+                logger.warn(`add miss survey statistic for survey ${ctx.query.surveyId}!`);
+            } else {
+                ctx.response.status = 404;
+                logger.warn(`survey statistic is not exist!`);
+            }
         }
     } catch(err) {
         ctx.response.status = 404;

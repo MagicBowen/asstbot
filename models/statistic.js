@@ -26,9 +26,8 @@ model.getSurveyStatistic = async (surveyId) => {
     return await SurveyStatistic.findOne({surveyId : surveyId}).exec();
 }
 
-model.addSurveyStatistic = async (survey) => {
-    logger.debug(`add new survey Statistic for survey ${survey.id}`);
-    const newStatistic = new SurveyStatistic({
+model.getEmptyStatisticBy = (survey) => {
+    return {
         surveyId : survey.id,
         subjects : survey.subjects.map(subject => {
             return {
@@ -41,7 +40,12 @@ model.addSurveyStatistic = async (survey) => {
                 })
             }
         })
-    });
+    };
+}
+
+model.addSurveyStatistic = async (survey) => {
+    logger.debug(`add new survey Statistic for survey ${survey.id}`);
+    const newStatistic = new SurveyStatistic(model.getEmptyStatisticBy(survey));
     await newStatistic.save();
     logger.debug(`add new survey statistic for ${survey.id} successful!`);    
 };
