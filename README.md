@@ -105,14 +105,14 @@ const reply = {
 }
 
 {
-    type : 'imageUploader',
+    type : 'image-uploader',
     title: '请上传您的背景图', // optional
     indicator : 'profile',
     explicit  : false // optional
 }
 
 {
-    type : 'numberList',
+    type : 'number-list',
     title : '请选择名次：',  // optional
     min   : 0,
     max   : 100,
