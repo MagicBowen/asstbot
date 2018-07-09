@@ -66,7 +66,7 @@ const updateSurveyResultInStatistic = (surveyResult, statistic) => {
 model.addSurveyResult = async (surveyResult) => {
     logger.debug(`add new survey result for statistic of survey ${surveyResult.surveyId}`);
     let statistic = await SurveyStatistic.findOne({surveyId : surveyResult.surveyId}).exec();
-    let newStatistic = updateSurveyResultInStatistic(surveyResult, statistic);
+    let newStatistic = updateSurveyResultInStatistic(surveyResult, statistic.toObject());
     statistic.set(newStatistic);
     await statistic.save();
     logger.debug(`update survey result to statistic of survey ${statistic.surveyId} successful!`);
