@@ -56,10 +56,10 @@ function uploadFile( ctx, filePath) {
       let saveTo = path.join(_uploadFilePath)
 
       logger.debug("save file path:" + saveTo)
-
-      file.pipe(fs.createWriteStream(saveTo))
-      fs.on('finish', () => {
-            upStream.close( ()=> {
+      let fileStream = fs.createWriteStream(saveTo)
+      file.pipe(fileStream)
+      fileStream.on('finish', () => {
+            fileStream.close( ()=> {
                 result.success = true
                 result.message = 'upload file success'
                 result.fileUrl = "/image?name="+fileName
