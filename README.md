@@ -104,7 +104,9 @@ const dateMsg = {
 	},
 	type : 'date',
 	data : {
-		value : "2018年7月9日",
+		year : "2018",
+		month: "7",
+		day: "23",
 		indicator : 'birthday',  // optional
 	}
 };
