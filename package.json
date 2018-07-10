@@ -15,8 +15,10 @@
     },
     "dependencies": {
         "axios": "^0.18.0",
+        "baidu-aip-sdk": "^2.3.3",
         "busboy": "^0.2.14",
         "canvas": "^1.6.11",
+        "fluent-ffmpeg": "^2.1.2",
         "fs": "0.0.1-security",
         "koa": "^2.5.1",
         "koa-body": "^2.6.0",

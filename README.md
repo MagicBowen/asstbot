@@ -149,7 +149,8 @@ const reply = {
     		{ 
     			"id" : 1,
     			"type" : "radio",
-    			"question" : "我是哪个星座的？",
+				"question" : "我是哪个星座的？",
+				"imageUrl" : "http://www.xiaodamp.cn/image/constellation.png",
     			"answers" : [
     				{
     					"value" : "白羊座",
@@ -482,11 +483,27 @@ const reply = {
 ### node-canvas install
 
 ```bash
-ubuntu: sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++
+// ubuntu: 
+sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++
 
-mac: brew install pkg-config cairo pango libpng jpeg giflib
+// mac: 
+brew install pkg-config cairo pango libpng jpeg giflib
 ```
 
 ```bash
 npm install canvas
+```
+
+## ffmpeg
+
+```bash
+//mac
+brew install ffmpeg
+
+// ubuntu
+sudo apt-get install ffmpeg
+```
+
+```bash
+npm install fluent-ffmpeg
 ```
