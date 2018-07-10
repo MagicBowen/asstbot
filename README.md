@@ -10,7 +10,6 @@ const textMsg = {
     type : 'text',
     data : {
 		query : 'hello',
-		nlu : false  // optional
     }
 };
 
@@ -22,8 +21,37 @@ const speechMsg = {
     data : {
 		url : 'http://localhost:8000/audio/hello.mp3',
 		asr : 'hello'
-		nlu : true  // optional
     }
+};
+
+const radioReply = {
+    from : {
+        id : 'xxxxx'
+    },
+    type : 'radio-reply',
+    data : {
+		value : '白羊座',
+		indicator : 'index-0' // optional
+    }	
+};
+
+const checkboxReply = {
+    from : {
+        id : 'xxxxx'
+    },
+    type : 'checkbox-reply',
+    data : {
+		items : [
+			{
+				value : '凉面',
+				indicator : 'index-0' // optional
+			},
+			{
+				value : '米饭',
+				indicator : 'index-1' // optional
+			}			
+		]
+    }	
 };
 
 const imageMsg = {
@@ -65,7 +93,8 @@ const loginMsg = {
     },
     type : 'login',
     data : {
-        code : '12345' // optional
+		code : '12345', // optional
+		userId : 'xxxxx' // optional
     }
 };
 
@@ -76,8 +105,7 @@ const dateMsg = {
 	type : 'date',
 	data : {
 		value : "2018年7月9日",
-		indicator : 'now',  // optional
-		nlu : true // optional
+		indicator : 'birthday',  // optional
 	}
 };
 ```
@@ -105,29 +133,43 @@ const reply = {
 
 {
     type : 'radio',
-    title : '您是男的还是女的呢？',  // optional
+    title : '请选择：',  // optional
     items : [
-        { caption : '男', 
-          value : '我是男的'  // optional
+		{ caption : '男', 
+		  image : 'http://localhost/image/icon1.png', // optional
+		  indicator: 'index-0' // optional
         },
-        { caption : '女', 
-          value : '我是女的' // optional
+		{ caption : '女',
+		  image : 'http://localhost/image/icon1.png', // optional
+		  indicator: 'index-1' // optional
         }
     ]
 }
 
 {
     type  : 'checkbox',
-	title : '我爱吃以下哪些东东呢？',  // optional
-	prefix: '我爱吃：', // optional
-	split : '，', // optional, default : ','
-	postfix: '的呀！', // optional
+	title : '请选择：',  // optional
     items : [
-        { caption : '水饺'},
-        { caption : '牛排'},
-        { caption : '沙拉'},
-        { caption : '披萨'},
-        { caption : '凉皮'}
+		{ caption : '水饺',
+		  image : 'http://localhost/image/icon0.png', // optional
+		  indicator: 'index-0' // optional		
+		},
+		{ caption : '牛排',
+		  image : 'http://localhost/image/icon1.png', // optional
+		  indicator: 'index-1' // optional		
+		},
+		{ caption : '沙拉',
+		  image : 'http://localhost/image/icon2.png', // optional
+		  indicator: 'index-2' // optional		
+		},
+		{ caption : '披萨',
+		  image : 'http://localhost/image/icon3.png', // optional
+		  indicator: 'index-3' // optional		
+		},
+		{ caption : '凉皮',
+		  image : 'http://localhost/image/icon4.png', // optional
+		  indicator: 'index-4' // optional		
+		}
     ]
 }
 
@@ -172,8 +214,7 @@ const reply = {
 
 {
 	type : 'date-picker',
-	indicator : 'now',
-	nlu : true
+	indicator : 'birthday',
 }
 
 {
