@@ -58,14 +58,23 @@ function uploadFile( ctx, filePath) {
       logger.debug("save file path:" + saveTo)
 
       file.pipe(fs.createWriteStream(saveTo))
+      fs.on('finish', () => {
+            upStream.close( ()=> {
+                result.success = true
+                result.message = 'upload file success'
+                result.fileUrl = "/image?name="+fileName
+                logger.debug('upload file success！')
+                resolve(result);
+            });
+      });
 
-      file.on('end', function() {
-        result.success = true
-        result.message = 'upload file success'
-        result.fileUrl = "/image?name="+fileName
-        logger.debug('upload file success！')
-        resolve(result)
-      })
+      // file.on('end', function() {
+      //   result.success = true
+      //   result.message = 'upload file success'
+      //   result.fileUrl = "/image?name="+fileName
+      //   logger.debug('upload file success！')
+      //   resolve(result)
+      // })
     })
 
     busboy.on('finish', function( ) {
