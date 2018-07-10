@@ -48,7 +48,7 @@ const audioMsg = {
     }
 };
 
-const audioMsg = {
+const vedioMsg = {
     from : {
         id : 'xxxxx'
     },
