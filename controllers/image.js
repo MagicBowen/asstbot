@@ -16,7 +16,7 @@ async function fillImageToCtx(ctx, image) {
 
 var getImage = async (ctx, next) => {
     var name = ctx.query.name;
-    var image = `${static_picture_path}/${name}`;
+    var image = `static/image/${name}`;
     await fillImageToCtx(ctx, image);
 };
 
