@@ -9,7 +9,20 @@ const textMsg = {
     },
     type : 'text',
     data : {
-        query : 'hello'
+		query : 'hello',
+		nlu : false  // optional
+    }
+};
+
+const speechMsg = {
+    from : {
+        id : 'xxxxx'
+    },
+    type : 'speech',
+    data : {
+		url : 'http://localhost:8000/audio/hello.mp3',
+		asr : 'hello'
+		nlu : true  // optional
     }
 };
 
@@ -20,7 +33,29 @@ const imageMsg = {
     type : 'image',
     data : {
         url : 'http://localhost:8000/test.jpg',
-        indicator : 'profile'
+        indicator : 'profile' // optional
+    }
+};
+
+const audioMsg = {
+    from : {
+        id : 'xxxxx'
+    },
+    type : 'audio',
+    data : {
+		url : 'http://localhost:8000/audio/test.mp3',
+		indicator : 'music' // optional
+    }
+};
+
+const audioMsg = {
+    from : {
+        id : 'xxxxx'
+    },
+    type : 'vedio',
+    data : {
+		url : 'http://localhost:8000/audio/test.mp4',
+		indicator : 'film' // optional
     }
 };
 
@@ -30,7 +65,7 @@ const loginMsg = {
     },
     type : 'login',
     data : {
-        code : '12345'
+        code : '12345' // optional
     }
 };
 
@@ -44,7 +79,7 @@ const dateMsg = {
 		indicator : 'now',  // optional
 		nlu : true // optional
 	}
-}
+};
 ```
 
 ### msg to client
@@ -112,6 +147,20 @@ const reply = {
 }
 
 {
+    type : 'audio-uploader',
+    title: '请上传您的音乐', // optional
+    indicator : 'music',
+    explicit  : false // optional
+}
+
+{
+    type : 'vedio-uploader',
+    title: '请上传您的视频', // optional
+    indicator : 'film',
+    explicit  : false // optional
+}
+
+{
     type : 'number-list',
     title : '请选择名次：',  // optional
     min   : 0,
@@ -122,15 +171,14 @@ const reply = {
 }
 
 {
-	type : 'dialog-end'
-}
-
-{
 	type : 'date-picker',
 	indicator : 'now',
 	nlu : true
 }
 
+{
+	type : 'dialog-end'
+}
 ```
 
 ## Survey
