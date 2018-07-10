@@ -3,23 +3,22 @@ const fs = require('fs')
 const logger = require('../utils/logger').logger('image');
 const uuid = require('node-uuid');
 
-// async function fillImageToCtx(ctx, image) {
-//     logger.debug("get image file is:" + image)
-//     if (fs.existsSync(image)) {
-//         ctx.response.type = "image/jpg";
-//         ctx.response.body = fs.readFileSync(image);
-//     } else {
-//         logger.warn("file is un exsited")
-//         ctx.response.status = 404;
-//     }
-// }
+async function fillImageToCtx(ctx, image) {
+    logger.debug("get image file is:" + image)
+    if (fs.existsSync(image)) {
+        ctx.response.type = "image/jpg";
+        ctx.response.body = fs.readFileSync(image);
+    } else {
+        logger.warn("file is un exsited")
+        ctx.response.status = 404;
+    }
+}
 
-// var getImage = async (ctx, next) => {
-//     var name = ctx.query.name;
-//     var image = `${static_picture_path}/${name}`;
-//     await fillImageToCtx(ctx, image);
-// };
-
+var getImage = async (ctx, next) => {
+    var name = ctx.query.name;
+    var image = `${static_picture_path}/${name}`;
+    await fillImageToCtx(ctx, image);
+};
 
 function saveFile(file, path) {
     return new Promise( (resolve, reject) => {
@@ -42,7 +41,7 @@ async function addImageFile(ctx) {
         const imageFileName = await saveFile(ctx.request.body.files.image, 'static/image');       
         ctx.response.type = "application/json";
         ctx.response.status = 200;
-        ctx.response.body = {fileUrl : '/image/' + imageFileName, message:'upload file success'};
+        ctx.response.body = {fileUrl : 'image/' + imageFileName, message:'upload file success'};
     } catch (err) {
         ctx.response.status = 404;
         ctx.response.type = "application/json";
@@ -53,6 +52,6 @@ async function addImageFile(ctx) {
 
 
 module.exports = {
-    // 'GET /image': getImage,
+    'GET /image': getImage,
     'POST /image' : addImageFile
 };
