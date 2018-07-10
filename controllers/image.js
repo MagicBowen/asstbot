@@ -1,9 +1,9 @@
 const path = require('path')
 const fs = require('fs')
 const logger = require('../utils/logger').logger('image');
-const Busboy = require('busboy')
+// const Busboy = require('busboy')
 const uuid = require('node-uuid');
-const static_picture_path = 'static/image'
+// const static_picture_path = 'static/image'
 
 async function fillImageToCtx(ctx, image) {
     logger.debug("get image file is:" + image)
@@ -38,67 +38,87 @@ function getSuffixName( fileName ) {
   return nameList[nameList.length - 1]
 }
 
-function uploadFile( ctx, filePath) {
-  let req = ctx.req
-  mkdirsSync( filePath )
-  let busboy = new Busboy({headers: req.headers})
-  return new Promise((resolve, reject) => {
-    logger.debug('upload...')
-    let result = {
-      success: false,
-      formData: {},
-    }
+// function uploadFile( ctx, filePath) {
+//   let req = ctx.req
+//   mkdirsSync( filePath )
+//   let busboy = new Busboy({headers: req.headers})
+//   return new Promise((resolve, reject) => {
+//     logger.debug('upload...')
+//     let result = {
+//       success: false,
+//       formData: {},
+//     }
 
-    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-      logger.debug("fileName:" + filename)
-      let fileName = uuid.v1() + '.' + getSuffixName(filename)
-      let _uploadFilePath = path.join( filePath, fileName )
-      let saveTo = path.join(_uploadFilePath)
+//     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+//       logger.debug("fileName:" + filename)
+//       let fileName = uuid.v1() + '.' + getSuffixName(filename)
+//       let _uploadFilePath = path.join( filePath, fileName )
+//       let saveTo = path.join(_uploadFilePath)
 
-      logger.debug("save file path:" + saveTo)
-      let fileStream = fs.createWriteStream(saveTo)
-      file.pipe(fileStream)
-      fileStream.on('finish', () => {
-            fileStream.close( ()=> {
-                result.success = true
-                result.message = 'upload file success'
-                result.fileUrl = "/image?name="+fileName
-                logger.debug('upload file success！')
-                resolve(result);
+//       logger.debug("save file path:" + saveTo)
+//       file.pipe(fs.createWriteStream(saveTo))
+//       file.on('end', function() {
+//         result.success = true
+//         result.message = 'upload file success'
+//         result.fileUrl = "/image?name="+fileName
+//         logger.debug('upload file success！')
+//         resolve(result)
+//       })
+//     })
+
+//     busboy.on('finish', function( ) {
+//       logger.debug('upload file finish')
+//       resolve(result)
+//     })
+
+//     busboy.on('error', function(err) {
+//       logger.debug('upload file error')
+//       reject(result)
+//     })
+
+//     req.pipe(busboy)
+//   })
+// } 
+
+// var postImage = async (ctx, next) => {
+//     let result = { success: false }
+//     logger.debug("server File Path is: "+ static_picture_path)
+//     result = await uploadFile(ctx, static_picture_path)
+//     ctx.body = result
+// };
+
+function saveFile(file, path) {
+    return new Promise( (resolve, reject) => {
+        const reader = fs.createReadStream(file.path);
+        const ext = file.name.split('.').pop();   
+        const fileName = `${uuid.v1()}.${ext}`;
+        const filePath = `${path}/${fileName}`;
+        const upStream = fs.createWriteStream(filePath);
+        upStream.on('finish', () => {
+            upStream.close( ()=> {
+                resolve(fileName);
             });
-      });
-
-      // file.on('end', function() {
-      //   result.success = true
-      //   result.message = 'upload file success'
-      //   result.fileUrl = "/image?name="+fileName
-      //   logger.debug('upload file success！')
-      //   resolve(result)
-      // })
+        });
+        reader.pipe(upStream);
     })
+}
 
-    busboy.on('finish', function( ) {
-      logger.debug('upload file finish')
-      resolve(result)
-    })
+async function addImageFile(ctx) {
+    try {
+        const imageFileName = await saveFile(ctx.request.body.files.image, 'static/image');       
+        ctx.response.type = "application/json";
+        ctx.response.status = 200;
+        ctx.response.body = {fileUrl : '/image?name=' + imageFileName, message:'upload file success'};
+    } catch (err) {
+        ctx.response.status = 404;
+        ctx.response.type = "application/json";
+        ctx.response.body = {error: err.toString()};
+        logger.error('asr handler failed: ' + err);
+    }
+}
 
-    busboy.on('error', function(err) {
-      logger.debug('upload file error')
-      reject(result)
-    })
-
-    req.pipe(busboy)
-  })
-} 
-
-var postImage = async (ctx, next) => {
-    let result = { success: false }
-    logger.debug("server File Path is: "+ static_picture_path)
-    result = await uploadFile(ctx, static_picture_path)
-    ctx.body = result
-};
 
 module.exports = {
     'GET /image': getImage,
-    'POST /image' : postImage
+    'POST /image' : addImageFile
 };
