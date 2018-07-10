@@ -53,6 +53,6 @@ async function addImageFile(ctx) {
 
 
 module.exports = {
-    'GET /image': getImage,
+    // 'GET /image': getImage,
     'POST /image' : addImageFile
 };
