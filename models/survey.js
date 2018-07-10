@@ -11,8 +11,10 @@ const AnswerSchema = new Schema({
 
 const SubjectSchema = new Schema({
     id: { type : Number, required: true },
-    type : String,   // single-choice | multiple-choice | text
+    type : String,   // radio | checkbox | text | date
+    nlu  : Boolean,
     question : String,
+    imageUrl : String,
     answers  : [AnswerSchema]
 });
 
