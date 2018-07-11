@@ -245,10 +245,12 @@ const reply = {
     			"answers" : [
     				{
     					"value" : "白羊座",
+                        "imageUrl" : "http://www.xiaodamp.cn/image/baiyang.png",
     					"correct" : true
     				},
     				{
     					"value" : "金牛座"
+                        "imageUrl" : "http://www.xiaodamp.cn/image/jinniu.png",
     				},
     				{
     					"value" : "处女座"

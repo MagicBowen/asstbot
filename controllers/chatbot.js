@@ -22,7 +22,7 @@ class Chatbot {
     }
     
     async replyToEvent(user, eventType, params) {
-        const data = { event   : { name : eventType, content : params },
+        const data = { event   : { name : eventType, content : { data : params } },
                      session : user.id, 
                      agent   : this.agent, 
                      userContext : user };
