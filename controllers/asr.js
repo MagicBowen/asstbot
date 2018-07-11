@@ -11,7 +11,7 @@ function audioToAsr(audioPath) {
     let voice = fs.readFileSync(audioPath);
     let voiceBase64 = new Buffer(voice);
     return new Promise( (resolve, reject) => {
-        client.recognize(voiceBase64, 'wav', 8000).then(result => {
+        client.recognize(voiceBase64, 'wav', 16000).then(result => {
             logger.debug('receive asr result:');
             logger.debug(JSON.stringify(result));
             resolve(result)
