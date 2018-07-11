@@ -1,0 +1,28 @@
+swagger: "2.0"
+
+info:
+  version: 0.1.0
+  title: AsstBot API
+  description: API description of AsstBot
+
+schemes:
+  - https
+host: www.xiaodamp.cn/asstbot
+basePath: /api
+
+paths:
+  /chatbot/survey:
+    post:
+      summary: Send message to survey chatbot
+      description: User send a message to survey chatbot and get the reply
+      parameters:
+        - name: message
+          in: body
+          description: The message to backend.
+          schema:
+            $ref: "#/definitions/UserMsg"
+      responses:
+        200:
+          description: The message to frontend
+          schema:
+            $ref: "#/definitions/AsstBotMsg"

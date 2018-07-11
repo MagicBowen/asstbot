@@ -3,6 +3,27 @@
 ## msg from client
 
 ```js
+
+const loginMsg = {
+    from : {
+        id : 'xxxxx'
+    },
+    type : 'login',
+    data : {
+		code : '12345', // optional
+    }
+};
+
+const dialogStartMsg = {
+    from : {
+        id : 'xxxxx'
+    },
+    type : 'dialog-start',
+    data : {
+		scene : ''     // test | publish
+    }
+};
+
 const textMsg = {
     from : {
         id : 'xxxxx'
@@ -32,6 +53,7 @@ const radioReply = {
     data : {
 		value : '白羊座',
 		indicator : 'index-0' // optional
+		text : '' // optional
     }	
 };
 
@@ -50,7 +72,8 @@ const checkboxReply = {
 				value : '米饭',
 				indicator : 'index-1' // optional
 			}			
-		]
+		],
+		text : '' // optional
     }	
 };
 
@@ -94,7 +117,6 @@ const loginMsg = {
     type : 'login',
     data : {
 		code : '12345', // optional
-		userId : 'xxxxx' // optional
     }
 };
 
@@ -305,7 +327,7 @@ const reply = {
 				"question" : "说说我的生日吧？",
 				"answers" : [
 					{
-						"value" : "1983年1月17日"
+						"value" : "2018-07-10"   // yyyy-mm-dd
 					}
 				]
 			}
