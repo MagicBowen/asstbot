@@ -1,0 +1,61 @@
+swagger: "2.0"
+
+info:
+  version: 0.1.0
+  title: AsstBot API
+  description: API description of AsstBot
+
+schemes:
+  - https
+host: www.xiaodamp.cn/asstbot
+basePath: /api
+
+paths:
+  /chatbot/survey:
+    post:
+      summary: Send message to survey chatbot
+      description: User send a message to survey chatbot and get the reply
+      parameters:
+        - name: message
+          in: body
+          description: The message to backend.
+          schema:
+            $ref: "#/definitions/FrontendMsg"
+      responses:
+        200:
+          description: The message to frontend
+          schema:
+            $ref: "#/definitions/AsstBotMsg"
+
+#START 新增定义####################################################################
+definitions:
+  FrontendMsg:
+    type: object
+    required:
+      - from
+      - type
+    properties:
+      from:
+        type: object
+        required:
+          - id        
+        properties:
+          id : string
+      type:
+        type: string
+        enum:
+          - login
+          - dialog-start
+          - text
+          - speech
+          - radio-reply
+          - checkbox-reply
+          - image
+          - audio
+          - vedio
+          - date
+      data:
+        type: object
+  AsstBotMsg:
+    type: object
+# END 新增定义####################################################################            

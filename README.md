@@ -20,7 +20,8 @@ const dialogStartMsg = {
     },
     type : 'dialog-start',
     data : {
-		scene : ''     // test | publish
+		scene : '',     // test | publish
+		surveyId : ''
     }
 };
 
@@ -107,16 +108,6 @@ const vedioMsg = {
     data : {
 		url : 'http://localhost:8000/audio/test.mp4',
 		indicator : 'film' // optional
-    }
-};
-
-const loginMsg = {
-    from : {
-        id : 'xxxxx'
-    },
-    type : 'login',
-    data : {
-		code : '12345', // optional
     }
 };
 
@@ -239,6 +230,16 @@ const reply = {
 {
 	type : 'date-picker',
 	indicator : 'birthday',
+	explicit  : false // optional
+}
+
+{
+	type : 'redirect',
+	url  : 'pages/index/index',  // self defined protocal
+	option : {
+		id : 'xxxxx'
+	},
+	explicit : false
 }
 
 {

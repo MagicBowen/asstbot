@@ -26,6 +26,12 @@ const apiHandle = async (req) => {
         case 'get-survey-by-id':
             result = await Survey.getSurveyById(params.id);
             break;
+        case 'add-survey':
+            result = await Survey.addSurvey(userId, params.survey);
+            break;
+        case 'update-survey':
+            result = await Survey.updateSurvey(userId, params.survey);
+            break;
         case 'add-survey-result':
             result = await Survey.addSurveyResult(userId, params.surveyResult);
             break;

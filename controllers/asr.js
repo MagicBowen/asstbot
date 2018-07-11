@@ -47,7 +47,7 @@ function saveFile(file, path) {
         const ext = file.name.split('.').pop();
         if (ext != 'mp3') {
             throw reject('not support file type : ' + ext);
-        }        
+        }
         const fileName = `${uuid.v1()}.${ext}`;
         const filePath = `${path}/${fileName}`;
         const upStream = fs.createWriteStream(filePath);
