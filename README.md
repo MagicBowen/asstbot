@@ -327,7 +327,7 @@ const reply = {
 				"question" : "说说我的生日吧？",
 				"answers" : [
 					{
-						"value" : "1983年1月17日"
+						"value" : "2018-07-10"   // yyyy-mm-dd
 					}
 				]
 			}

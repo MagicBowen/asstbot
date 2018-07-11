@@ -18,29 +18,11 @@ paths:
       parameters:
         - name: message
           in: body
-          description: The messge to send.
+          description: The message to backend.
           schema:
-            required:
-              - from
-            properties:
-              firstName:
-                type: string
-              lastName:
-                type: string
-              username:
-                type: string      
+            $ref: "#/definitions/UserMsg"
       responses:
         200:
-          description: A list of Person
+          description: The message to frontend
           schema:
-            type: array
-            items:
-              required:
-                - username
-              properties:
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                username:
-                  type: string
+            $ref: "#/definitions/AsstBotMsg"
