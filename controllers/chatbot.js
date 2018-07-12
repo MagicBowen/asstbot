@@ -73,6 +73,8 @@ const talkToChatBot = async (agent, userId, type, params) => {
     const chatbot = new Chatbot(agent, config.chatbot_url);
     if (type === 'text') {
         return await chatbot.replyToText(user, params.query);
+    } else if (type === 'speech') {
+        return await chatbot.replyToText(user, params.asr);
     }
     return await chatbot.replyToEvent(user, type, params);
 }
