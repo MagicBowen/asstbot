@@ -272,7 +272,7 @@ const reply = {
     					"correct" : true
     				},
     				{
-    					"value" : "金牛座"
+    					"value" : "金牛座",
                         "imageUrl" : "http://www.xiaodamp.cn/image/jinniu.png",
     				},
     				{
