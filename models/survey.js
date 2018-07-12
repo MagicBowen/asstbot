@@ -53,6 +53,7 @@ const ResponderSchema = new Schema({
 
 mongoose.model('SurveyResults', new Schema({
     id      : { type: String, unique: true, required: true},
+    surveyId: { type: String, required: true},
     responder  : { type: ResponderSchema, required: true},
     answers : [AnswerResultSchema],
     score   : Number,
