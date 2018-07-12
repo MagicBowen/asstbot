@@ -77,7 +77,7 @@ const talkToChatBot = async (agent, userId, type, params) => {
     return await chatbot.replyToEvent(user, type, params);
 }
 
-const handleMessage = async (ctx, agent = config.agent) => {
+const handleMessage = async (ctx, agent) => {
     const msg = ctx.request.body;
 
     logger.debug(`receive chat msg from client to agent ${agent}: ${JSON.stringify(msg)}`);
@@ -106,7 +106,12 @@ const handleSurveyMessage = async (ctx) => {
     await handleMessage(ctx, config.surveyAgent);
 }
 
+const handleAssistantMessage = async(ctx) => {
+    await handleMessage(ctx, config.agent);
+}
+
+
 module.exports = {
-    'POST /chatbot' : handleMessage,
+    'POST /chatbot' : handleAssistantMessage,
     'POST /chatbot/survey' : handleSurveyMessage,
 };
