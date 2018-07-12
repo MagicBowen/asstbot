@@ -1,4 +1,5 @@
 swagger: "2.0"
+openapi: 3.0.0
 
 info:
   version: 0.1.0
@@ -16,11 +17,19 @@ paths:
       summary: Send message to survey chatbot
       description: User send a message to survey chatbot and get the reply
       parameters:
-        - name: message
-          in: body
-          description: The message to backend.
-          schema:
-            $ref: "#/definitions/FrontendMsg"
+      - in: "body"
+        name: "body"
+        description: "message to send"
+        required: true
+        schema:
+          oneOf:
+          - $ref : "#/FromMsgComponents/LoginMsg"
+          - $ref : "#/FromMsgComponents/DialogStartMsg"
+          discriminator:
+            propertyName: type
+            mapping:
+              login: "#/FromMsgComponents/LoginMsg"
+              dialog-start: "#/FromMsgComponents/DialogStartMsg"       
       responses:
         200:
           description: The message to frontend
@@ -29,18 +38,22 @@ paths:
 
 #START 新增定义####################################################################
 definitions:
-  FrontendMsg:
+  AsstBotMsg:
+    type: object     
+
+FromMsgComponents:
+  Basemsg:
     type: object
     required:
-      - from
-      - type
+    - from
+    - type
     properties:
       from:
         type: object
         required:
-          - id        
+        - id
         properties:
-          id : string
+          id: string
       type:
         type: string
         enum:
@@ -53,9 +66,27 @@ definitions:
           - image
           - audio
           - vedio
-          - date
-      data:
-        type: object
-  AsstBotMsg:
-    type: object
-# END 新增定义####################################################################            
+          - date          
+  LoginMsg:
+    allOf:
+    - $ref: "#/FromMsgComponents/Basemsg"
+    - type: object
+      required:
+      - data
+      properties:
+        data: object
+        properties:
+          code: string
+  DialogStartMsg:
+    allOf:
+    - $ref: "#/FromMsgComponents/Basemsg"
+    - type: object
+      required:
+      - data
+      properties:
+        data: object
+        properties:
+          scene: 
+            type: string
+            enum: [test, publish]
+          surveyId: string
