@@ -282,7 +282,6 @@ const reply = {
     					"value" : "射手座"
     				}     				
     			]
-    		
     		},
     		{ 
     			"id" : 2,
