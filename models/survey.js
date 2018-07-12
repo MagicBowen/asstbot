@@ -27,7 +27,7 @@ const ConclusionSchema = new Schema({
     text  : String
 });
 
-mongoose.model('Surveys', new Schema({
+const surveySchema = new Schema({
     id      : { type: String, unique: true, required: true},
     userId  : { type: String, required: true},
     type    : { type: String, required: true }, // inquiry | poll | exam
@@ -36,7 +36,9 @@ mongoose.model('Surveys', new Schema({
     avatarUrl : { type: String },
     subjects: [SubjectSchema],
     conclusions : [ConclusionSchema]
-}, { timestamps: { createdAt: 'created_at' } }));
+}, { timestamps: { createdAt: 'created_at' } });
+
+mongoose.model('Surveys', surveySchema);
 
 const AnswerResultSchema = new Schema({
     id    : {type : Number, required: true},
@@ -51,10 +53,10 @@ const ResponderSchema = new Schema({
 
 mongoose.model('SurveyResults', new Schema({
     id      : { type: String, unique: true, required: true},
-    surveyId: { type: String, required: true},
     responder  : { type: ResponderSchema, required: true},
     answers : [AnswerResultSchema],
-    score   : Number
+    score   : Number,
+    survey  : Object
 }, { timestamps: { createdAt: 'created_at' } }));
 
 const Survey = mongoose.model('Surveys');
@@ -133,13 +135,16 @@ model.getSurveyResults = async (surveyId) => {
 
 model.addSurveyResult = async (userId, surveyResult) => {
     logger.debug(`add new survey result of user ${userId}`);
+    const survey = await model.getSurveyById(surveyResult.surveyId);
     const id = globalId();
     const newSurveyResult = new SurveyResult({
         id : id,
         surveyId : surveyResult.surveyId,
         responder : surveyResult.responder,
         answers : surveyResult.answers,
-        score: surveyResult.score
+        score: surveyResult.score,
+        survey: survey
+
     });
     await newSurveyResult.save();
     await Statistic.addSurveyResult(surveyResult);
@@ -157,7 +162,14 @@ model.updateSurveyResult = async (userId, surveyResult) => {
     if (!oriSurveyResult) {
         throw Error(`update unexisted survey result ${oriSurveyResult.id} of user ${userId}`);
     }
-    oriSurveyResult.set(surveyResult);
+    oriSurveyResult.set({
+        id : surveyResult.id,
+        surveyId : surveyResult.surveyId,   
+        responder : surveyResult.responder,
+        answers : surveyResult.answers,
+        score: surveyResult.score,
+        survey: oriSurveyResult.survey   
+    });
     await oriSurveyResult.save();
     logger.debug(`update survey result ${surveyResult.id} of user ${userId} successful!`); 
     return surveyResult.id;
