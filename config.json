@@ -7,6 +7,6 @@
     "surveyAgent" : "survey-bot",
     "chatbot_url" : "http://localhost:8080/query",
     "baidu_api_id" : "11430077",
-    "baidu_api_key" : "6Ku10LmTDFzwhAeyWvWruo7Y",
-    "baidu_secret_key" : "sksCRKUV2cZWLO5ee5Xp8xp4oQsDpSfz"
+    "baidu_api_key" : "",
+    "baidu_secret_key" : ""
 }
