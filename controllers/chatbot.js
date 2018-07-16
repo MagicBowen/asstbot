@@ -65,6 +65,7 @@ const getUserInfo = async (userId) => {
         return userContext;
     } catch (err) {
         logger.error(`get user info of ${userId} error: ` + err);
+        throw err;
     }
 }
 

@@ -615,7 +615,7 @@ const reply = {
     			]
     		
     		},			
-    		{ 
+    		{
     			"id" : 5,
     			"type" : "text",
 				"question" : "囧，告诉我你想的什么牌，我下次会进步的！",
@@ -623,9 +623,9 @@ const reply = {
     				{
 						"end"   : 3
 					}
-				]				
+				]
 			},
-    		{ 
+    		{
     			"id" : 6,
     			"type" : "radio",
 				"question" : "要重新开始吗？",
@@ -638,7 +638,7 @@ const reply = {
 						"value" : "不要",
 						"end"   : 2
     				}    				
-    			]				
+    			]
     		}			
 		],
     	"conclusions" : [
