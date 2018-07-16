@@ -644,7 +644,7 @@ const reply = {
     	"conclusions" : [
     		{
 				"id"   : 1,
-				"text" : "下面这张图送给你座位奖励！",
+				"text" : "下面这张图送给你作为奖励！",
 				"imageUrl" : "http://localhost:8000/heart-7.png"
 			},
     		{
