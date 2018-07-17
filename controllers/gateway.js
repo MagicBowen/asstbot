@@ -11,6 +11,9 @@ const apiHandle = async (req) => {
         case 'get-user-info' :
             result = await User.getInfo(userId);
             break;
+        case 'get-originator-info':
+            result = await User.getInfo(params.userId);
+            break;
         case 'update-asst-nickname':
             result = await User.updateAsstBotNickName(userId, params.nickName);
             break;
