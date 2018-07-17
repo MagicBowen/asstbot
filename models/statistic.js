@@ -68,6 +68,12 @@ const updateSurveyResultInStatistic = (surveyResult, statistic) => {
             }
         }
     }
+    if (!statistic.totalReviewCount) {
+        statistic.totalReviewCount = 0;
+    }
+    if (!statistic.lastReviewCount) {
+        statistic.lastReviewCount = 0
+    }
     statistic.totalReviewCount++;
     statistic.lastReviewCount++;
     return statistic;
