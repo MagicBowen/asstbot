@@ -48,6 +48,9 @@ const apiHandle = async (req) => {
         case 'get-survey-statistic':
             result = await Statistic.getSurveyStatistic(params.id);
             break;
+        case 'get-user-statistic':
+            result = await Survey.getStatisticByUser(userId);
+            break;
         default:
             result = 'unknown gateway api : ' + api;
             logger.error(result);

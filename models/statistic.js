@@ -1,4 +1,5 @@
 const logger = require('../utils/logger').logger('mongo-statistic');
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 

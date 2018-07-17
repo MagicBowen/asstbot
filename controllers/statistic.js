@@ -39,9 +39,22 @@ const reviewSurveyStatistic = async (ctx) => {
         ctx.response.body = {result : 'failed', cause : err.toString()};
         logger.error(`post survey statistic review error: ` + err.stack);
     }
+};
+
+const getStatisticByUser = async (ctx) => {
+    try {
+        const statistic = await Survey.getStatisticByUser(ctx.query.userId);
+        ctx.response.type = "application/json";
+        ctx.response.status = 200;
+        ctx.response.body = {result : statistic};
+    } catch(err) {
+        ctx.response.status = 404;
+        logger.error(`get user statistic failed: ` + err.stack);
+    }    
 }
 
 module.exports = {
     'GET /survey/statistic'  : getSurveyStatistic,
-    'POST /survey/statistic/review' : reviewSurveyStatistic
+    'POST /survey/statistic/review' : reviewSurveyStatistic,
+    'GET /user/statistic' : getStatisticByUser
 };

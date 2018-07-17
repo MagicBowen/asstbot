@@ -186,4 +186,18 @@ model.deleteSurveyResult = async (id) => {
     logger.debug(`delete survey result ${id} successful!`); 
 }
 
+model.getStatisticByUser = async (userId) => {
+    logger.debug(`get statistic by user ${userId}`);
+    const result = {createdCount : 0, reviewedCount : 0};
+    const surveys = await model.getSurveyByUser(userId);
+    const replies = await model.getSurveyResultsByUser(userId);
+    if (surveys) {
+        result.createdCount = surveys.length;
+    }
+    if (replies) {
+        result.createdCount = replies.length;
+    }
+    return result;
+}
+
 module.exports = model;
