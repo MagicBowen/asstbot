@@ -345,7 +345,8 @@ const reply = {
     				"min" : 2,
     				"max" : 4
     			},
-    			"text" : "你对我的了解让我吃惊，你绝对是我的好基友！"
+				"text" : "你对我的了解让我吃惊，你绝对是我的好基友！",
+				"imageUrl" : "http://localhost:8000/praise.png"
     		}
     	]
     }
@@ -446,7 +447,8 @@ const reply = {
     	],
     	"conclusions" : [
     		{
-    			"text" : "感谢您的回复，我们会认真考虑您的建议！"
+				"text" : "感谢您的回复，我们会认真考虑您的建议！",
+				"imageUrl" : "http://localhost:8000/result.png"
     		}
     	]
     }
@@ -535,6 +537,175 @@ const reply = {
 				"result": [ {"value" : "东方明珠"} ]
 			}			
 		]
+	}
+}
+```
+
+### branch-quiz
+
+```json
+{
+    "survey" : {
+    	"userId" : "bowen",
+    	"type"   : "branch-quiz",
+		"title"  : "心理预言",
+		"intro"  : "好朋友们，来让我猜猜你想的是什么吧！",
+		"avatarUrl" : "http://localhost:8000/profile.jpg",
+    	"subjects" : [
+    		{ 
+    			"id" : 1,
+    			"type" : "radio",
+				"question" : "一副牌有四种花色：黑桃，红桃，梅花，方块，脑海中快速想一个你喜欢的花色。",
+    			"answers" : [
+    				{
+    					"value" : "想好了",
+    					"next" : 2
+    				},
+    				{
+    					"value" : "没想好",
+                        "next"  : 6
+					}					 				
+    			]
+    		},
+    		{ 
+    			"id" : 2,
+    			"type" : "radio",
+    			"question" : "在1 ~ 9之间快速想一个数字。",
+    			"answers" : [
+    				{
+						"value" : "想好了",
+						"next"  : 3
+    				},
+    				{
+						"value" : "没想好",
+						"next"  : 6
+    				}    				
+    			]
+    		
+			},
+    		{ 
+    			"id" : 3,
+    			"type" : "radio",
+    			"question" : "现在脑海里将你想的花色和数字合并在一起，想着这张牌。",
+    			"answers" : [
+    				{
+						"value" : "想好了",
+						"next"  : 4
+    				},
+    				{
+						"value" : "没想好",
+						"next"  : 6
+    				}    				
+    			]
+    		
+    		},			
+    		{ 
+    			"id" : 4,
+    			"type" : "",
+    			"question" : "哈哈，你想的牌是红心7，对不对？？？",
+    			"answers" : [
+    				{
+						"value" : "对的",
+						"end"   : 1
+    				},
+    				{
+						"value" : "不对",
+						"next"  : 5
+    				}    				
+    			]
+    		
+    		},			
+    		{
+    			"id" : 5,
+    			"type" : "text",
+				"question" : "囧，告诉我你想的什么牌，我下次会进步的！",
+    			"answers" : [
+    				{
+						"end"   : 3
+					}
+				]
+			},
+    		{
+    			"id" : 6,
+    			"type" : "radio",
+				"question" : "要重新开始吗？",
+    			"answers" : [
+    				{
+						"value" : "要",
+						"next"  : 1
+    				},
+    				{
+						"value" : "不要",
+						"end"   : 2
+    				}    				
+    			]
+    		}			
+		],
+    	"conclusions" : [
+    		{
+				"id"   : 1,
+				"text" : "下面这张图送给你作为奖励！",
+				"imageUrl" : "http://localhost:8000/heart-7.png"
+			},
+    		{
+				"id"   : 2,
+				"text" : "下次再来试试，会给你惊喜的！"
+			},
+    		{
+				"id"   : 3,
+				"text" : "感谢提供您的答案，我会继续改进的！"
+			}		
+    	]		
+    }
+}
+```
+
+### branch-quiz result
+
+```json
+{
+	"surveyResult" : {
+		"surveyId" : "survey-652ea4d0-7dad-11e8-abe8-abb0bd666421",
+		"responder": {
+			"userId" : "xxxxxxx",
+			"nickName" : "xiaowei",
+			"avatarUrl": "http://localhost:8000/profile.png"
+		},
+		"answers"  : [
+			{
+				"id"    : 1,
+				"result": [ {"value" : "想好了"} ]
+			},
+			{
+				"id"    : 2,
+				"result": [ {"value" : "没想好"} ]
+			},
+			{
+				"id"    : 6,
+				"result": [ {"value" : "要"} ]
+			},
+			{
+				"id"    : 1,
+				"result": [ {"value" : "想好了"} ]
+			},
+			{
+				"id"    : 2,
+				"result": [ {"value" : "想好了"} ]
+			},
+			{
+				"id"    : 3,
+				"result": [ {"value" : "想好了"} ]
+			},
+			{
+				"id"    : 4,
+				"result": [ {"value" : "不对"} ]
+			},
+            {
+				"id"    : 5,
+				"result": [ {"value" : "黑桃2"} ]
+			},			
+		],
+		"conclusion"    : 3
 	}
 }
 ```

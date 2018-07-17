@@ -7,12 +7,14 @@ const Schema = mongoose.Schema;
 const AnswerSchema = new Schema({
     value : String,
     imageUrl : String,
-    correct : Boolean
+    correct : Boolean,
+    next    : Number,
+    end     : Number
 });
 
 const SubjectSchema = new Schema({
     id: { type : Number, required: true },
-    type : String,   // radio | checkbox | text | date
+    type : String,   // radio | checkbox | text | date | position | phone
     nlu  : Boolean,
     question : String,
     imageUrl : String,
@@ -24,13 +26,15 @@ const ConclusionSchema = new Schema({
         min : Number,
         max : Number
     },
-    text  : String
+    id : Number,
+    text  : String,
+    imageUrl : String
 });
 
 const surveySchema = new Schema({
     id      : { type: String, unique: true, required: true},
     userId  : { type: String, required: true},
-    type    : { type: String, required: true }, // inquiry | poll | exam
+    type    : { type: String, required: true }, // inquiry | poll | exam | branch-quiz
     title   : { type: String, required: true},
     intro   : { type: String},
     avatarUrl : { type: String },
@@ -57,6 +61,7 @@ mongoose.model('SurveyResults', new Schema({
     responder  : { type: ResponderSchema, required: true},
     answers : [AnswerResultSchema],
     score   : Number,
+    conclusion : Number,
     survey  : Object
 }, { timestamps: { createdAt: 'created_at' } }));
 

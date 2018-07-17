@@ -28,6 +28,20 @@ const getSurveyStatistic = async (ctx) => {
     }
 };
 
+const reviewSurveyStatistic = async (ctx) => {
+    try {
+        await Statistic.clearLastReviewCount(ctx.request.body.surveyId);
+        ctx.response.type = "application/json";
+        ctx.response.status = 200;
+        ctx.response.body = {result : 'success'};
+    } catch(err) {
+        ctx.response.status = 404;
+        ctx.response.body = {result : 'failed', cause : err.toString()};
+        logger.error(`post survey statistic review error: ` + err.stack);
+    }
+}
+
 module.exports = {
-    'GET /survey/statistic'  : getSurveyStatistic
+    'GET /survey/statistic'  : getSurveyStatistic,
+    'POST /survey/statistic/review' : reviewSurveyStatistic
 };

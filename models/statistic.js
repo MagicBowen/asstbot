@@ -14,6 +14,8 @@ const SubjectSchema = new Schema({
 
 mongoose.model('SurveyStatistics', new Schema({
     surveyId: { type: String, unique: true, required: true},
+    totalReviewCount: Number,
+    lastReviewCount: Number,    
     subjects: [SubjectSchema],
 }, { timestamps: { createdAt: 'created_at' } }));
 
@@ -29,6 +31,8 @@ model.getSurveyStatistic = async (surveyId) => {
 model.getEmptyStatisticBy = (survey) => {
     return {
         surveyId : survey.id,
+        totalReviewCount: 0,
+        lastReviewCount: 0,
         subjects : survey.subjects.map(subject => {
             return {
                 id : subject.id,
@@ -64,6 +68,14 @@ const updateSurveyResultInStatistic = (surveyResult, statistic) => {
             }
         }
     }
+    if (!statistic.totalReviewCount) {
+        statistic.totalReviewCount = 0;
+    }
+    if (!statistic.lastReviewCount) {
+        statistic.lastReviewCount = 0
+    }
+    statistic.totalReviewCount++;
+    statistic.lastReviewCount++;
     return statistic;
 }
 
@@ -85,11 +97,24 @@ model.updateSurveyStatistic = async (statistic) => {
     oriSurveyStatistic.set(statistic);
     await oriSurveyStatistic.save();
     logger.debug(`update survey statistic of survey ${statistic.surveyId} successful!`); 
-};
+}
 
 model.deleteSurveyStatistic = async (surveyId) => {
     await SurveyStatistic.deleteOne({surveyId : surveyId});
     logger.debug(`delete survey statistic ${surveyId} successful!`);    
+}
+
+model.clearLastReviewCount = async (surveyId) => {
+    logger.debug(`clear last review statistic for ${surveyId}`);
+    const oriSurveyStatistic = await SurveyStatistic.findOne({surveyId : surveyId}).exec();
+    if (!oriSurveyStatistic) {
+        throw Error(`clear unexisted survey statistic of survey ${surveyId}`);
+    }
+    let newStatistic = oriSurveyStatistic.toObject();
+    newStatistic.lastReviewCount = 0;
+    oriSurveyStatistic.set(newStatistic);
+    await oriSurveyStatistic.save();
+    logger.debug(`clear review statistic of survey ${surveyId} successful!`);     
 }
 
 module.exports = model;

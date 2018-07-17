@@ -23,8 +23,8 @@ class Chatbot {
     
     async replyToEvent(user, eventType, params) {
         const data = { event   : { name : eventType, content : { data : params } },
-                     session : user.id, 
-                     agent   : this.agent, 
+                     session : user.id,
+                     agent   : this.agent,
                      userContext : user };
 
         const response = await postJson(this.uri, data);
@@ -65,6 +65,7 @@ const getUserInfo = async (userId) => {
         return userContext;
     } catch (err) {
         logger.error(`get user info of ${userId} error: ` + err);
+        throw err;
     }
 }
 

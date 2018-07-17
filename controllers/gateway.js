@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Survey = require('../models/survey');
+const Statistic = require('../models/statistic');
 const logger = require('../utils/logger').logger('gateway');
 
 const apiHandle = async (req) => {
@@ -10,6 +11,9 @@ const apiHandle = async (req) => {
     switch(api) {
         case 'get-user-info' :
             result = await User.getInfo(userId);
+            break;
+        case 'get-originator-info':
+            result = await User.getInfo(params.userId);
             break;
         case 'update-asst-nickname':
             result = await User.updateAsstBotNickName(userId, params.nickName);
@@ -32,6 +36,9 @@ const apiHandle = async (req) => {
         case 'update-survey':
             result = await Survey.updateSurvey(userId, params.survey);
             break;
+        case 'get-survey-result':
+            result = await Survey.getSurveyResultsByUser(userId);
+            break;
         case 'add-survey-result':
             result = await Survey.addSurveyResult(userId, params.surveyResult);
             break;
@@ -40,7 +47,10 @@ const apiHandle = async (req) => {
             break;                    
         case 'delete-survey-result':
             result = await Survey.deleteSurveyResult(params.id);
-            break;                    
+            break;
+        case 'get-survey-statistic':
+            result = await Statistic.getSurveyStatistic(params.id);
+            break;
         default:
             result = 'unknown gateway api : ' + api;
             logger.error(result);
