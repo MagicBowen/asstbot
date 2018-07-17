@@ -188,14 +188,14 @@ model.deleteSurveyResult = async (id) => {
 
 model.getStatisticByUser = async (userId) => {
     logger.debug(`get statistic by user ${userId}`);
-    const result = {createdCount : 0, reviewedCount : 0};
-    const surveys = await model.getSurveyByUser(userId);
-    const replies = await model.getSurveyResultsByUser(userId);
-    if (surveys) {
-        result.createdCount = surveys.length;
+    const result = {createdCount : 0, receivedCount : 0};
+    const createdSurveys = await model.getSurveyByUser(userId);
+    const receivedSurveys = await model.getSurveyResultsByUser(userId);
+    if (createdSurveys) {
+        result.createdCount = createdSurveys.length;
     }
-    if (replies) {
-        result.reviewedCount = replies.length;
+    if (receivedSurveys) {
+        result.receivedCount = receivedSurveys.length;
     }
     return result;
 }
