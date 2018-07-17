@@ -195,7 +195,7 @@ model.getStatisticByUser = async (userId) => {
         result.createdCount = surveys.length;
     }
     if (replies) {
-        result.createdCount = replies.length;
+        result.reviewedCount = replies.length;
     }
     return result;
 }
