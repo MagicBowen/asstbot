@@ -11,6 +11,7 @@ const loginMsg = {
     type : 'login',
     data : {
 		code : '12345', // optional
+		isNew: true   // optional, 是否新注册用户
     }
 };
 
@@ -20,7 +21,7 @@ const dialogStartMsg = {
     },
     type : 'dialog-start',
     data : {
-		scene : '',     // test | publish
+		scene : '',     // test | publish | other...
 		surveyId : ''
     }
 };
