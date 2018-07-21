@@ -22,7 +22,7 @@ function getQrCodeImageFromWechat(savePath, url, scene) {
             json: {
                 // scene: scene,
                 // page : 'pages/index/main'
-                path : 'pages/index/main?id=' + scene
+                path : 'pages/surveyChat/main?id=' + scene
             }
         })
         .on('error', function(err) {
@@ -48,7 +48,7 @@ async function getQrCode(ctx) {
 
         if (!fs.existsSync(targetQrCodeImagePath)) {
             if (!fs.existsSync(originalQrCodeImagePath)) {
-                await getQrCodeImageFromWechat(originalQrCodeImagePath, url);
+                await getQrCodeImageFromWechat(originalQrCodeImagePath, url, surveyId);
             }
             const survey = await Survey.getSurveyById(surveyId);
             const profileImageName = uuid.v1() + '.png';
