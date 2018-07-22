@@ -102,6 +102,7 @@ const handleMessage = async (ctx, agent) => {
     } catch (err) {
         ctx.response.status = 404;
         logger.error('talk to chatbot error: ' + err);
+        logger.error('talk to chatbot error: ' + err.stack);
     }
 }
 
