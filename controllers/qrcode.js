@@ -9,6 +9,7 @@ const uuid = require('node-uuid');
 const logger = require('../utils/logger').logger('controller_qrcode');
 
 function getQrCodeImageFromWechat(savePath, url, scene) {
+    logger.debug(`qr code image get: path=${savePath}, url=${url}, scene=${scene}`)
     return new Promise( (resolve, reject) => {
         const file = fs.createWriteStream(savePath);
         file.on('finish', () => {
