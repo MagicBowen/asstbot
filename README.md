@@ -152,11 +152,11 @@ const reply = {
     title : '请选择：',  // optional
     items : [
 		{ caption : '男', 
-		  image : 'http://localhost/image/icon1.png', // optional
+		  imageUrl : 'http://localhost/image/icon1.png', // optional
 		  indicator: 'index-0' // optional
         },
 		{ caption : '女',
-		  image : 'http://localhost/image/icon1.png', // optional
+		  imageUrl : 'http://localhost/image/icon1.png', // optional
 		  indicator: 'index-1' // optional
         }
     ]
@@ -167,23 +167,23 @@ const reply = {
 	title : '请选择：',  // optional
     items : [
 		{ caption : '水饺',
-		  image : 'http://localhost/image/icon0.png', // optional
+		  imageUrl : 'http://localhost/image/icon0.png', // optional
 		  indicator: 'index-0' // optional		
 		},
 		{ caption : '牛排',
-		  image : 'http://localhost/image/icon1.png', // optional
+		  imageUrl : 'http://localhost/image/icon1.png', // optional
 		  indicator: 'index-1' // optional		
 		},
 		{ caption : '沙拉',
-		  image : 'http://localhost/image/icon2.png', // optional
+		  imageUrl : 'http://localhost/image/icon2.png', // optional
 		  indicator: 'index-2' // optional		
 		},
 		{ caption : '披萨',
-		  image : 'http://localhost/image/icon3.png', // optional
+		  imageUrl : 'http://localhost/image/icon3.png', // optional
 		  indicator: 'index-3' // optional		
 		},
 		{ caption : '凉皮',
-		  image : 'http://localhost/image/icon4.png', // optional
+		  imageUrl : 'http://localhost/image/icon4.png', // optional
 		  indicator: 'index-4' // optional		
 		}
     ]
