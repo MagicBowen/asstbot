@@ -39,6 +39,9 @@ const apiHandle = async (req) => {
         case 'update-survey':
             result = await Survey.updateSurvey(userId, params.survey);
             break;
+        case 'delete-survey':
+            result = await Survey.deleteSurvey(params.id);
+            break;
         case 'get-survey-results-by-user':
             result = await Survey.getSurveyResultsByUser(userId);
             break;
