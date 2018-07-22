@@ -46,6 +46,8 @@ mongoose.model('Surveys', surveySchema);
 
 const AnswerResultSchema = new Schema({
     id    : {type : Number, required: true},
+    correct  : String,
+    user_say : String,
     result: [AnswerSchema]
 });
 
