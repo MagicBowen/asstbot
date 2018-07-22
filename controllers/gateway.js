@@ -30,13 +30,16 @@ const apiHandle = async (req) => {
         case 'get-survey-by-id':
             result = await Survey.getSurveyById(params.id);
             break;
+        case 'get-survey-by-user':
+            result = await Survey.getSurveyByUser(userId);
+            break;
         case 'add-survey':
             result = await Survey.addSurvey(userId, params.survey);
             break;
         case 'update-survey':
             result = await Survey.updateSurvey(userId, params.survey);
             break;
-        case 'get-survey-result':
+        case 'get-survey-results-by-user':
             result = await Survey.getSurveyResultsByUser(userId);
             break;
         case 'add-survey-result':
