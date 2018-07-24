@@ -2,6 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const logger = require('../utils/logger').logger('image');
 const uuid = require('node-uuid');
+const images = require("images");
 
 async function fillImageToCtx(ctx, image) {
     logger.debug("get image file is:" + image)
@@ -38,15 +39,26 @@ function saveFile(file, path) {
 
 async function addImageFile(ctx) {
     try {
-        const imageFileName = await saveFile(ctx.request.body.files.image, 'static/image');       
+        let imageFileName = await saveFile(ctx.request.body.files.image, 'static/image');
+        let quality = ctx.query.quality;
+        if (quality) {
+            let compressFileName = imageFileName.split('.')[0] + `_c_${quality}` + path.extname(imageFileName)
+            images(path.join('static/image', imageFileName)).save(path.join('static/image', compressFileName), { quality : quality })
+            ctx.response.body = {fileUrl : 'image/' + compressFileName, message:'compress image success'};
+            logger.debug(`upload to compress image : ${compressFileName}`);
+        }
+        else {
+            ctx.response.body = {fileUrl : 'image/' + imageFileName, message:'upload image success'};
+            logger.debug(`upload image : ${imageFileName}`);
+        }
         ctx.response.type = "application/json";
         ctx.response.status = 200;
-        ctx.response.body = {fileUrl : 'image/' + imageFileName, message:'upload file success'};
     } catch (err) {
         ctx.response.status = 404;
         ctx.response.type = "application/json";
         ctx.response.body = {error: err.toString()};
-        logger.error('updload file  failed: ' + err);
+        logger.error('upload image failed: ' + err);
+        logger.debug(err.stack);
     }
 }
 

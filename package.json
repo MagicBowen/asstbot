@@ -20,6 +20,7 @@
         "canvas": "^1.6.11",
         "fluent-ffmpeg": "^2.1.2",
         "fs": "0.0.1-security",
+        "images": "^3.0.1",
         "koa": "^2.5.1",
         "koa-body": "^2.6.0",
         "koa-router": "^7.4.0",
