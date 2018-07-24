@@ -803,3 +803,9 @@ sudo apt-get install ffmpeg
 ```bash
 npm install fluent-ffmpeg
 ```
+
+## restart mongodb
+
+```bash
+sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --logappend  -fork -port 27017
+```
