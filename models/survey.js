@@ -34,7 +34,7 @@ const ConclusionSchema = new Schema({
 const surveySchema = new Schema({
     id      : { type: String, unique: true, required: true},
     userId  : { type: String, required: true},
-    type    : { type: String, required: true }, // inquiry | poll | exam | branch-quiz
+    type    : { type: String, required: true }, // inquiry | poll | exam | quiz
     title   : { type: String, required: true},
     intro   : { type: String},
     avatarUrl : { type: String },

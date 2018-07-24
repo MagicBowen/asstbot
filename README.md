@@ -250,6 +250,15 @@ const reply = {
 
 ## Survey
 
+目前支持配置以下类型机器人：
+
+- inquiry ： 调查问卷机器人
+- poll ： 投票机器人
+- exam ： 答卷机器人
+- quiz ： 跳转测验机器人
+
+survey中的`type`字段为上述其一；
+
 ### exam
 
 ```json
