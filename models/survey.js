@@ -77,9 +77,15 @@ model.getSurveyById = async (id) => {
     return await Survey.findOne({id : id}).exec();
 };
 
-model.getSurveyByUser = async (userId) => {
-    logger.debug(`Looking up survey by user id ${userId}`);
-    return await Survey.find({userId : userId}).exec();
+model.getSurveyByUser = async (userId, type) => {
+    logger.debug(`Looking up survey by user id ${userId}, type ${type}`);
+    let condition = {
+        userId : userId
+    };
+    if (type) {
+        condition.type = type;
+    }
+    return await Survey.find(condition).exec();
 };
 
 model.addSurvey = async (userId, survey) => {
@@ -131,9 +137,15 @@ model.getSurveyResultById = async (id) => {
     return await SurveyResult.findOne({id : id}).exec();    
 }
 
-model.getSurveyResultsByUser = async (userId) => {
-    logger.debug(`get survey result by user ${userId}`);
-    return await SurveyResult.find({'responder.userId' : userId}).exec();
+model.getSurveyResultsByUser = async (userId, type) => {
+    logger.debug(`get survey result by user ${userId}, type ${type}`);
+    let condition = {
+        'responder.userId' : userId
+    };
+    if (type) {
+        condition.type = type;
+    }    
+    return await SurveyResult.find(condition).exec();
 }
 
 model.getSurveyResults = async (surveyId) => {

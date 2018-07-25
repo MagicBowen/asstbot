@@ -7,7 +7,7 @@ const getSurvey = async (ctx) => {
         if (ctx.query.id) {
             survey = await Survey.getSurveyById(ctx.query.id);
         } else if (ctx.query.userId) {
-            survey = await Survey.getSurveyByUser(ctx.query.userId);
+            survey = await Survey.getSurveyByUser(ctx.query.userId, ctx.query.type);
         }
         if (survey) {
             ctx.response.type = "application/json";

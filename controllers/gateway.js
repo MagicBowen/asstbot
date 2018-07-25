@@ -31,7 +31,7 @@ const apiHandle = async (req) => {
             result = await Survey.getSurveyById(params.id);
             break;
         case 'get-survey-by-user':
-            result = await Survey.getSurveyByUser(userId);
+            result = await Survey.getSurveyByUser(userId, params.type);
             break;
         case 'add-survey':
             result = await Survey.addSurvey(userId, params.survey);
@@ -43,7 +43,7 @@ const apiHandle = async (req) => {
             result = await Survey.deleteSurvey(params.id);
             break;
         case 'get-survey-results-by-user':
-            result = await Survey.getSurveyResultsByUser(userId);
+            result = await Survey.getSurveyResultsByUser(userId, params.type);
             break;
         case 'add-survey-result':
             result = await Survey.addSurveyResult(userId, params.surveyResult);

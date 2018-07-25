@@ -9,7 +9,7 @@ const getSurveyResult = async (ctx) => {
         } else if (ctx.query.surveyId) {
             surveyResult = await Survey.getSurveyResults(ctx.query.surveyId);
         } else if (ctx.query.userId) {
-            surveyResult = await Survey.getSurveyResultsByUser(ctx.query.userId);
+            surveyResult = await Survey.getSurveyResultsByUser(ctx.query.userId, ctx.query.type);
         }
         if (surveyResult) {
             ctx.response.type = "application/json";
