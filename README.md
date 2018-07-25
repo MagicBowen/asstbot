@@ -244,6 +244,14 @@ const reply = {
 }
 
 {
+	type : 'input-prompt',
+	prompt   : '请输入简介',
+	keyboard : 'text', // text | number
+	length   : 100     // optional
+	explicit : true // optional
+}
+
+{
 	type : 'dialog-end'
 }
 ```
