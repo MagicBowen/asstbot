@@ -143,7 +143,7 @@ model.getSurveyResultsByUser = async (userId, type) => {
         'responder.userId' : userId
     };
     if (type) {
-        condition.type = type;
+        condition['survey.type'] = type;
     }    
     return await SurveyResult.find(condition).exec();
 }
