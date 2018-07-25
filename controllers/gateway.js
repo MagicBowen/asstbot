@@ -2,6 +2,7 @@ const User = require('../models/user');
 const Survey = require('../models/survey');
 const Statistic = require('../models/statistic');
 const simplify = require('../utils/simplifier')
+const SimplifyResult = require('../models/simplifier')
 const logger = require('../utils/logger').logger('gateway');
 
 const apiHandle = async (req) => {
@@ -63,6 +64,9 @@ const apiHandle = async (req) => {
             break;
         case 'get-simplifier-result':
             result = await simplify(params.query);
+            break;
+        case 'record-wrong-simplifier-result':
+            result = await SimplifyResult.addResult(userId, params.query, params.result, params.correct);
             break;
         default:
             result = 'unknown gateway api : ' + api;
