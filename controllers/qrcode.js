@@ -20,9 +20,9 @@ function getQrCodeImageFromWechat(savePath, url, scene) {
             url: url,
             method: "POST",
             json: {
-                // scene: scene,
-                // page : 'pages/index/main'
-                path : 'pages/surveyChat/main?id=' + scene
+                scene: scene,
+                page : 'pages/surveyChat/main'
+                // path : 'pages/surveyChat/main?id=' + scene
             }
         })
         .on('error', function(err) {
@@ -37,8 +37,8 @@ async function getQrCode(ctx) {
     try {
         const tocken = await accessTocken.getTocken();
         // const tocken = '11_cDzPzj_5E98GQUIATlG6J0aQYraIJ56mAkoXek_04fZ0RJtFWoAXDPxfQ4Fb8yDg3s-O28EK5eFKD3_bhnoVfZdGjO-nvhM-fduzpi1r-yHn9u1sjC8IR5q0oI9QXQT-tSG_Bk-WY6MmRCgcVAIjAFAGLT';
-        const url = 'https://api.weixin.qq.com/wxa/getwxacode?access_token=' + tocken;
-        // const url = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=' + tocken;
+        // const url = 'https://api.weixin.qq.com/wxa/getwxacode?access_token=' + tocken;
+        const url = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=' + tocken;
 
         const surveyId = ctx.query.scene;
         const originalQrcodeImageName = surveyId + '_qrcode' + '.png';
