@@ -165,12 +165,11 @@ model.addSurveyResult = async (userId, surveyResult) => {
         score: surveyResult.score,
         conclusion: surveyResult.conclusion,
         survey: survey
-
     });
     await newSurveyResult.save();
     await Statistic.addSurveyResult(surveyResult);
     logger.debug(`Add new survey result ${id} of survey ${surveyResult.surveyId} successful!`); 
-    return id;       
+    return id;
 }
 
 model.updateSurveyResult = async (userId, surveyResult) => {
