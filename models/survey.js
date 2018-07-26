@@ -163,6 +163,7 @@ model.addSurveyResult = async (userId, surveyResult) => {
         responder : surveyResult.responder,
         answers : surveyResult.answers,
         score: surveyResult.score,
+        conclusion: surveyResult.conclusion,
         survey: survey
 
     });
