@@ -252,6 +252,11 @@ const reply = {
 }
 
 {
+	type : 'spliter',
+	style: 'timer'
+}
+
+{
 	type : 'dialog-end'
 }
 ```
