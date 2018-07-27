@@ -40,8 +40,9 @@ function saveFile(file, path) {
 async function addImageFile(ctx) {
     try {
         let imageFileName = await saveFile(ctx.request.body.files.image, 'static/image');
+        const ext = imageFileName.split('.').pop();
         let compress = ctx.query.compress;
-        if (compress) {
+        if (compress && ext !== 'gif') {
             ImageUtil.fitToPhone(imageFileName, 'static/image')
             logger.debug(`upload image ${imageFileName} has been compressed!`);
         }

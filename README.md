@@ -252,7 +252,7 @@ const reply = {
 }
 
 {
-	type : 'spliter',
+	type : 'divider',
 	style: 'timer'
 }
 
