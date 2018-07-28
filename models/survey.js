@@ -46,7 +46,7 @@ mongoose.model('Surveys', surveySchema);
 
 const AnswerResultSchema = new Schema({
     id    : {type : Number, required: true},
-    correct  : String,
+    correct  : Boolean,
     user_say : String,
     result: [AnswerSchema]
 });
@@ -165,11 +165,12 @@ model.addSurveyResult = async (userId, surveyResult) => {
         score: surveyResult.score,
         conclusion: surveyResult.conclusion,
         survey: survey
+
     });
     await newSurveyResult.save();
     await Statistic.addSurveyResult(surveyResult);
     logger.debug(`Add new survey result ${id} of survey ${surveyResult.surveyId} successful!`); 
-    return id;
+    return id;       
 }
 
 model.updateSurveyResult = async (userId, surveyResult) => {
@@ -188,6 +189,7 @@ model.updateSurveyResult = async (userId, surveyResult) => {
         responder : surveyResult.responder,
         answers : surveyResult.answers,
         score: surveyResult.score,
+        conclusion: surveyResult.conclusion,
         survey: oriSurveyResult.survey   
     });
     await oriSurveyResult.save();
