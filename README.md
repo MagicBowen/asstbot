@@ -54,8 +54,8 @@ const radioReply = {
     type : 'radio-reply',
     data : {
 		value : '白羊座',
-		indicator : 'index-0' // optional
-		text : '' // optional
+		indicator : 'index-0', // optional
+		event : 'deal-radio-reply' // optional
     }	
 };
 
@@ -75,7 +75,7 @@ const checkboxReply = {
 				indicator : 'index-1' // optional
 			}			
 		],
-		text : '' // optional
+		event : 'deal-checkbox-reply' // optional
     }	
 };
 
@@ -249,6 +249,11 @@ const reply = {
 	keyboard : 'text', // text | number
 	length   : 100     // optional
 	explicit : true // optional
+}
+
+{
+	type : 'divider',
+	style: 'timer'
 }
 
 {
