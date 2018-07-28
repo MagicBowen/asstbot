@@ -76,8 +76,8 @@ const talkToChatBot = async (agent, userId, type, params) => {
         return await chatbot.replyToText(user, params.query);
     } else if (type === 'speech') {
         return await chatbot.replyToText(user, params.asr);
-    } else if ((params)&&(params.hasOwnProperty('intent'))) {
-        return await chatbot.replyToEvent(user, params.intent, params);
+    } else if ((params)&&(params.hasOwnProperty('event'))) {
+        return await chatbot.replyToEvent(user, params.event, params);
     }
     return await chatbot.replyToEvent(user, type, params);
 }

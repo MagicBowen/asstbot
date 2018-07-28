@@ -55,7 +55,7 @@ const radioReply = {
     data : {
 		value : '白羊座',
 		indicator : 'index-0', // optional
-		intent : 'deal-radio-reply' // optional
+		event : 'deal-radio-reply' // optional
     }	
 };
 
@@ -75,7 +75,7 @@ const checkboxReply = {
 				indicator : 'index-1' // optional
 			}			
 		],
-		intent : 'deal-checkbox-reply' // optional
+		event : 'deal-checkbox-reply' // optional
     }	
 };
 
