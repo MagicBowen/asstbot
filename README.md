@@ -154,12 +154,12 @@ const reply = {
 		{ caption  : '男', 
 		  imageUrl : 'http://localhost/image/icon1.png', // optional
 		  indicator: 'index-0', // optional
-		  event    : 'deal-male-selection'
+		  event    : 'deal-male-selection' // optional
         },
 		{ caption : '女',
 		  imageUrl : 'http://localhost/image/icon1.png', // optional
 		  indicator: 'index-1', // optional
-		  event    : 'deal-female-selection'
+		  event    : 'deal-female-selection' // optional
         }
     ]
 }
@@ -167,7 +167,7 @@ const reply = {
 {
     type  : 'checkbox',
 	title : '请选择：',  // optional
-	event : 'deal-food-selection'
+	event : 'deal-food-selection', // optional
     items : [
 		{ caption : '水饺',
 		  imageUrl : 'http://localhost/image/icon0.png', // optional
