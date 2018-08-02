@@ -162,14 +162,12 @@ const reply = {
 	items : [
 		{
 			caption : '👍',
-			imageUrl: 'http://localhost/image/icon1.png', // optional
 			event   : 'right',
 			option  : {
 			}
 		},
 		{
 			caption : '👎',
-			imageUrl: 'http://localhost/image/icon2.png', // optional
 			event   : 'wrong',
 			option  : {
 			}
