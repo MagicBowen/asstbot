@@ -59,6 +59,17 @@ const radioReply = {
     }	
 };
 
+const eventReply = {
+    from : {
+        id : 'xxxxx'
+    },
+    type : 'eventName', // eventName is the value of event field of button
+    data : {
+		// content in option
+    }	
+
+}
+
 const checkboxReply = {
     from : {
         id : 'xxxxx'
@@ -148,8 +159,29 @@ const reply = {
 }
 
 {
+	type : 'button-list',
+	items : [
+		{
+			caption : '👍',
+			imageUrl: 'http://localhost/image/icon1.png', // optional
+			event   : 'right',
+			option  : {
+			}
+		},
+		{
+			caption : '👎',
+			imageUrl: 'http://localhost/image/icon2.png', // optional
+			event   : 'wrong',
+			option  : {
+			}
+		}
+	]
+}
+
+{
     type : 'radio',
-    title : '请选择：',  // optional
+	title : '请选择：',  // optional
+	inline : false,
     items : [
 		{ caption  : '男', 
 		  imageUrl : 'http://localhost/image/icon1.png', // optional
