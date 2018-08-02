@@ -176,6 +176,40 @@ const reply = {
 }
 
 {
+	type : 'slider-list',
+	items : [
+		{
+			caption : '选项1',
+			imageUrl: 'http://localhost/image/item1.png',
+			id : 'abcdef1'
+		},
+		{
+			caption : '选项2',
+			imageUrl: 'http://localhost/image/item2.png',
+			id  : 'abcdef2'
+		}
+	],
+	actions : [
+		{
+			caption : '编辑',
+			type : 'redirect',
+			url  : ''
+		},
+		{
+			caption : '删除',
+			type : 'delete',
+			url : ''
+		},
+		{
+			caption : '刷新',
+			type : 'refresh',
+			direction : 'forward', // forward | backward
+			url  : ''
+		}
+	]
+}
+
+{
     type : 'radio',
 	title : '请选择：',  // optional
 	inline : false,
