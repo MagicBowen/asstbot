@@ -67,7 +67,6 @@ const eventReply = {
     data : {
 		// content in option
     }	
-
 }
 
 const checkboxReply = {
