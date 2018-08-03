@@ -63,9 +63,9 @@ const eventReply = {
     from : {
         id : 'xxxxx'
     },
-    type : 'eventName', // eventName is the value of event field of button
+    type : 'event',
     data : {
-		// content
+		name : 'eventName'
     }	
 }
 
