@@ -65,7 +65,7 @@ const eventReply = {
     },
     type : 'eventName', // eventName is the value of event field of button
     data : {
-		// content in option
+		// content
     }	
 }
 
@@ -153,40 +153,48 @@ const reply = {
 // msgs
 
 {
-    type : 'text',
-    reply: '你好，主人'
+    type   : 'text',
+    reply  : '你好，主人'
 }
 
 {
-	type : 'button-list',
-	items : [
+	type   : 'event-reply',
+	data   : {
+	}
+}
+
+{
+	type   : 'button-list',
+	once   : true,
+	reflex : false,
+	items  : [
 		{
 			caption : '👍',
 			event   : 'right',
-			option  : {
+			data    : {
 			}
 		},
 		{
 			caption : '👎',
 			event   : 'wrong',
-			option  : {
+			data    : {
 			}
 		}
 	]
 }
 
 {
-	type : 'slider-list',
+	type : 'exhibition',
 	items : [
 		{
 			caption : '选项1',
 			imageUrl: 'http://localhost/image/item1.png',
-			id : 'abcdef1'
+			indicator: 'abcdef1'
 		},
 		{
 			caption : '选项2',
 			imageUrl: 'http://localhost/image/item2.png',
-			id  : 'abcdef2'
+			indicator: 'abcdef2'
 		}
 	],
 	actions : [
@@ -212,7 +220,6 @@ const reply = {
 {
     type : 'radio',
 	title : '请选择：',  // optional
-	inline : false,
     items : [
 		{ caption  : '男', 
 		  imageUrl : 'http://localhost/image/icon1.png', // optional
@@ -267,7 +274,8 @@ const reply = {
     type : 'image-uploader',
     title: '请上传您的背景图', // optional
     indicator : 'profile',
-    explicit  : false // optional
+	 once  : false  : false // optional
+	 : false,
 }
 
 {
