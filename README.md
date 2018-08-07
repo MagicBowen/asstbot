@@ -159,14 +159,17 @@ const reply = {
 
 {
 	type   : 'event-reply',
+	action : '', // mute | update
 	data   : {
 	}
 }
 
 {
 	type   : 'button-list',
-	once   : true,
-	reflex : false,
+	once   : true, // optional
+	reflex : false, // optional
+	title  : '', // optional
+	imageUrl: '', // optional
 	items  : [
 		{
 			caption : '👍',
