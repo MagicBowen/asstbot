@@ -173,12 +173,14 @@ const reply = {
 	items  : [
 		{
 			caption : '👍',
+			value   : '赞',
 			event   : 'right',
 			data    : {
 			}
 		},
 		{
 			caption : '👎',
+			value   : '批',
 			event   : 'wrong',
 			data    : {
 			}
@@ -225,11 +227,13 @@ const reply = {
 	title : '请选择：',  // optional
     items : [
 		{ caption  : '男', 
+		  value    : '我是男的', // optional
 		  imageUrl : 'http://localhost/image/icon1.png', // optional
 		  indicator: 'index-0', // optional
 		  event    : 'deal-male-selection' // optional
         },
-		{ caption : '女',
+		{ caption  : '女',
+		  value    : '我是女的', // optional
 		  imageUrl : 'http://localhost/image/icon1.png', // optional
 		  indicator: 'index-1', // optional
 		  event    : 'deal-female-selection' // optional
