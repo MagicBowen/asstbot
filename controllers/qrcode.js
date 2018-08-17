@@ -53,6 +53,7 @@ async function getProfileQrCodeImage(url, surveyId) {
 }
 
 async function getQrCodeImage(url, surveyId) {
+    const targetQrcodeImageName = surveyId + '.png';
     const targetQrCodeImagePath = path.join('static/image', surveyId + '.png');
 
     if (!fs.existsSync(targetQrCodeImagePath)) {
