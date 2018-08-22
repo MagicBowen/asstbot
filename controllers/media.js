@@ -6,7 +6,7 @@ function saveFile(file, path) {
     return new Promise( (resolve, reject) => {
         const reader = fs.createReadStream(file.path);
         const ext = file.name.split('.').pop();
-        if (ext != 'mp3') {
+        if (ext != 'mp3' && ext != 'mp4') {
             throw reject('not support file type : ' + ext);
         }
         const fileName = `${uuid.v1()}.${ext}`;
