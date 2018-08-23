@@ -59,6 +59,16 @@ const radioReply = {
     }	
 };
 
+const eventReply = {
+    from : {
+        id : 'xxxxx'
+    },
+    type : 'event',
+    data : {
+		name : 'eventName'
+    }	
+}
+
 const checkboxReply = {
     from : {
         id : 'xxxxx'
@@ -143,20 +153,87 @@ const reply = {
 // msgs
 
 {
-    type : 'text',
-    reply: '你好，主人'
+    type   : 'text',
+    reply  : '你好，主人'
+}
+
+{
+	type   : 'event-reply',
+	action : '', // mute | update
+	data   : {
+	}
+}
+
+{
+	type   : 'button-list',
+	once   : true, // optional
+	reflex : false, // optional
+	title  : '', // optional
+	imageUrl: '', // optional
+	items  : [
+		{
+			caption : '👍',
+			value   : '赞',
+			event   : 'right',
+			data    : {
+			}
+		},
+		{
+			caption : '👎',
+			value   : '批',
+			event   : 'wrong',
+			data    : {
+			}
+		}
+	]
+}
+
+{
+	type : 'exhibition',
+	items : [
+		{
+			caption : '选项1',
+			imageUrl: 'http://localhost/image/item1.png',
+			indicator: 'abcdef1'
+		},
+		{
+			caption : '选项2',
+			imageUrl: 'http://localhost/image/item2.png',
+			indicator: 'abcdef2'
+		}
+	],
+	actions : [
+		{
+			caption : '编辑',
+			type : 'redirect',
+			url  : ''
+		},
+		{
+			caption : '删除',
+			type : 'delete',
+			url : ''
+		},
+		{
+			caption : '刷新',
+			type : 'refresh',
+			direction : 'forward', // forward | backward
+			url  : ''
+		}
+	]
 }
 
 {
     type : 'radio',
-    title : '请选择：',  // optional
+	title : '请选择：',  // optional
     items : [
 		{ caption  : '男', 
+		  value    : '我是男的', // optional
 		  imageUrl : 'http://localhost/image/icon1.png', // optional
 		  indicator: 'index-0', // optional
 		  event    : 'deal-male-selection' // optional
         },
-		{ caption : '女',
+		{ caption  : '女',
+		  value    : '我是女的', // optional
 		  imageUrl : 'http://localhost/image/icon1.png', // optional
 		  indicator: 'index-1', // optional
 		  event    : 'deal-female-selection' // optional
@@ -204,7 +281,8 @@ const reply = {
     type : 'image-uploader',
     title: '请上传您的背景图', // optional
     indicator : 'profile',
-    explicit  : false // optional
+	 once  : false  : false // optional
+	 : false,
 }
 
 {

@@ -7,22 +7,24 @@ mongoose.model('Simplifiers', new Schema({
     userId : { type: String, required: true},
     query  : { type: String, required: true},
     result : { type: String, required: true},
-    correct : String
+    correct : String,
+    mark : String   // phrase | wrong | modify | omit
 }, { timestamps: { createdAt: 'created_at' } }));
 
 const Simplifier = mongoose.model('Simplifiers');
 
 const model = {};
 
-model.addResult = async (userId, query, result, correct) => {
+model.addResult = async (userId, query, result, mark, modified) => {
     logger.debug(`add simplifier result for user ${userId}`);
     let data = {
         userId  : userId,
         query   : query,
-        result  : result
+        result  : result,
+        mark    : mark
     }
-    if (correct) {
-        data.correct = correct
+    if (modified) {
+        data.correct = modified
     }
     const simplifier = new Simplifier(data);
     await simplifier.save();

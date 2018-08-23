@@ -65,8 +65,8 @@ const apiHandle = async (req) => {
         case 'get-simplifier-result':
             result = await simplify(params.query);
             break;
-        case 'record-wrong-simplifier-result':
-            result = await SimplifyResult.addResult(userId, params.query, params.result, params.correct);
+        case 'record-simplifier-result':
+            result = await SimplifyResult.addResult(userId, params.query, params.result, params.mark, params.modified);
             break;
         default:
             result = 'unknown gateway api : ' + api;
