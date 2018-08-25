@@ -7,6 +7,7 @@ const Schema = mongoose.Schema;
 const AnswerSchema = new Schema({
     value : String,
     imageUrl : String,
+    poster   : String,
     urlType  : String,
     correct : Boolean,
     next    : Number,
@@ -20,6 +21,7 @@ const SubjectSchema = new Schema({
     question : String,
     imageUrl : String,
     urlType  : String,
+    poster  : String,
     answers  : [AnswerSchema]
 });
 
