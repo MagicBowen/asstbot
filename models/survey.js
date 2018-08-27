@@ -4,11 +4,18 @@ const globalId = require('../utils/global-id');
 const Statistic = require('./statistic')
 const Schema = mongoose.Schema;
 
+const MediaInfo = new Schema({
+    poster: String,
+    author: String,
+    name: String
+});
+
+
 const AnswerSchema = new Schema({
     value : String,
     imageUrl : String,
-    poster   : String,
     urlType  : String,
+    mediaInfo : MediaInfo,
     correct : Boolean,
     next    : Number,
     end     : Number
@@ -21,7 +28,7 @@ const SubjectSchema = new Schema({
     question : String,
     imageUrl : String,
     urlType  : String,
-    poster  : String,
+    mediaInfo : MediaInfo,
     answers  : [AnswerSchema]
 });
 
@@ -33,6 +40,7 @@ const ConclusionSchema = new Schema({
     id : Number,
     text  : String,
     urlType  : String,
+    mediaInfo : MediaInfo,
     imageUrl : String
 });
 
