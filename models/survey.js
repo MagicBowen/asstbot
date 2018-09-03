@@ -50,8 +50,9 @@ const surveySchema = new Schema({
     type    : { type: String, required: true }, // inquiry | poll | exam | quiz
     title   : { type: String, required: true},
     intro   : { type: String},
-    avatarUrl : { type: String },
-    subjects: [SubjectSchema],
+    avatarUrl   : { type: String },
+    permission  : { type: String },
+    subjects    : [SubjectSchema],
     conclusions : [ConclusionSchema]
 }, { timestamps: { createdAt: 'created_at' } });
 
@@ -227,6 +228,38 @@ model.getStatisticByUser = async (userId) => {
         result.receivedCount = receivedSurveys.length;
     }
     return result;
+}
+
+model.publishSurvey = async(userId, surveyId) =>{
+    logger.debug(`publish survey ${surveyId} for user ${userId}`);
+    const oriSurvey = await Survey.findOne({id : surveyId}).exec();
+    if (!oriSurvey) {
+        throw Error(`update unexisted survey ${surveyId} of user ${userId}`);
+    }
+    oriSurvey.set({permission: "community"});
+    await oriSurvey.save();
+    logger.debug(`update survey ${surveyId} for user ${userId} successful!`); 
+    return surveyId;
+}
+
+model.unPublishSurvey = async(userId, surveyId) =>{
+    logger.debug(`un publish survey ${surveyId} for user ${userId}`);
+    const oriSurvey = await Survey.findOne({id : surveyId}).exec();
+    if (!oriSurvey) {
+        throw Error(`update unexisted survey ${surveyId} of user ${userId}`);
+    }
+    oriSurvey.set({permission: "friend"});
+    await oriSurvey.save();
+    logger.debug(`update survey ${surveyId} for user ${userId} successful!`); 
+    return surveyId;
+}
+
+model.getSurveyOfCommunity = async(userId) => {
+    logger.debug(`Looking up survey for community ${userId}`);
+    let condition = {
+        permission: "community"
+    };
+    return await Survey.find(condition).exec();
 }
 
 module.exports = model;
