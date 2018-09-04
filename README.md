@@ -189,7 +189,7 @@ const reply = {
 }
 
 {
-	type : 'exhibition',
+	type  : 'exhibition',
 	items : [
 		{
 			caption : '选项1',
@@ -205,19 +205,21 @@ const reply = {
 	actions : [
 		{
 			caption : '编辑',
-			type : 'redirect',
-			url  : ''
+			event   : 'edit-item',
+			data    : {
+			}
+		},
+		{
+			caption : '显示',
+			event   : 'show-item',
+			data    : {
+			}
 		},
 		{
 			caption : '删除',
-			type : 'delete',
-			url : ''
-		},
-		{
-			caption : '刷新',
-			type : 'refresh',
-			direction : 'forward', // forward | backward
-			url  : ''
+			event   : 'delete-item',
+			data    : {
+			}
 		}
 	]
 }
