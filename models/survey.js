@@ -4,9 +4,18 @@ const globalId = require('../utils/global-id');
 const Statistic = require('./statistic')
 const Schema = mongoose.Schema;
 
+const MediaInfo = new Schema({
+    poster: String,
+    author: String,
+    name: String
+});
+
+
 const AnswerSchema = new Schema({
     value : String,
     imageUrl : String,
+    urlType  : String,
+    mediaInfo : MediaInfo,
     correct : Boolean,
     next    : Number,
     end     : Number
@@ -18,6 +27,8 @@ const SubjectSchema = new Schema({
     nlu  : Boolean,
     question : String,
     imageUrl : String,
+    urlType  : String,
+    mediaInfo : MediaInfo,
     answers  : [AnswerSchema]
 });
 
@@ -28,6 +39,8 @@ const ConclusionSchema = new Schema({
     },
     id : Number,
     text  : String,
+    urlType  : String,
+    mediaInfo : MediaInfo,
     imageUrl : String
 });
 
@@ -37,8 +50,9 @@ const surveySchema = new Schema({
     type    : { type: String, required: true }, // inquiry | poll | exam | quiz
     title   : { type: String, required: true},
     intro   : { type: String},
-    avatarUrl : { type: String },
-    subjects: [SubjectSchema],
+    avatarUrl   : { type: String },
+    permission  : { type: String },
+    subjects    : [SubjectSchema],
     conclusions : [ConclusionSchema]
 }, { timestamps: { createdAt: 'created_at' } });
 
@@ -46,7 +60,7 @@ mongoose.model('Surveys', surveySchema);
 
 const AnswerResultSchema = new Schema({
     id    : {type : Number, required: true},
-    correct  : String,
+    correct  : Boolean,
     user_say : String,
     result: [AnswerSchema]
 });
@@ -165,11 +179,12 @@ model.addSurveyResult = async (userId, surveyResult) => {
         score: surveyResult.score,
         conclusion: surveyResult.conclusion,
         survey: survey
+
     });
     await newSurveyResult.save();
     await Statistic.addSurveyResult(surveyResult);
     logger.debug(`Add new survey result ${id} of survey ${surveyResult.surveyId} successful!`); 
-    return id;
+    return id;       
 }
 
 model.updateSurveyResult = async (userId, surveyResult) => {
@@ -188,6 +203,7 @@ model.updateSurveyResult = async (userId, surveyResult) => {
         responder : surveyResult.responder,
         answers : surveyResult.answers,
         score: surveyResult.score,
+        conclusion: surveyResult.conclusion,
         survey: oriSurveyResult.survey   
     });
     await oriSurveyResult.save();
@@ -212,6 +228,38 @@ model.getStatisticByUser = async (userId) => {
         result.receivedCount = receivedSurveys.length;
     }
     return result;
+}
+
+model.publishSurvey = async(userId, surveyId) =>{
+    logger.debug(`publish survey ${surveyId} for user ${userId}`);
+    const oriSurvey = await Survey.findOne({id : surveyId}).exec();
+    if (!oriSurvey) {
+        throw Error(`update unexisted survey ${surveyId} of user ${userId}`);
+    }
+    oriSurvey.set({permission: "community"});
+    await oriSurvey.save();
+    logger.debug(`update survey ${surveyId} for user ${userId} successful!`); 
+    return surveyId;
+}
+
+model.unPublishSurvey = async(userId, surveyId) =>{
+    logger.debug(`un publish survey ${surveyId} for user ${userId}`);
+    const oriSurvey = await Survey.findOne({id : surveyId}).exec();
+    if (!oriSurvey) {
+        throw Error(`update unexisted survey ${surveyId} of user ${userId}`);
+    }
+    oriSurvey.set({permission: "friend"});
+    await oriSurvey.save();
+    logger.debug(`update survey ${surveyId} for user ${userId} successful!`); 
+    return surveyId;
+}
+
+model.getSurveyOfCommunity = async(userId) => {
+    logger.debug(`Looking up survey for community ${userId}`);
+    let condition = {
+        permission: "community"
+    };
+    return await Survey.find(condition).exec();
 }
 
 module.exports = model;
