@@ -30,34 +30,34 @@ function getQrCodeImageFromWechat(savePath, url, scene) {
             logger.error('download qrcode from wechat error: ' + err)
             reject(err)
         })        
-        .pipe(file);   
+        .pipe(file);
     });
 }
 
-async function getProfileQrCodeImage(url, surveyId) {
-    const originalQrcodeImageName = surveyId + '_qrcode' + '.png';
-    const targetQrcodeImageName = surveyId + '.png';
-    const originalQrCodeImagePath = path.join('static/image', originalQrcodeImageName);
-    const targetQrCodeImagePath = path.join('static/image', surveyId + '.png');
+// async function getProfileQrCodeImage(url, surveyId) {
+//     const originalQrcodeImageName = surveyId + '_qrcode' + '.png';
+//     const targetQrcodeImageName = surveyId + '.png';
+//     const originalQrCodeImagePath = path.join('static/image', originalQrcodeImageName);
+//     const targetQrCodeImagePath = path.join('static/image', surveyId + '.png');
+
+//     if (!fs.existsSync(targetQrCodeImagePath)) {
+//         if (!fs.existsSync(originalQrCodeImagePath)) {
+//             await getQrCodeImageFromWechat(originalQrCodeImagePath, url, surveyId);
+//         }
+//         const survey = await Survey.getSurveyById(surveyId);
+//         const profileImageName = uuid.v1() + '.png';
+//         await download(path.join('static/image', profileImageName), survey.avatarUrl)
+//         await qrcode.draw(targetQrcodeImageName, originalQrcodeImageName, profileImageName, survey.title)
+//     }
+//     return targetQrcodeImageName
+// }
+
+async function getQrCodeImage(url, id) {
+    const targetQrcodeImageName = id + '.png';
+    const targetQrCodeImagePath = path.join('static/image', id + '.png');
 
     if (!fs.existsSync(targetQrCodeImagePath)) {
-        if (!fs.existsSync(originalQrCodeImagePath)) {
-            await getQrCodeImageFromWechat(originalQrCodeImagePath, url, surveyId);
-        }
-        const survey = await Survey.getSurveyById(surveyId);
-        const profileImageName = uuid.v1() + '.png';
-        await download(path.join('static/image', profileImageName), survey.avatarUrl)
-        await qrcode.draw(targetQrcodeImageName, originalQrcodeImageName, profileImageName, survey.title)
-    }
-    return targetQrcodeImageName
-}
-
-async function getQrCodeImage(url, surveyId) {
-    const targetQrcodeImageName = surveyId + '.png';
-    const targetQrCodeImagePath = path.join('static/image', surveyId + '.png');
-
-    if (!fs.existsSync(targetQrCodeImagePath)) {
-        await getQrCodeImageFromWechat(targetQrCodeImagePath, url, surveyId);
+        await getQrCodeImageFromWechat(targetQrCodeImagePath, url, id);
     }
     return targetQrcodeImageName    
 }
