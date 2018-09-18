@@ -15,7 +15,7 @@ function getPageFromSource(source) {
 }
 
 function getBgColorFromSource(source) {
-    return (source === 'dueros')
+    return (source !== 'dueros')
 }
 
 function getQrCodeImageFromWechat(savePath, url, scene, source) {
