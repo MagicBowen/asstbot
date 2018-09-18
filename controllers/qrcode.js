@@ -8,7 +8,18 @@ const download = require('../utils/download-file');
 const uuid = require('node-uuid');
 const logger = require('../utils/logger').logger('controller_qrcode');
 
-function getQrCodeImageFromWechat(savePath, url, scene, page) {
+
+function getPageFromSource(source) {
+    if (source === 'dueros') return 'pages/course/main'
+    return 'pages/surveyChat/main'
+}
+
+function getLineColorFromSource(source) {
+    if (source === 'dueros') return {"r":"255","g":"255","b":"255"} 
+    return {"r":"0","g":"0","b":"0"} 
+}
+
+function getQrCodeImageFromWechat(savePath, url, scene, source) {
     return new Promise( (resolve, reject) => {
         const file = fs.createWriteStream(savePath);
         file.on('finish', () => {
@@ -22,7 +33,8 @@ function getQrCodeImageFromWechat(savePath, url, scene, page) {
             json: {
                 scene: scene,
                 is_hyaline: true,
-                page : page
+                line_color: getLineColorFromSource(source),
+                page : getPageFromSource(source)
             }
         })
         .on('error', function(err) {
@@ -51,19 +63,14 @@ function getQrCodeImageFromWechat(savePath, url, scene, page) {
 //     return targetQrcodeImageName
 // }
 
-async function getQrCodeImage(url, scene, page) {
+async function getQrCodeImage(url, scene, source) {
     const targetQrcodeImageName = scene + '.png';
     const targetQrCodeImagePath = path.join('static/image', scene + '.png');
 
     if (!fs.existsSync(targetQrCodeImagePath)) {
-        await getQrCodeImageFromWechat(targetQrCodeImagePath, url, scene, page);
+        await getQrCodeImageFromWechat(targetQrCodeImagePath, url, scene, source);
     }
     return targetQrcodeImageName    
-}
-
-function getPageFromSource(source) {
-    if (source === 'dueros') return 'pages/course/main'
-    return 'pages/surveyChat/main'
 }
 
 async function getQrCode(ctx) {
@@ -72,7 +79,7 @@ async function getQrCode(ctx) {
         const url = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=' + tocken;
 
         // const image = await getProfileQrCodeImage(url, ctx.query.scene)
-        const image = await getQrCodeImage(url, ctx.query.scene, getPageFromSource(ctx.query.source))
+        const image = await getQrCodeImage(url, ctx.query.scene, ctx.query.source)
         ctx.response.type = "application/json";
         ctx.response.body = {url : '/image?name=' + image};
         ctx.response.status = 200;
