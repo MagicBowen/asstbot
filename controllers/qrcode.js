@@ -14,9 +14,8 @@ function getPageFromSource(source) {
     return 'pages/surveyChat/main'
 }
 
-function getLineColorFromSource(source) {
-    if (source === 'dueros') return {"r":"255","g":"255","b":"255"} 
-    return {"r":"0","g":"0","b":"0"} 
+function getBgColorFromSource(source) {
+    return (source === 'dueros')
 }
 
 function getQrCodeImageFromWechat(savePath, url, scene, source) {
@@ -32,8 +31,7 @@ function getQrCodeImageFromWechat(savePath, url, scene, source) {
             method: "POST",
             json: {
                 scene: scene,
-                is_hyaline: false,
-                line_color: getLineColorFromSource(source),
+                is_hyaline: getBgColorFromSource(source),
                 page : getPageFromSource(source)
             }
         })
