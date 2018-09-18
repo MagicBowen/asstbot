@@ -32,7 +32,7 @@ function getQrCodeImageFromWechat(savePath, url, scene, source) {
             method: "POST",
             json: {
                 scene: scene,
-                is_hyaline: true,
+                is_hyaline: false,
                 line_color: getLineColorFromSource(source),
                 page : getPageFromSource(source)
             }
