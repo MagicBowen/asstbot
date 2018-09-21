@@ -26,7 +26,7 @@ function convert_to_openId(userId){
 async function getCourseId(userId) {
     var openId = convert_to_openId(userId)
     var courseId = "darwin_" + openId
-    var aql = `FOR user in ${userIdsCollection} filter user.openId = '${openId}' return user.courseId`
+    var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user.courseId`
     logger.info('execute aql', aql)
     await db.query(aql).then(cursor => cursor.all())
           .then(users => {
