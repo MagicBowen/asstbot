@@ -39,7 +39,7 @@ async function getCourseId(userId) {
     return courseId
 }
 
-async function getCourseTable(userId, weekday){
+async function getDayCourseForUser(userId, weekday){
     var courseId = await getCourseId(userId)
     var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable.${weekday}`
     logger.info('execute aql', aql)
@@ -57,7 +57,27 @@ async function getCourseTable(userId, weekday){
     })
 }
 
+async function queryAllCourseForUser(userId) {
+    var courseId = await getCourseId(userId)
+    var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable`
+    logger.info('execute aql', aql)
+    return await db.query(aql).then(cursor => cursor.all())
+    .then(courses => {
+        if(courses.length == 0){
+            return null
+        }else{
+            return courses[0]
+        }
+    },
+    err => {
+        logger.error('Failed to fetch agent document:')
+        return null
+    })
+
+}
+
 module.exports={
     init,
-    getCourseTable
+    getDayCourseForUser,
+    queryAllCourseForUser
 }

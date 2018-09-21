@@ -79,7 +79,11 @@ const apiHandle = async (req) => {
             result = await SimplifyResult.addResult(userId, params.query, params.result, params.mark, params.modified);
             break;
         case 'query-day-course-for-user':
-            result = await arangoDb.getCourseTable(userId, params.weekday)
+            result = await arangoDb.getDayCourseForUser(userId, params.weekday)
+            break;
+
+        case 'query-all-course-for-user':
+            result = await arangoDb.queryAllCourseForUser(userId)
             break;
         default:
             result = 'unknown gateway api : ' + api;
