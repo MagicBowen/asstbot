@@ -3,6 +3,7 @@ const Survey = require('../models/survey');
 const Statistic = require('../models/statistic');
 const simplify = require('../utils/simplifier')
 const SimplifyResult = require('../models/simplifier')
+var arangoDb = require("../models/arango.js")
 const logger = require('../utils/logger').logger('gateway');
 
 const apiHandle = async (req) => {
@@ -76,6 +77,9 @@ const apiHandle = async (req) => {
             break;
         case 'record-simplifier-result':
             result = await SimplifyResult.addResult(userId, params.query, params.result, params.mark, params.modified);
+            break;
+        case 'query-day-course-for-user':
+            result = await arangoDb.getCourseTable(userId, params.weekday)
             break;
         default:
             result = 'unknown gateway api : ' + api;
