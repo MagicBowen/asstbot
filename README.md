@@ -158,6 +158,25 @@ const reply = {
 }
 
 {
+    type   : 'html',
+    body  : '<h4>语文</h5><li>时间：9：00 ~ 10：00</li><li>地点：文津楼</li><li>老师：王文</li>'
+}
+
+{
+    type   : 'page-list',
+	pages  : [
+		{
+			type   : 'html',
+            body  : '<h4>语文</h5><li>时间：9：00 ~ 10：00</li><li>地点：文津楼</li><li>老师：王文</li>'
+		},
+		{
+			type   : 'html',
+            body  : '<h4>数学</h5><li>时间：10：00 ~ 11：00</li><li>地点：科苑楼</li><li>老师：张锋</li>'
+		}	
+	]
+}
+
+{
 	type   : 'event-reply',
 	action : '', // mute | update
 	data   : {
