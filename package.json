@@ -14,6 +14,7 @@
         "url": "https://github.com/magicbowen/asstbot.git"
     },
     "dependencies": {
+        "arangojs": "^6.6.0",
         "axios": "^0.18.0",
         "baidu-aip-sdk": "^2.3.3",
         "busboy": "^0.2.14",
