@@ -159,7 +159,8 @@ const reply = {
 
 {
     type   : 'html',
-    body  : '<h4>语文</h5><li>时间：9：00 ~ 10：00</li><li>地点：文津楼</li><li>老师：王文</li>'
+	body   : '<h4>语文</h4><li>时间：9：00 ~ 10：00</li><li>地点：文津楼</li><li>老师：王文</li>',
+	style  : 'h4 {color:red; font-size:14px;} li {color:black; font-size:12px;} '
 }
 
 {
@@ -167,11 +168,11 @@ const reply = {
 	pages  : [
 		{
 			type   : 'html',
-            body  : '<h4>语文</h5><li>时间：9：00 ~ 10：00</li><li>地点：文津楼</li><li>老师：王文</li>'
+            body  : '<h4>语文</h4><li>时间：9：00 ~ 10：00</li><li>地点：文津楼</li><li>老师：王文</li>'
 		},
 		{
 			type   : 'html',
-            body  : '<h4>数学</h5><li>时间：10：00 ~ 11：00</li><li>地点：科苑楼</li><li>老师：张锋</li>'
+            body  : '<h4>数学</h4><li>时间：10：00 ~ 11：00</li><li>地点：科苑楼</li><li>老师：张锋</li>'
 		}	
 	]
 }
