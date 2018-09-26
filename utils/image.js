@@ -9,8 +9,6 @@ function fitImageToPhone(imageFile, dir) {
     if (size.width > phoneWidth) {
         const quality = Math.floor((100 * phoneWidth)/size.width);
         image.size(phoneWidth).save(imagePath, {quality : quality});
-        console.log(JSON.stringify(size))
-        console.log(quality)
     }
 }
 

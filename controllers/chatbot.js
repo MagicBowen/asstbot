@@ -69,7 +69,40 @@ const getUserInfo = async (userId) => {
     }
 }
 
+const fakeResponse = (userId, type, params) => {
+    let result = {
+        to : { id : userId },
+        msgs: []
+    };
+
+    if (params.query === '测试html') {
+        result.msgs.push({
+            type : 'html', 
+            reply : '<h4>语文</h4><li>时间：9：00 ~ 10：00</li><li>地点：文津楼</li><li>老师：王文</li>'
+        })
+    } else if (params.query === '测试html分页') {
+        result.msgs.push({
+            type   : 'page-list',
+            pages  : [
+                {
+                    type   : 'html',
+                    body  : '<h4>语文</h4><li>时间：9：00 ~ 10：00</li><li>地点：文津楼</li><li>老师：王文</li>'
+                },
+                {
+                    type   : 'html',
+                    body  : '<h4>数学</h4><li>时间：10：00 ~ 11：00</li><li>地点：科苑楼</li><li>老师：张锋</li>'
+                }	
+            ]
+        })
+    } else {
+        return null
+    }
+}
+
 const talkToChatBot = async (agent, userId, type, params) => {
+    const result = fakeResponse(userId, type, params)
+    if (result) return result
+    
     const user = await getUserInfo(userId);
     const chatbot = new Chatbot(agent, config.chatbot_url);
     if (type === 'text') {
@@ -119,7 +152,6 @@ const handleSurveyMessage = async (ctx) => {
 const handleAssistantMessage = async(ctx) => {
     await handleMessage(ctx, config.agent);
 }
-
 
 module.exports = {
     'POST /chatbot' : handleAssistantMessage,
