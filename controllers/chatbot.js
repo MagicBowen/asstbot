@@ -97,12 +97,13 @@ const fakeResponse = (userId, type, params) => {
     } else {
         return null
     }
+    return result
 }
 
 const talkToChatBot = async (agent, userId, type, params) => {
     const result = fakeResponse(userId, type, params)
     if (result) return result
-    
+
     const user = await getUserInfo(userId);
     const chatbot = new Chatbot(agent, config.chatbot_url);
     if (type === 'text') {
