@@ -256,10 +256,17 @@ const reply = {
         },
 		{ caption  : '女',
 		  value    : '我是女的', // optional
-		  imageUrl : 'http://localhost/image/icon1.png', // optional
+		  imageUrl : 'http://localhost/image/icon2.png', // optional
 		  indicator: 'index-1', // optional
 		  event    : 'deal-female-selection' // optional
-        }
+		},
+		{ caption  : '分享到群',
+		  value    : '分享到群', // optional
+		  imageUrl : 'http://localhost/image/icon3.png', // optional
+		  indicator: 'index-2', // optional
+		  event    : 'share-to-group', // optional
+		  type     : 'share'
+        }		
     ]
 }
 
