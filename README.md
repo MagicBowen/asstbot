@@ -265,7 +265,7 @@ const reply = {
 		  imageUrl : 'http://localhost/image/icon3.png', // optional
 		  indicator: 'index-2', // optional
 		  event    : 'share-to-group', // optional
-		  type     : 'share'
+		  type     : 'share' // optional
         }		
     ]
 }
