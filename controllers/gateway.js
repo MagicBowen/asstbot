@@ -27,8 +27,11 @@ const apiHandle = async (req) => {
         case 'update-asst-header-url':
             result = await User.updateAsstBotAvatarUrl(userId, params.avatarUrl);
             break;
-        case 'updateA-asst-master-title':
+        case 'update-asst-master-title':
             result = await User.updateAsstBotMasterTitle(userId, params.masterTitle);
+            break;
+        case 'update-asst-tts':
+            result = await User.updateAsstBotTts(userId, params.ttsEnable);
             break;
         case 'get-survey-by-id':
             result = await Survey.getSurveyById(params.id);
