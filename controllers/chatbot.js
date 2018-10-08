@@ -99,7 +99,8 @@ const talkToChatBot = async (agent, userId, type, params) => {
         result =  await chatbot.replyToEvent(user, params.event, params);
     }
     result = await chatbot.replyToEvent(user, type, params);
-    return await addTtsForMsgs(result)
+    // return await addTtsForMsgs(result)
+    return result
 }
 
 const handleMessage = async (ctx, agent) => {
