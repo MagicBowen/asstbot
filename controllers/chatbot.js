@@ -83,7 +83,7 @@ const addTtsForMsgs = async (response) => {
 }
 
 const talkToChatBot = async (agent, userId, type, params) => {
-    const result = null
+    let result = null
 
     const user = await getUserInfo(userId);
     const chatbot = new Chatbot(agent, config.chatbot_url);
