@@ -154,7 +154,8 @@ const reply = {
 
 {
     type   : 'text',
-    reply  : '你好，主人'
+	reply  : '你好，主人',
+	tts    : 'tts/i7fb23rftc09234mphklf89.mp3'
 }
 
 {

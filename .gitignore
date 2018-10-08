@@ -3,6 +3,7 @@ node_modules/*
 .DS_Store
 package-lock.json
 logs/*
+static/tts/*.mp3
 static/audio/*
 static/vedio/*
 config.json
