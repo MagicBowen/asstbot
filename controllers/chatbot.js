@@ -40,7 +40,7 @@ class Chatbot {
             for (let i = 0; i < response.reply.length; i++){
                 result.msgs.push({type : 'text', reply : response.reply[i]});
             }
-        } 
+        }
         if (response.hasOwnProperty('data')) {
             result.msgs.push(...response['data']);
         }

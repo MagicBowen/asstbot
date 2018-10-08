@@ -5,15 +5,18 @@ const path = require('path');
 const config = require('../config')
 const AipSpeech = require("baidu-aip-sdk").speech;
 
-function getTtsAudioFile(text) {
+function getTtsAudioFile(text, speed, role) {
+    speed = speed ? speed : 5
+    role = role ? role : 4
     const client = new AipSpeech(config.baidu_api_id, config.baidu_api_key, config.baidu_secret_key)
     return new Promise( (resolve, reject) => {
-        client.text2audio(text, {spd: 5, per: 4}).then(function(result) {
+        client.text2audio(text, {spd: speed, per: role}).then(function(result) {
             if (result.data) {
-                const audioFile = 'tts/' + uuid.v1() + '.mp3'
-                fs.writeFileSync(audioFile, result.data)
-                logger.debug('get tts audio from baidu: ' + audioFile)
-                resolve(audioFile)
+                const filename = uuid.v1() + '.mp3'
+                const filepath = 'static/tts/' + filename
+                fs.writeFileSync(filepath, result.data)
+                logger.debug('get tts audio from baidu: ' + filepath)
+                resolve(filename)
             } else {
                 logger.error(result)
                 reject(result)
@@ -24,4 +27,4 @@ function getTtsAudioFile(text) {
     })
 }
 
-module.exports.getTts = getTtsAudioFile
+module.exports.getAudio = getTtsAudioFile
