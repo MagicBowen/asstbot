@@ -17,7 +17,8 @@ mongoose.model('Users', new Schema({
         nickName : String,
         gender   : String,
         avatarUrl: String,
-        masterTitle : String
+        masterTitle : String,
+        tts      : Boolean
     }
 }));
 
@@ -147,6 +148,29 @@ model.updateAsstBotMasterTitle = async (userId,  masterTitle) => {
     });
     await user.save();
     logger.debug(`Add new user ${userId} by asstbot masterTitle ${masterTitle} successful!`);
+}
+
+model.updateAsstBotTts = async (userId,  tts) => {
+    const oriUser = await User.findOne({id : userId}).exec();
+    
+    if (oriUser) {
+        let newUser = oriUser.toObject();
+        if(!newUser.asstBot){
+            newUser.asstBot = {}
+        }
+        newUser.asstBot.tts = tts;
+        oriUser.set(newUser);
+        await oriUser.save();
+        logger.debug(`update tts ${tts} of user ${userId} successful!`);
+        return;
+    }
+
+    const user = new User({
+        id : userId,
+        asstBot : {tts : tts},
+    });
+    await user.save();
+    logger.debug(`Add new user ${userId} by asstbot tts ${tts} successful!`);
 }
 
 module.exports = model;

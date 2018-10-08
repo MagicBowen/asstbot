@@ -108,6 +108,19 @@ const updateAsstBotMasterTitle = async (ctx) => {
     }
 }
 
+const updateAsstBotTts = async (ctx) => {
+    try {
+        await user.updateAsstBotTts(ctx.request.body.id, ctx.request.body.tts);
+        ctx.response.type = "application/json";
+        ctx.response.status = 200;
+        ctx.response.body = {result : 'success'};
+    } catch(err) {
+        ctx.response.status = 404;
+        ctx.response.body = {result : 'failed'};
+        logger.error('update user asstbot tts error: ' + err);
+    }
+}
+
 module.exports = {
     'GET /openid' : getUserId,
     'GET /user'   : getUserInfo,
@@ -115,5 +128,6 @@ module.exports = {
     'POST /user/asstBot/nickname' : updateAsstBotNickName,
     'POST /user/asstBot/gender' : updateAsstBotGender,
     'POST /user/asstBot/avatar' : updateAsstBotAvatarUrl,
-    'POST /user/asstBot/master' : updateAsstBotMasterTitle
+    'POST /user/asstBot/master' : updateAsstBotMasterTitle,
+    'POST /user/asstBot/tts' : updateAsstBotTts
 };
