@@ -1,6 +1,7 @@
 const postJson = require('../utils/postjson');
 const config = require('../config');
 const User = require('../models/user');
+const TTS = require('../utils/tts')
 const logger = require('../utils/logger').logger('chatbot');
 
 class Chatbot {
@@ -69,55 +70,38 @@ const getUserInfo = async (userId) => {
     }
 }
 
-const fakeResponse = (userId, type, params) => {
-    let result = {
-        to : { id : userId },
-        msgs: []
-    };
-
-    if (params.query === '测试html') {
-        result.msgs.push({
-            type : 'html', 
-            reply : '<h4>语文</h4><li>时间：9：00 ~ 10：00</li><li>地点：文津楼</li><li>老师：王文</li>'
-        })
-    } else if (params.query === '测试html分页') {
-        result.msgs.push({
-            type   : 'page-list',
-            pages  : [
-                {
-                    type   : 'html',
-                    body  : '<h4>语文</h4><li>时间：9：00 ~ 10：00</li><li>地点：文津楼</li><li>老师：王文</li>'
-                },
-                {
-                    type   : 'html',
-                    body  : '<h4>数学</h4><li>时间：10：00 ~ 11：00</li><li>地点：科苑楼</li><li>老师：张锋</li>'
-                }	
-            ]
-        })
-    } else {
-        return null
+const addTtsForMsgs = async (response) => {
+    for (let msg of response.msgs) {
+        if (msg.type === 'text') {
+            try {
+                msg.tts = await TTS.getAudio(msg.reply)
+            } catch (err) {
+                logger.error(`text msg ${JSON.stringify(msg)} get tts error ${err}`)
+            }
+        }
     }
-    return result
+    return response
 }
 
 const talkToChatBot = async (agent, userId, type, params) => {
-    const result = fakeResponse(userId, type, params)
-    if (result) return result
+    let result = null
 
     const user = await getUserInfo(userId);
     const chatbot = new Chatbot(agent, config.chatbot_url);
     if (type === 'text') {
-        return await chatbot.replyToText(user, params.query);
+        result = await chatbot.replyToText(user, params.query);
     } else if (type === 'speech') {
-        return await chatbot.replyToText(user, params.asr);
+        result = await chatbot.replyToText(user, params.asr);
     } else if (type === 'event') {
         if ((params)&&(params.hasOwnProperty('name'))) {
-            return await chatbot.replyToEvent(user, params.name, params);
+            result = await chatbot.replyToEvent(user, params.name, params);
         }
     } else if ((params)&&(params.hasOwnProperty('event'))) {
-        return await chatbot.replyToEvent(user, params.event, params);
+        result =  await chatbot.replyToEvent(user, params.event, params);
+    } else {
+        result = await chatbot.replyToEvent(user, type, params);
     }
-    return await chatbot.replyToEvent(user, type, params);
+    return await addTtsForMsgs(result)
 }
 
 const handleMessage = async (ctx, agent) => {
