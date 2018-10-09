@@ -62,7 +62,9 @@ const getUserInfo = async (userId) => {
         if (user.wechat && user.wechat.avatarUrl) {
             userContext.avatarUrl = user.wechat.avatarUrl;
         }
-
+        if (user.asstBot) {
+            userContext.tts = user.asstBot.tts
+        }
         return userContext;
     } catch (err) {
         logger.error(`get user info of ${userId} error: ` + err);
@@ -70,9 +72,12 @@ const getUserInfo = async (userId) => {
     }
 }
 
-const addTtsForMsgs = async (response) => {
+const addTtsForMsgs = async (user, response) => {
+    if (user.tts === false) {
+        return response
+    }
     for (let msg of response.msgs) {
-        if (msg.type === 'text') {
+        if (msg.type === 'text' || msg.type === 'tts') {
             try {
                 msg.tts = await TTS.getAudio(msg.reply)
             } catch (err) {
@@ -101,7 +106,7 @@ const talkToChatBot = async (agent, userId, type, params) => {
     } else {
         result = await chatbot.replyToEvent(user, type, params);
     }
-    return await addTtsForMsgs(result)
+    return await addTtsForMsgs(user, result)
 }
 
 const handleMessage = async (ctx, agent) => {

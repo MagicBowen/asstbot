@@ -160,13 +160,13 @@ const reply = {
 
 {
 	type   : 'tts',
-	url    : 'tts/i7fb23rftc09234mphklf89.mp3'
+	tts    : 'tts/i7fb23rftc09234mphklf89.mp3'
 }
 
 {
     type   : 'html',
 	body   : '<h4>语文</h4><li>时间：9：00 ~ 10：00</li><li>地点：文津楼</li><li>老师：王文</li>',
-	style  : 'h4 {color:red; font-size:14px;} li {color:black; font-size:12px;} '
+	style  : 'h4 {color:red; font-size:14px;} li {color:black; font-size:12px;}'
 }
 
 {
@@ -179,7 +179,7 @@ const reply = {
 		{
 			type   : 'html',
             body  : '<h4>数学</h4><li>时间：10：00 ~ 11：00</li><li>地点：科苑楼</li><li>老师：张锋</li>'
-		}	
+		}
 	]
 }
 
@@ -399,7 +399,7 @@ survey中的`type`字段为上述其一；
 		"intro"  : "Hello, 好朋友们，回答下面的问题，来看看你们有多了解我吧",
 		"avatarUrl" : "http://localhost:8000/profile.jpg",
     	"subjects" : [
-    		{ 
+    		{
     			"id" : 1,
     			"type" : "radio",
 				"question" : "我是哪个星座的？",
@@ -422,7 +422,7 @@ survey中的`type`字段为上述其一；
     				}     				
     			]
     		},
-    		{ 
+    		{
     			"id" : 2,
     			"type" : "checkbox",
     			"question" : "我喜欢吃以下哪些东西？",
