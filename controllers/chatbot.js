@@ -62,8 +62,9 @@ const getUserInfo = async (userId) => {
         if (user.wechat && user.wechat.avatarUrl) {
             userContext.avatarUrl = user.wechat.avatarUrl;
         }
+        userContext.tts = true
         if (user.asstBot) {
-            userContext.tts = user.asstBot.tts
+            userContext.tts = (user.asstBot.tts !== false)
         }
         return userContext;
     } catch (err) {
