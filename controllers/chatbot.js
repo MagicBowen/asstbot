@@ -52,6 +52,7 @@ class Chatbot {
 const getUserInfo = async (userId) => {
     try {
         const user = await User.getInfo(userId);
+        logger.debug('user is ' + JSON.stringify(user))
         const userContext = { id : userId };
         if(user == null ) {
             return userContext
