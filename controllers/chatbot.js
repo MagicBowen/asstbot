@@ -78,12 +78,16 @@ const addTtsForMsgs = async (user, response) => {
         return response
     }
     for (let msg of response.msgs) {
-        if ((msg.type === 'text' && msg.tts !== false) || msg.type === 'tts') {
-            try {
-                msg.tts = await TTS.getAudio(msg.reply)
-            } catch (err) {
-                logger.error(`text msg ${JSON.stringify(msg)} get tts error ${err}`)
-            }
+        let reply = null
+        if (msg.type === 'text') {
+            reply = msg.tts ? msg.tts : msg.reply
+        } else if (msg.type === 'tts') {
+            reply = msg.reply
+        }
+        try {
+            msg.tts = await TTS.getAudio(reply)
+        } catch (err) {
+            logger.error(`text msg ${JSON.stringify(msg)} get tts error ${err}`)
         }
     }
     return response
