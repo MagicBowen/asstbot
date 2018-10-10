@@ -162,6 +162,7 @@ model.updateAsstBotTts = async (userId,  tts) => {
         oriUser.set(newUser);
         await oriUser.save();
         logger.debug(`update tts ${tts} of user ${userId} successful!`);
+        logger.debug(`user changed to ${JSON.stringify(oriUser)}`);
         return;
     }
 

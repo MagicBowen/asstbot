@@ -6,8 +6,13 @@ const SimplifyResult = require('../models/simplifier')
 var arangoDb = require("../models/arango.js")
 const logger = require('../utils/logger').logger('gateway');
 
+function convert_to_openId(userId){
+    var openId = (userId.length == 28) ? userId : userId.replace("_D_", "-")
+    return openId
+}
+
 const apiHandle = async (req) => {
-    const userId = req.userId;
+    const userId = convert_to_openId(req.userId);
     const api = req.api;
     const params = req.arguments;
     let result = null;
