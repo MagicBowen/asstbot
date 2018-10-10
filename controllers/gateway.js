@@ -10,6 +10,7 @@ const apiHandle = async (req) => {
     const userId = req.userId;
     const api = req.api;
     const params = req.arguments;
+    logger.debug('gateway param: ' + JSON.stringify(params))
     let result = null;
     switch(api) {
         case 'get-user-info' :
