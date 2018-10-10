@@ -49,10 +49,17 @@ class Chatbot {
     }
 }
 
+const isTtsEnable = (user) => {
+    let tts = true
+    if (user.asstBot) {
+        tts = (user.asstBot.tts !== false)
+    }    
+    return tts
+}
+
 const getUserInfo = async (userId) => {
     try {
         const user = await User.getInfo(userId);
-        logger.debug('user is ' + JSON.stringify(user))
         const userContext = { id : userId };
         if(user == null ) {
             return userContext
@@ -63,11 +70,7 @@ const getUserInfo = async (userId) => {
         if (user.wechat && user.wechat.avatarUrl) {
             userContext.avatarUrl = user.wechat.avatarUrl;
         }
-        userContext.tts = true
-        if (user.asstBot) {
-            userContext.tts = (user.asstBot.tts !== false)
-            logger.debug('get user tts config is ' + user.asstBot.tts)
-        }
+        userContext.tts = isTtsEnable(user)
         return userContext;
     } catch (err) {
         logger.error(`get user info of ${userId} error: ` + err);
@@ -75,9 +78,10 @@ const getUserInfo = async (userId) => {
     }
 }
 
-const addTtsForMsgs = async (user, response) => {
-    logger.debug('user config is ' + JSON.stringify(user))
-    if (user.tts !== true) {
+const addTtsForMsgs = async (userId, response) => {
+    const user = await User.getInfo(userId);
+    const ttsEnable = isTtsEnable(user)
+    if (!ttsEnable) {
         return response
     }
     for (let msg of response.msgs) {
@@ -115,7 +119,7 @@ const talkToChatBot = async (agent, userId, type, params) => {
     } else {
         result = await chatbot.replyToEvent(user, type, params);
     }
-    return await addTtsForMsgs(user, result)
+    return await addTtsForMsgs(userId, result)
 }
 
 const handleMessage = async (ctx, agent) => {
