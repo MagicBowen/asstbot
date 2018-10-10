@@ -84,6 +84,7 @@ const addTtsForMsgs = async (user, response) => {
         } else if (msg.type === 'tts') {
             reply = msg.reply
         }
+        if (!reply) continue
         try {
             msg.tts = await TTS.getAudio(reply)
         } catch (err) {
