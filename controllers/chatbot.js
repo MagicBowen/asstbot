@@ -77,7 +77,7 @@ const addTtsForMsgs = async (user, response) => {
         return response
     }
     for (let msg of response.msgs) {
-        if (msg.type === 'text' || msg.type === 'tts') {
+        if ((msg.type === 'text' && msg.tts) || msg.type === 'tts') {
             try {
                 msg.tts = await TTS.getAudio(msg.reply)
             } catch (err) {
@@ -145,5 +145,5 @@ const handleAssistantMessage = async(ctx) => {
 
 module.exports = {
     'POST /chatbot' : handleAssistantMessage,
-    'POST /chatbot/survey' : handleSurveyMessage,
+    'POST /chatbot/survey' : handleSurveyMessage
 };
