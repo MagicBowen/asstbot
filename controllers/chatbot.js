@@ -80,7 +80,7 @@ const addTtsForMsgs = async (user, response) => {
     for (let msg of response.msgs) {
         let reply = null
         if (msg.type === 'text') {
-            reply = msg.tts ? msg.tts : msg.reply
+            reply = msg.hasOwnProperty('tts') ? msg.tts : msg.reply
         } else if (msg.type === 'tts') {
             reply = msg.reply
         }
