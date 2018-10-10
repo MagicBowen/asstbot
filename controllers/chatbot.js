@@ -73,11 +73,11 @@ const getUserInfo = async (userId) => {
 }
 
 const addTtsForMsgs = async (user, response) => {
-    if (user.tts === false) {
+    if (user.tts !== true) {
         return response
     }
     for (let msg of response.msgs) {
-        if ((msg.type === 'text' && msg.tts) || msg.type === 'tts') {
+        if ((msg.type === 'text' && msg.tts !== false) || msg.type === 'tts') {
             try {
                 msg.tts = await TTS.getAudio(msg.reply)
             } catch (err) {
