@@ -65,6 +65,7 @@ const getUserInfo = async (userId) => {
         userContext.tts = true
         if (user.asstBot) {
             userContext.tts = (user.asstBot.tts !== false)
+            logger.debug('get user tts config is ' + user.asstBot.tts)
         }
         return userContext;
     } catch (err) {
@@ -74,6 +75,7 @@ const getUserInfo = async (userId) => {
 }
 
 const addTtsForMsgs = async (user, response) => {
+    logger.debug('user config is ' + JSON.stringify(user))
     if (user.tts !== true) {
         return response
     }
