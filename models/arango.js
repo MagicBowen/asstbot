@@ -17,12 +17,14 @@ function init(){
 
 const  courseTableCollection = "courseTable2"
 const  userIdsCollection = "userIds"
+const  feedbackCollection = "userFeedbacks"
 
 function convert_to_openId(userId){
     var openId = (userId.length == 28) ? userId : userId.replace("_D_", "-")
     return openId
 }
 
+//////////////////////////////////////////////////////////////////
 async function getCourseId(userId) {
     var openId = convert_to_openId(userId)
     var courseId = "darwin_" + openId
@@ -39,6 +41,7 @@ async function getCourseId(userId) {
     return courseId
 }
 
+//////////////////////////////////////////////////////////////////
 async function getDayCourseForUser(userId, weekday){
     var courseId = await getCourseId(userId)
     var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable.${weekday}`
@@ -57,6 +60,7 @@ async function getDayCourseForUser(userId, weekday){
     })
 }
 
+//////////////////////////////////////////////////////////////////
 async function queryAllCourseForUser(userId) {
     var courseId = await getCourseId(userId)
     var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable`
@@ -76,8 +80,33 @@ async function queryAllCourseForUser(userId) {
 
 }
 
+//////////////////////////////////////////////////////////////////
+function buildFeedbackDoc(userId, userInfo, content, contectWay){
+    var doc = {}
+    doc.userId = userId
+    doc.userInfo = userInfo
+    doc.content = content
+    doc.contectWay = contectWay
+    return doc
+}
+
+//////////////////////////////////////////////////////////////////
+async function saveFeedbackForUser(userId, userInfo, content, contectWay){
+    var collection = db.collection(feedbackCollection)
+    var doc = buildFeedbackDoc(userId, userInfo, content, contectWay)
+
+    var feedbackId = await collection.save(doc).then(
+        meta => { console.log('Document saved:', meta._key); return meta._key },
+        err => { console.error('Failed to save document:', err); return "" }
+    );
+
+    rerturn feedbackId
+}
+
+
 module.exports={
     init,
     getDayCourseForUser,
-    queryAllCourseForUser
+    queryAllCourseForUser,
+    saveFeedbackForUser
 }

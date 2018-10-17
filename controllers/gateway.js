@@ -93,6 +93,11 @@ const apiHandle = async (req) => {
         case 'query-all-course-for-user':
             result = await arangoDb.queryAllCourseForUser(userId)
             break;
+
+        case 'save-feedback-for-user':
+            result = await arangoDb.saveFeedbackForUser(userId, User.getInfo(userId), params.content, params.contactWay)
+            break;
+
         default:
             result = 'unknown gateway api : ' + api;
             logger.error(result);
