@@ -95,7 +95,9 @@ const apiHandle = async (req) => {
             break;
 
         case 'save-feedback-for-user':
-            result = await arangoDb.saveFeedbackForUser(userId, User.getInfo(userId), params.content, params.contactWay)
+            var userInfo = User.getInfo(userId)
+            logger.info('user info ', userInfo)
+            result = await arangoDb.saveFeedbackForUser(userId, userInfo, params.content, params.contactWay)
             break;
 
         default:
