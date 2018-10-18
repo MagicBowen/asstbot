@@ -84,9 +84,9 @@ async function queryAllCourseForUser(userId) {
 function buildFeedbackDoc(userId, userInfo, content, contectWay){
     var doc = {}
     doc.userId = userId
-    delete userInfo._key
-    delete userInfo.key
-    delete userInfo._v
+    delete userInfo._id
+    delete userInfo.id
+    delete userInfo.__v
     doc.userInfo = userInfo
     doc.content = content
     doc.contectWay = contectWay
