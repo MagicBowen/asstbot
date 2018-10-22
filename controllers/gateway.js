@@ -98,6 +98,14 @@ const apiHandle = async (req) => {
             var userInfo = await User.getInfo(userId)
             result = await arangoDb.saveFeedbackForUser(userId, userInfo, params.content, params.contactWay)
             break;
+        
+        case 'get-today-horoscope':
+            result = await arangoDb.getTodayHoroscope(params.sign)
+            break;
+        
+        case 'get-horoscope':
+            result = await arangoDb.getHoroscope(params.day, params.sign)
+            break;
 
         default:
             result = 'unknown gateway api : ' + api;
