@@ -152,7 +152,7 @@ async function deleteDictateWords(dictateWordsId){
 async function getAllDictateWords(openId){
     var darwinId = await getDarwinId(openId)
     var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' return doc`
-    await db.query(aql).then(cursor => cursor.all())
+    return await db.query(aql).then(cursor => cursor.all())
     .then(wordsList => { return wordsList
     },
     err => {
