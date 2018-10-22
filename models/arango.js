@@ -108,9 +108,17 @@ async function saveFeedbackForUser(userId, userInfo, content, contectWay){
 }
 
 //////////////////////////////////////////////////////////////////
+function getlocalDateString(){
+    var myDate = new Date()
+    return myDate.toLocaleDateString()
+}
+
+//////////////////////////////////////////////////////////////////
 async function addDictateWords(openId, dictateWords) {
     var darwinId = await getDarwinId(openId)
     dictateWords.darwinId = darwinId
+    dictateWords.createTime = getlocalDateString()
+    dictateWords.updateTime = getlocalDateString()
     var collection = db.collection(dictateWordsCollection)
     var dictateWordsId = await collection.save(dictateWords).then(
         meta => { console.log('dictate words saved:', meta._key); return meta._key },
@@ -122,6 +130,7 @@ async function addDictateWords(openId, dictateWords) {
 //////////////////////////////////////////////////////////////////
 async function udpateDictateWords(dictateWordsId, dictateWords){
     var collection = db.collection(dictateWordsCollection)
+    dictateWords.updateTime = getlocalDateString()
     var dictateWordsId = await collection.update(dictateWordsId, dictateWords).then(
         meta => { console.log('dictate words udpated:', meta._key); return meta._key },
         err => { console.error('Failed to udpate dictate words:', err); return "" }
