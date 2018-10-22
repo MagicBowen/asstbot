@@ -18,14 +18,16 @@ function init(){
 const  courseTableCollection = "courseTable2"
 const  userIdsCollection = "userIds"
 const  feedbackCollection = "userFeedbacks"
+const  dictateWordsCollection = "dictateWords"
 
 function convert_to_openId(userId){
     var openId = (userId.length == 28) ? userId : userId.replace("_D_", "-")
     return openId
 }
 
+
 //////////////////////////////////////////////////////////////////
-async function getCourseId(userId) {
+async function getDarwinId(userId) {
     var openId = convert_to_openId(userId)
     var courseId = "darwin_" + openId
     var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user.courseId`
@@ -43,7 +45,7 @@ async function getCourseId(userId) {
 
 //////////////////////////////////////////////////////////////////
 async function getDayCourseForUser(userId, weekday){
-    var courseId = await getCourseId(userId)
+    var courseId = await getDarwinId(userId)
     var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable.${weekday}`
     logger.info('execute aql', aql)
     return await db.query(aql).then(cursor => cursor.all())
@@ -62,7 +64,7 @@ async function getDayCourseForUser(userId, weekday){
 
 //////////////////////////////////////////////////////////////////
 async function queryAllCourseForUser(userId) {
-    var courseId = await getCourseId(userId)
+    var courseId = await getDarwinId(userId)
     var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable`
     logger.info('execute aql', aql)
     return await db.query(aql).then(cursor => cursor.all())
@@ -105,10 +107,58 @@ async function saveFeedbackForUser(userId, userInfo, content, contectWay){
     return  feedbackId
 }
 
+//////////////////////////////////////////////////////////////////
+async function addDictateWords(openId, dictateWords) {
+    var darwinId = await getDarwinId(openId)
+    dictateWords.darwinId = darwinId
+    var collection = db.collection(dictateWordsCollection)
+    var dictateWordsId = await collection.save(dictateWords).then(
+        meta => { console.log('dictate words saved:', meta._key); return meta._key },
+        err => { console.error('Failed to save dictate words:', err); return "" }
+    );
+    return dictateWordsId
+}
+
+//////////////////////////////////////////////////////////////////
+async function udpateDictateWords(dictateWordsId, dictateWords){
+    var collection = db.collection(dictateWordsCollection)
+    var dictateWordsId = await collection.update(dictateWordsId, dictateWords).then(
+        meta => { console.log('dictate words udpated:', meta._key); return meta._key },
+        err => { console.error('Failed to udpate dictate words:', err); return "" }
+    );
+    return dictateWordsId
+}
+
+//////////////////////////////////////////////////////////////////
+async function deleteDictateWords(dictateWordsId){
+    var collection = db.collection(dictateWordsCollection)
+    await collection.remove(dictateWordsId).then(
+        () => console.log('dictateWords doc removed'),
+        err => console.error('Failed to remove dictateWords', err)
+    );
+    return dictateWordsId
+}
+
+//////////////////////////////////////////////////////////////////
+async function getAllDicateWords(openId){
+    var darwinId = await getDarwinId(openId)
+    var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' return doc`
+    await db.query(aql).then(cursor => cursor.all())
+    .then(wordsList => { return wordsList
+    },
+    err => {
+        logger.error('Failed to fetch agent document:')
+        return []
+    })
+}
 
 module.exports={
     init,
     getDayCourseForUser,
     queryAllCourseForUser,
-    saveFeedbackForUser
+    saveFeedbackForUser,
+    addDictateWords,
+    udpateDictateWords,
+    deleteDictateWords,
+    getAllDicateWords
 }
