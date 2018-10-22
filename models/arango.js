@@ -190,7 +190,7 @@ async function getTodayHoroscope (sign) {
 }
 
 async function getHoroscope (day, sign) {
-    var aql = `let today = DATE_FORMAT(DATE('${day}'), '%yyyy%mm%dd')
+    var aql = `let today = DATE_FORMAT(DATE_ISO8601('${day}'), '%yyyy%mm%dd')
     for doc in dayHoroscope
         let day = TO_STRING(doc.date)
         filter day == today && doc.name == '${sign}'
