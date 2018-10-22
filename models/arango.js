@@ -179,8 +179,14 @@ async function getTodayHoroscope (sign) {
         filter day == today && doc.name == '${sign}'
         return doc`
 
-    var result = await db.query(aql)
-    return result[0]
+    return await db.query(aql).then(cursor => cursor.all())
+        .then(result => {
+            if(result.length == 0){
+                return null
+            }else{
+                return result[0]
+            }
+        })
 }
 
 async function getHoroscope (day, sign) {
@@ -190,8 +196,14 @@ async function getHoroscope (day, sign) {
         filter day == today && doc.name == '${sign}'
         return doc`
 
-    var result = await db.query(aql)
-    return result[0]
+    return await db.query(aql).then(cursor => cursor.all())
+        .then(result => {
+            if(result.length == 0){
+                return null
+            }else{
+                return result[0]
+            }
+        })
 }
 
 module.exports={
