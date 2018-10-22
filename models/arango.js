@@ -148,13 +148,23 @@ async function deleteDictateWords(dictateWordsId){
     return dictateWordsId
 }
 
+function formatDictateWords(doc){
+    var id = doc._key
+    delete doc._key
+    delete doc._id
+    delete doc._rev
+    doc.id = id
+    return doc
+}
+
 //////////////////////////////////////////////////////////////////
 async function getAllDictateWords(openId){
     var darwinId = await getDarwinId(openId)
     var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' return doc`
     return await db.query(aql).then(cursor => cursor.all())
-    .then(wordsList => { return wordsList
-    },
+    .then(wordsList => { return wordsList.map(function(doc){
+        return formatDictateWords(doc)
+    })},
     err => {
         logger.error('Failed to fetch agent document:')
         return []
