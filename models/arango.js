@@ -149,7 +149,7 @@ async function deleteDictateWords(dictateWordsId){
 }
 
 //////////////////////////////////////////////////////////////////
-async function getAllDicateWords(openId){
+async function getAllDictateWords(openId){
     var darwinId = await getDarwinId(openId)
     var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' return doc`
     await db.query(aql).then(cursor => cursor.all())
@@ -169,5 +169,5 @@ module.exports={
     addDictateWords,
     udpateDictateWords,
     deleteDictateWords,
-    getAllDicateWords
+    getAllDictateWords
 }
