@@ -995,7 +995,7 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 ### 删除词语列表
 * 请求方式
 
-``` get http://localhost/dictateWords?id=52115059```
+``` delete http://localhost/dictateWords?id=52115059```
 
 * 返回值
 ```json
