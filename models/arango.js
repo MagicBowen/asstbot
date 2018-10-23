@@ -19,6 +19,7 @@ const  courseTableCollection = "courseTable2"
 const  userIdsCollection = "userIds"
 const  feedbackCollection = "userFeedbacks"
 const  dictateWordsCollection = "dictateWords"
+const  dayHoroscopeCollection = "dayHoroscope" 
 
 function convert_to_openId(userId){
     var openId = (userId.length == 28) ? userId : userId.replace("_D_", "-")
@@ -148,6 +149,7 @@ async function deleteDictateWords(dictateWordsId){
     return dictateWordsId
 }
 
+//////////////////////////////////////////////////////////////////
 function formatDictateWords(doc){
     var id = doc._key
     delete doc._key
@@ -171,7 +173,7 @@ async function getAllDictateWords(openId){
     })
 }
 
-
+//////////////////////////////////////////////////////////////////
 async function getActiveDictationWords(openId){
     var darwinId = await getDarwinId(openId)
     var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' and doc.active == true return doc`
@@ -186,6 +188,41 @@ async function getActiveDictationWords(openId){
         return []
     })
 }
+//////////////////////////////////////////////////////////////////
+async function getTodayHoroscope (sign) {
+    var aql = `let today = DATE_FORMAT(DATE_ADD(DATE_NOW(), 8, 'hours'), '%yyyy%mm%dd')
+    for doc in dayHoroscope
+        let day = TO_STRING(doc.date)
+        filter day == today && doc.name == '${sign}'
+        return doc`
+
+    return await db.query(aql).then(cursor => cursor.all())
+        .then(result => {
+            if(result.length == 0){
+                return null
+            }else{
+                return result[0]
+            }
+        })
+}
+
+//////////////////////////////////////////////////////////////////
+async function getHoroscope (day, sign) {
+    var aql = `let today = DATE_FORMAT(DATE_ISO8601('${day}'), '%yyyy%mm%dd')
+    for doc in dayHoroscope
+        let day = TO_STRING(doc.date)
+        filter day == today && doc.name == '${sign}'
+        return doc`
+
+    return await db.query(aql).then(cursor => cursor.all())
+        .then(result => {
+            if(result.length == 0){
+                return null
+            }else{
+                return result[0]
+            }
+        })
+}
 
 module.exports={
     init,
@@ -196,5 +233,7 @@ module.exports={
     udpateDictateWords,
     deleteDictateWords,
     getAllDictateWords,
-    getActiveDictationWords
+    getActiveDictationWords,
+    getTodayHoroscope,
+    getHoroscope
 }

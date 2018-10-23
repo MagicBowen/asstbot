@@ -102,6 +102,14 @@ const apiHandle = async (req) => {
         case 'get_dictate_words_for_user':
             result = await arangoDb.getActiveDictationWords(userId)
             break;
+        
+        case 'get-today-horoscope':
+            result = await arangoDb.getTodayHoroscope(params.sign)
+            break;
+        
+        case 'get-horoscope':
+            result = await arangoDb.getHoroscope(params.day, params.sign)
+            break;
 
         default:
             result = 'unknown gateway api : ' + api;
