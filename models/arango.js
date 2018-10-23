@@ -101,8 +101,8 @@ async function saveFeedbackForUser(userId, userInfo, content, contectWay){
     var doc = buildFeedbackDoc(userId, userInfo, content, contectWay)
 
     var feedbackId = await collection.save(doc).then(
-        meta => { console.log('Document saved:', meta._key); return meta._key },
-        err => { console.error('Failed to save document:', err); return "" }
+        meta => { logger.info('Document saved:', meta._key); return meta._key },
+        err => { logger.error('Failed to save document:', err); return "" }
     );
 
     return  feedbackId
@@ -122,8 +122,8 @@ async function addDictateWords(openId, dictateWords) {
     dictateWords.updateTime = getlocalDateString()
     var collection = db.collection(dictateWordsCollection)
     var dictateWordsId = await collection.save(dictateWords).then(
-        meta => { console.log('dictate words saved:', meta._key); return meta._key },
-        err => { console.error('Failed to save dictate words:', err); return "" }
+        meta => { logger.info('dictate words saved:', meta._key); return meta._key },
+        err => { logger.error('Failed to save dictate words:', err); return "" }
     );
     return dictateWordsId
 }
@@ -133,8 +133,8 @@ async function udpateDictateWords(dictateWordsId, dictateWords){
     var collection = db.collection(dictateWordsCollection)
     dictateWords.updateTime = getlocalDateString()
     var dictateWordsId = await collection.update(dictateWordsId, dictateWords).then(
-        meta => { console.log('dictate words udpated:', meta._key); return meta._key },
-        err => { console.error('Failed to udpate dictate words:', err); return "" }
+        meta => { logger.info('dictate words udpated:', meta._key); return meta._key },
+        err => { logger.error('Failed to udpate dictate words:', err); return "" }
     );
     return dictateWordsId
 }
@@ -143,8 +143,8 @@ async function udpateDictateWords(dictateWordsId, dictateWords){
 async function deleteDictateWords(dictateWordsId){
     var collection = db.collection(dictateWordsCollection)
     await collection.remove(dictateWordsId).then(
-        () => console.log('dictateWords doc removed'),
-        err => console.error('Failed to remove dictateWords', err)
+        () => logger.info('dictateWords doc removed'),
+        err => logger.error('Failed to remove dictateWords', err)
     );
     return dictateWordsId
 }
@@ -176,7 +176,8 @@ async function getAllDictateWords(openId){
 //////////////////////////////////////////////////////////////////
 async function getActiveDictationWords(openId){
     var darwinId = await getDarwinId(openId)
-    var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' and doc.active == true return doc`
+    var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' and doc.active == true return doc.words`
+    logger.info("query aql: ", aql)
     return await db.query(aql).then(cursor => cursor.all())
     .then(wordsList => {if(wordsList.length == 0){
         return []
