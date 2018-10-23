@@ -98,6 +98,10 @@ const apiHandle = async (req) => {
             var userInfo = await User.getInfo(userId)
             result = await arangoDb.saveFeedbackForUser(userId, userInfo, params.content, params.contactWay)
             break;
+            
+        case 'get_dictate_words_for_user':
+            result = await arangoDb.getActiveDictationWords(userId)
+            break;
 
         default:
             result = 'unknown gateway api : ' + api;

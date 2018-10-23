@@ -171,6 +171,22 @@ async function getAllDictateWords(openId){
     })
 }
 
+
+async function getActiveDictationWords(openId){
+    var darwinId = await getDarwinId(openId)
+    var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' and doc.active == true return doc`
+    return await db.query(aql).then(cursor => cursor.all())
+    .then(wordsList => {if(wordsList.length == 0){
+        return []
+    }else{
+        return wordsList[0]
+    }},
+    err => {
+        logger.error('Failed to fetch agent document:')
+        return []
+    })
+}
+
 module.exports={
     init,
     getDayCourseForUser,
@@ -179,5 +195,6 @@ module.exports={
     addDictateWords,
     udpateDictateWords,
     deleteDictateWords,
-    getAllDictateWords
+    getAllDictateWords,
+    getActiveDictationWords
 }
