@@ -189,6 +189,55 @@ async function getTodayHoroscope (sign) {
         })
 }
 
+async function getTomorrowHoroscope (sign) {
+    var aql = `let tomorrow = DATE_FORMAT(DATE_ADD(DATE_NOW(), 32, 'hours'), '%yyyy%mm%dd')
+    for doc in tomorrowHoroscope
+        let day = TO_STRING(doc.date)
+        filter day == tomorrow && doc.name == '${sign}'
+        return doc`
+
+    return await db.query(aql).then(cursor => cursor.all())
+        .then(result => {
+            if(result.length == 0){
+                return null
+            }else{
+                return result[0]
+            }
+        })
+}
+
+async function getWeekHoroscope (sign) {
+    var aql = `let week = DATE_ISOWEEK(DATE_ADD(DATE_NOW(), 8, 'hours'))
+    for doc in weekHoroscope
+        filter doc.weekth == week && doc.name == '${sign}'
+        return doc`
+
+    return await db.query(aql).then(cursor => cursor.all())
+        .then(result => {
+            if(result.length == 0){
+                return null
+            }else{
+                return result[0]
+            }
+        })
+}
+
+async function getMonthHoroscope (sign) {
+    var aql = `let month = DATE_MONTH(DATE_ADD(DATE_NOW(), 8, 'hours'))
+    for doc in monthHoroscope
+        filter doc.month == month && doc.name == '${sign}'
+        return doc`
+
+    return await db.query(aql).then(cursor => cursor.all())
+        .then(result => {
+            if(result.length == 0){
+                return null
+            }else{
+                return result[0]
+            }
+        })
+}
+
 async function getHoroscope (day, sign) {
     var aql = `let today = DATE_FORMAT(DATE_ISO8601('${day}'), '%yyyy%mm%dd')
     for doc in dayHoroscope
@@ -216,5 +265,8 @@ module.exports={
     deleteDictateWords,
     getAllDictateWords,
     getTodayHoroscope,
-    getHoroscope
+    getHoroscope,
+    getTomorrowHoroscope,
+    getWeekHoroscope,
+    getMonthHoroscope
 }
