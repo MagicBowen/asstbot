@@ -350,6 +350,36 @@ async function removeWaitingBindingUser(user){
 }
 
 //////////////////////////////////////////////////////////////////
+async function getBindingUserType(openId) {
+    var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user`
+    logger.info('execute aql', aql)
+    var user = await db.query(aql).then(cursor => cursor.all())
+          .then(users => {
+            if(users.length > 0){
+                return users[0]
+            }
+            return null
+          }, err => {
+             logger.error('Failed to fetch agent document:')
+             return null
+          })
+    if (user == null){
+        return []
+    }
+    var bindingUserType = []
+    if ("xiaomiId" in user) {
+        bindingUserType.push("小米")
+    }
+
+    if ("duerosId" in user) {
+        bindingUserType.push("百度")
+    }
+
+    return bindingUserType
+   
+}
+
+//////////////////////////////////////////////////////////////////
 async function bindingUser(openId, bindingCode){
     var timeStamp = getTimeStamp()
     var expireTimeStamp = timeStamp - 300
@@ -408,6 +438,7 @@ module.exports={
     getTodayHoroscope,
     getHoroscope,
     bindingUser,
+    getBindingUserType,
     getTomorrowHoroscope,
     getWeekHoroscope,
     getMonthHoroscope,
