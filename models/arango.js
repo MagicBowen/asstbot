@@ -341,6 +341,7 @@ async function updateBindingUser(openId, user){
 
 //////////////////////////////////////////////////////////////////
 async function removeWaitingBindingUser(user){
+    logger.info("delete binding user date", JSON.stringify(user))
     var collection  = db.collection(waitingBindingCollection)
     await collection.remove(user._key).then(
         () => logger.info('waiting binding user delete'),
