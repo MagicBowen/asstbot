@@ -204,7 +204,7 @@ model.getHoroscope = async (userId) => {
     }
     const user = oriUser.toObject();
     if(!user.asstBot){
-         return
+         return null
     }
     return user.asstBot.horoscope
 }
