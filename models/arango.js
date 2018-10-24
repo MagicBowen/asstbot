@@ -383,7 +383,7 @@ async function bindingUser(openId, bindingCode){
     var timeStamp = getTimeStamp()
     var expireTimeStamp = timeStamp - 300
     var aql = `for doc in ${waitingBindingCollection} 
-    filter doc.bindingCode == ${bindingCode}  and doc.timestamp < ${expireTimeStamp}
+    filter doc.bindingCode == ${bindingCode}  and doc.timestamp > ${expireTimeStamp}
     return doc `
     
     logger.info('query binding user aql', aql)
