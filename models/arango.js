@@ -274,6 +274,22 @@ async function getHoroscope (day, sign) {
         })
 }
 
+async function getLaohuangli (day) {
+    var aql = `for doc in laohuangli
+    filter doc.yangli == "${day}"
+    limit 1
+    return doc`
+
+    return await db.query(aql).then(cursor => cursor.all())
+        .then(result => {
+            if(result.length == 0){
+                return null
+            }else{
+                return result[0]
+            }
+        })
+}
+
 module.exports={
     init,
     getDayCourseForUser,
@@ -288,5 +304,6 @@ module.exports={
     getHoroscope,
     getTomorrowHoroscope,
     getWeekHoroscope,
-    getMonthHoroscope
+    getMonthHoroscope,
+    getLaohuangli
 }

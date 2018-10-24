@@ -123,6 +123,10 @@ const apiHandle = async (req) => {
             result = await arangoDb.getHoroscope(params.day, params.sign)
             break;
 
+        case 'get-laohuangli':
+            result = await arangoDb.getLaohuangli(params.day)
+            break;
+
         default:
             result = 'unknown gateway api : ' + api;
             logger.error(result);
