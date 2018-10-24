@@ -341,10 +341,9 @@ async function updateBindingUser(openId, user){
 
 //////////////////////////////////////////////////////////////////
 async function removeWaitingBindingUser(user){
-    logger.info("delete binding user date", JSON.stringify(user))
     var collection  = db.collection(waitingBindingCollection)
     await collection.remove(user._key).then(
-        () => logger.info('waiting binding user delete'),
+        () => logger.info('delete waiting binding user success'),
         err => logger.error('remove waiting bing user fail', err)
     );
 }
@@ -401,9 +400,8 @@ async function bindingUser(openId, bindingCode){
         return false
     }
     var user = bindingUsers[0]
-    var ret = updateBindingUser(openId, user)
+    var ret = await updateBindingUser(openId, user)
     if(ret){
-        logger.info('coming here......')
         await removeWaitingBindingUser(user)
     }
     return ret
