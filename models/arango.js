@@ -19,7 +19,7 @@ const  courseTableCollection = "courseTable2"
 const  userIdsCollection = "userIds"
 const  feedbackCollection = "userFeedbacks"
 const  dictateWordsCollection = "dictateWords"
-const  dayHoroscopeCollection = "dayHoroscope" 
+const  waitingBindingCollection = "waitingBindingAccount" 
 
 function convert_to_openId(userId){
     var openId = (userId.length == 28) ? userId : userId.replace("_D_", "-")
@@ -28,20 +28,39 @@ function convert_to_openId(userId){
 
 
 //////////////////////////////////////////////////////////////////
+//此处主要为了解决和遗留数据的兼容问题，所以名字不统一，使用courseId作为darwin平台的统一ID。
 async function getDarwinId(userId) {
     var openId = convert_to_openId(userId)
-    var courseId = "darwin_" + openId
     var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user.courseId`
     logger.info('execute aql', aql)
-    await db.query(aql).then(cursor => cursor.all())
+    var darwinId = await db.query(aql).then(cursor => cursor.all())
           .then(users => {
             if(users.length > 0){
-                courseId = users[0]
+                return users[0]
             }
+            return null
           }, err => {
              logger.error('Failed to fetch agent document:')
+             return null
           })
-    return courseId
+
+    if(darwinId == null){
+        darwinId = "darwin_" + openId
+        await addNewUser(darwinId, openId)
+    }
+    return darwinId
+}
+
+async function addNewUser(darwinId, openId){
+    var collection = db.collection(userIdsCollection)
+    var user = {}
+    //此处主要为了解决和遗留数据的兼容问题，所以名字不统一
+    user.courseId = darwinId
+    user.openId = openId
+    await collection.save(user).then(
+        meta => { logger.info('add new user  saved:', meta._key); return meta._key },
+        err => { logger.error('Failed to add new user', err); return "" }
+    );
 }
 
 //////////////////////////////////////////////////////////////////
@@ -211,19 +230,89 @@ async function getTodayHoroscope (sign) {
 async function getHoroscope (day, sign) {
     var aql = `let today = DATE_FORMAT(DATE_ISO8601('${day}'), '%yyyy%mm%dd')
     for doc in dayHoroscope
-        let day = TO_STRING(doc.date)
-        filter day == today && doc.name == '${sign}'
-        return doc`
-
+    let day = TO_STRING(doc.date)
+    filter day == today && doc.name == '${sign}'
+    return doc`
+    
     return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    .then(result => {
+        if(result.length == 0){
+            return null
+        }else{
+            return result[0]
+        }
+    })
 }
+
+//////////////////////////////////////////////////////////////////
+function getTimeStamp(){
+    var date = new Date()
+    return date.getSeconds()
+}
+
+
+//////////////////////////////////////////////////////////////////
+async function getUserKey(openId, darwinId){
+    var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' and user.courseId == '${darwinId}' return user._key`
+    logger.info('execute aql', aql)
+    return await db.query(aql).then(cursor => cursor.all())
+          .then(users => {
+            if(users.length > 0){
+                return users[0]
+            }
+            return null
+          }, err => {
+             logger.error('Failed to fetch agent document:')
+             return null
+          })
+}
+
+async function updateBindingUser(openId, user){
+    var darwinId = await getDarwinId(openId)
+    var userKey = await getUserKey(openId, darwinId)
+
+    var bindingInfo = {}
+    if(user.userType == "xiaoai"){
+        bindingInfo.xiaomiId = user.userId
+    }else if (user.userType == "dueros"){
+        bindingInfo.duerosId = user.userId
+    }
+    bindingInfo.openId = openId
+    bindingInfo.courseId = darwinId
+
+    var collection = db.collection(userIdsCollection)
+    var key = await collection.update(userKey, bindingInfo).then(
+        meta => { logger.info('update binding user success:', meta._key); return meta._key },
+        err => { logger.error('Failed to binding user:', err); return "" }
+    )
+    return key != ""
+}
+
+
+//////////////////////////////////////////////////////////////////
+async function bindingUser(openId, bindingCode){
+    var timeStamp = getTimeStamp()
+    var expireTimeStamp = timeStamp - 300
+    var aql = `for doc in ${waitingBindingCollection} 
+                 filter doc.bindingCode == ${bindingCode}  and doc.timestamp < ${expireTimeStamp}
+                 return doc `
+
+    var bindingUsers = await db.query(aql).then(cursor => cursor.all())
+                            .then(result => {
+                                return result
+                            },
+                            err => {
+                                logger.error('Failed to fetch binding user')
+                                return []
+                            })
+    if (bindingUsers.length == 0){
+        return false
+    }
+    var user = bindingUsers[0]
+    return updateBindingUser(openId, user)
+}
+
+
 
 module.exports={
     init,
@@ -236,5 +325,6 @@ module.exports={
     getAllDictateWords,
     getActiveDictationWords,
     getTodayHoroscope,
-    getHoroscope
+    getHoroscope,
+    bindingUser
 }
