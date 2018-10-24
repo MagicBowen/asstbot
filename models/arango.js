@@ -296,7 +296,9 @@ async function getHoroscope (day, sign) {
 //////////////////////////////////////////////////////////////////
 function getTimeStamp(){
     var date = new Date()
-    return date.getSeconds()
+    logger.info(date.getTimezoneOffset())
+    logger.info(date.getTime())
+    return date.getTime()
 }
 
 
