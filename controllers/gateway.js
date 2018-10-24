@@ -106,9 +106,25 @@ const apiHandle = async (req) => {
         case 'get-today-horoscope':
             result = await arangoDb.getTodayHoroscope(params.sign)
             break;
+    
+        case 'get-tomorrow-horoscope':
+            result = await arangoDb.getTomorrowHoroscope(params.sign)
+            break;
+        
+        case 'get-week-horoscope':
+            result = await arangoDb.getWeekHoroscope(params.sign)
+            break;
+
+        case 'get-month-horoscope':
+            result = await arangoDb.getMonthHoroscope(params.sign)
+            break;
         
         case 'get-horoscope':
             result = await arangoDb.getHoroscope(params.day, params.sign)
+            break;
+
+        case 'get-laohuangli':
+            result = await arangoDb.getLaohuangli(params.day)
             break;
 
         default:
