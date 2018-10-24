@@ -296,9 +296,8 @@ async function getHoroscope (day, sign) {
 //////////////////////////////////////////////////////////////////
 function getTimeStamp(){
     var date = new Date()
-    return (date.getTime() / 1000)
+    return parseInt(date.getTime() / 1000)
 }
-
 
 //////////////////////////////////////////////////////////////////
 async function getUserKey(openId, darwinId){
