@@ -402,7 +402,8 @@ async function bindingUser(openId, bindingCode){
     }
     var user = bindingUsers[0]
     var ret = updateBindingUser(openId, user)
-    if(ret == true){
+    if(ret){
+        logger.info('coming here......')
         await removeWaitingBindingUser(user)
     }
     return ret
