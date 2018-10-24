@@ -316,6 +316,7 @@ async function getUserKey(openId, darwinId){
           })
 }
 
+//////////////////////////////////////////////////////////////////
 async function updateBindingUser(openId, user){
     var darwinId = await getDarwinId(openId)
     var userKey = await getUserKey(openId, darwinId)
@@ -330,6 +331,7 @@ async function updateBindingUser(openId, user){
     bindingInfo.courseId = darwinId
 
     var collection = db.collection(userIdsCollection)
+    logger.info('update user key', userKey, "user info",JSON.stringify(bindingInfo))
     var key = await collection.update(userKey, bindingInfo).then(
         meta => { logger.info('update binding user success:', meta._key); return meta._key },
         err => { logger.error('Failed to binding user:', err); return "" }
@@ -339,30 +341,44 @@ async function updateBindingUser(openId, user){
 
 
 //////////////////////////////////////////////////////////////////
+async function removeWaitingBindingUser(user){
+    var collection  = db.collection(waitingBindingCollection)
+    await collection.remove(user._key).then(
+        () => logger.info('waiting binding user delete'),
+        err => logger.error('remove waiting bing user fail', err)
+    );
+}
+
+//////////////////////////////////////////////////////////////////
 async function bindingUser(openId, bindingCode){
     var timeStamp = getTimeStamp()
     var expireTimeStamp = timeStamp - 300
     var aql = `for doc in ${waitingBindingCollection} 
-                 filter doc.bindingCode == ${bindingCode}  and doc.timestamp < ${expireTimeStamp}
-                 return doc `
-
+    filter doc.bindingCode == ${bindingCode}  and doc.timestamp < ${expireTimeStamp}
+    return doc `
+    
+    logger.info('query binding user aql', aql)
     var bindingUsers = await db.query(aql).then(cursor => cursor.all())
-                            .then(result => {
-                                return result
-                            },
-                            err => {
-                                logger.error('Failed to fetch binding user')
-                                return []
-                            })
-    if (bindingUsers.length == 0){
+    .then(result => {
+        return result
+    },
+    err => {
+        logger.error('Failed to fetch binding user')
+        return []
+    })
+    if (bindingUsers.length != 1){
+        logger.error('waiting binding user infos is ', JSON.stringify(bindingUsers))
         return false
     }
     var user = bindingUsers[0]
-    return updateBindingUser(openId, user)
+    var ret = updateBindingUser(openId, user)
+    if(ret == true){
+        await removeWaitingBindingUser(user)
+    }
+    return ret
 }
 
-
-
+//////////////////////////////////////////////////////////////////
 async function getLaohuangli (day) {
     var aql = `for doc in laohuangli
     filter doc.yangli == "${day}"
