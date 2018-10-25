@@ -38,6 +38,12 @@ const apiHandle = async (req) => {
         case 'update-asst-tts':
             result = await User.updateAsstBotTts(userId, params.ttsEnable);
             break;
+        case 'update-asst-horoscope':
+            result = await User.updateHoroscope(userId, params.horoscope);
+            break;
+        case 'get-asst-horoscope':
+            result = await User.getHoroscope(userId);
+            break;
         case 'get-survey-by-id':
             result = await Survey.getSurveyById(params.id);
             break;
@@ -97,6 +103,34 @@ const apiHandle = async (req) => {
         case 'save-feedback-for-user':
             var userInfo = await User.getInfo(userId)
             result = await arangoDb.saveFeedbackForUser(userId, userInfo, params.content, params.contactWay)
+            break;
+            
+        case 'get_dictate_words_for_user':
+            result = await arangoDb.getActiveDictationWords(userId)
+            break;
+        
+        case 'get-today-horoscope':
+            result = await arangoDb.getTodayHoroscope(params.sign)
+            break;
+    
+        case 'get-tomorrow-horoscope':
+            result = await arangoDb.getTomorrowHoroscope(params.sign)
+            break;
+        
+        case 'get-week-horoscope':
+            result = await arangoDb.getWeekHoroscope(params.sign)
+            break;
+
+        case 'get-month-horoscope':
+            result = await arangoDb.getMonthHoroscope(params.sign)
+            break;
+        
+        case 'get-horoscope':
+            result = await arangoDb.getHoroscope(params.day, params.sign)
+            break;
+
+        case 'get-laohuangli':
+            result = await arangoDb.getLaohuangli(params.day)
             break;
 
         default:
