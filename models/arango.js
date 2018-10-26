@@ -137,6 +137,7 @@ function getlocalDateString(){
 async function addDictateWords(openId, dictateWords) {
     var darwinId = await getDarwinId(openId)
     dictateWords.darwinId = darwinId
+    dictateWords.timeStamp = getTimeStamp()
     dictateWords.createTime = getlocalDateString()
     dictateWords.updateTime = getlocalDateString()
     var collection = db.collection(dictateWordsCollection)
@@ -181,7 +182,7 @@ function formatDictateWords(doc){
 //////////////////////////////////////////////////////////////////
 async function getAllDictateWords(openId){
     var darwinId = await getDarwinId(openId)
-    var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' return doc`
+    var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' SORT doc.timestamp DESC return doc`
     return await db.query(aql).then(cursor => cursor.all())
     .then(wordsList => { return wordsList.map(function(doc){
         return formatDictateWords(doc)
