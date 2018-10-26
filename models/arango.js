@@ -137,7 +137,7 @@ function getlocalDateString(){
 async function addDictateWords(openId, dictateWords) {
     var darwinId = await getDarwinId(openId)
     dictateWords.darwinId = darwinId
-    dictateWords.timeStamp = getTimeStamp()
+    dictateWords.timestamp = getTimeStamp()
     dictateWords.createTime = getlocalDateString()
     dictateWords.updateTime = getlocalDateString()
     var collection = db.collection(dictateWordsCollection)
