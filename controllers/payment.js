@@ -15,7 +15,7 @@ const unifyOrder = async (ctx) => {
   }
 
   try {
-    const response = await payment.unifyOrder({openid, total_fee, out_trade_no: 'kfc' + (+new Date), 
+    const response = await payment.unifyOrder({openid, total_fee, out_trade_no: 'daerwen' + (+new Date), 
       spbill_create_ip: ctx.request.ip});
     ctx.response.type = "application/json";
     ctx.response.status = 200;
