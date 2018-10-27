@@ -13,7 +13,7 @@ var payment = new Payment(initConfig)
 
 var unifyOrder = async (order) => {
   order.trade_type = 'JSAPI'
-  order.body = {}
+  order.body = order.body !== undefined ? order.body : '打赏哒尔文'
   return await payment.getBrandWCPayRequestParams(order)
 }
 
