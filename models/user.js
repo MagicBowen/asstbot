@@ -18,6 +18,7 @@ mongoose.model('Users', new Schema({
         gender   : String,
         avatarUrl: String,
         masterTitle : String,
+        horoscope : String, 
         tts      : Boolean
     }
 }));
@@ -172,5 +173,41 @@ model.updateAsstBotTts = async (userId,  tts) => {
     await user.save();
     logger.debug(`Add new user ${userId} by asstbot tts ${tts} successful!`);
 }
+
+model.updateHoroscope = async (userId,  horoscope) => {
+    const oriUser = await User.findOne({id : userId}).exec();
+    
+    if (oriUser) {
+        let newUser = oriUser.toObject();
+        if(!newUser.asstBot){
+            newUser.asstBot = {}
+        }
+        newUser.asstBot.horoscope = horoscope;
+        oriUser.set(newUser);
+        await oriUser.save();
+        logger.debug(`update horoscope ${horoscope} of user ${userId} successful!`);
+        return;
+    }
+
+    const user = new User({
+        id : userId,
+        asstBot : {horoscope : horoscope},
+    });
+    await user.save();
+    logger.debug(`Add new user ${userId} by asstbot horoscope ${horoscope} successful!`);
+}
+
+model.getHoroscope = async (userId) => {
+    const oriUser = await User.findOne({id : userId}).exec();
+    if(!oriUser){
+        return null
+    }
+    const user = oriUser.toObject();
+    if(!user.asstBot){
+         return null
+    }
+    return user.asstBot.horoscope
+}
+
 
 module.exports = model;

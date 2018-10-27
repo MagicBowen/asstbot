@@ -38,6 +38,12 @@ const apiHandle = async (req) => {
         case 'update-asst-tts':
             result = await User.updateAsstBotTts(userId, params.ttsEnable);
             break;
+        case 'update-asst-horoscope':
+            result = await User.updateHoroscope(userId, params.horoscope);
+            break;
+        case 'get-asst-horoscope':
+            result = await User.getHoroscope(userId);
+            break;
         case 'get-survey-by-id':
             result = await Survey.getSurveyById(params.id);
             break;

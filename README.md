@@ -1050,3 +1050,46 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 }
 ```
 
+
+##绑定用户接口
+### 绑定新用户
+
+* 请求方式
+
+``` post http://localhost/binding```
+
+* 参数
+
+```json
+{"openId"    : "oNijH5e8sdGfry-3tQWVN3SgskB0",
+ "bindingCode": 70364
+}
+```
+
+* 返回值
+
+```json
+{
+    "result": "success",
+    "state": true
+}
+```
+
+###查询绑定的设备
+
+* 请求方式
+
+``` get http://localhost/binding?openid=oNijH5e8sdGfry-3tQWVN3SgskB0```
+
+* 返回值
+
+```json
+{
+    "result": "success",
+    "bindingTypes": [
+        "小米",
+        "百度"
+    ]
+}
+```
+

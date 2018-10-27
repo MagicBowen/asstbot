@@ -55,8 +55,8 @@ const getAllDictateWords = async(ctx) => {
         ctx.response.body = {result : 'failed', cause : err.toString()};
         logger.error(`add survey result error: ` + err.stack);
     }
-
 }
+
 
 
 module.exports = {
