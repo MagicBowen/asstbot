@@ -27,6 +27,8 @@ const unifyOrder = async (ctx) => {
 }
 
 const notify = async (ctx) => {
+  const msg = ctx.request.body
+  logger.debug(`receive notify from server: ${JSON.stringify(msg)}`)  
   ctx.response.type = "application/json";
   ctx.response.status = 200;  
 }
