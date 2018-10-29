@@ -425,6 +425,22 @@ async function getLaohuangli (day) {
         })
 }
 
+//////////////////////////////////////////////////////////////////
+async function getLunar (lunarYear, lunarMonth, lunarDay, leap) {
+    var aql = `for doc in lunar
+        filter doc.lunarYear == ${lunarYear} and doc.lunarMonth == ${lunarMonth} and doc.lunarDay == ${lunarDay} and doc.leap == ${leap}
+        return doc
+    `
+    return await db.query(aql).then(cursor => cursor.all())
+        .then(result => {
+            if(result.length == 0){
+                return null
+            }else{
+                return result[0]
+            }
+        })
+}
+
 module.exports={
     init,
     getDayCourseForUser,
@@ -442,5 +458,6 @@ module.exports={
     getTomorrowHoroscope,
     getWeekHoroscope,
     getMonthHoroscope,
-    getLaohuangli
+    getLaohuangli,
+    getLunar
 }

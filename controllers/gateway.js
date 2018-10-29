@@ -133,6 +133,10 @@ const apiHandle = async (req) => {
             result = await arangoDb.getLaohuangli(params.day)
             break;
 
+        case 'get-lunar':
+            result = await arangoDb.getLunar(params.lunarYear, params.lunarMonth, params.lunarDay, params.leap)
+            break;
+
         default:
             result = 'unknown gateway api : ' + api;
             logger.error(result);
