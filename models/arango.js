@@ -137,6 +137,7 @@ function getlocalDateString(){
 async function addDictateWords(openId, dictateWords) {
     var darwinId = await getDarwinId(openId)
     dictateWords.darwinId = darwinId
+    dictateWords.timestamp = getTimeStamp()
     dictateWords.createTime = getlocalDateString()
     dictateWords.updateTime = getlocalDateString()
     var collection = db.collection(dictateWordsCollection)
@@ -181,7 +182,7 @@ function formatDictateWords(doc){
 //////////////////////////////////////////////////////////////////
 async function getAllDictateWords(openId){
     var darwinId = await getDarwinId(openId)
-    var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' return doc`
+    var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' SORT doc.timestamp DESC return doc`
     return await db.query(aql).then(cursor => cursor.all())
     .then(wordsList => { return wordsList.map(function(doc){
         return formatDictateWords(doc)
@@ -424,6 +425,22 @@ async function getLaohuangli (day) {
         })
 }
 
+//////////////////////////////////////////////////////////////////
+async function getLunar (lunarYear, lunarMonth, lunarDay, leap) {
+    var aql = `for doc in lunar
+        filter doc.lunarYear == ${lunarYear} and doc.lunarMonth == ${lunarMonth} and doc.lunarDay == ${lunarDay} and doc.leap == ${leap}
+        return doc
+    `
+    return await db.query(aql).then(cursor => cursor.all())
+        .then(result => {
+            if(result.length == 0){
+                return null
+            }else{
+                return result[0]
+            }
+        })
+}
+
 module.exports={
     init,
     getDayCourseForUser,
@@ -441,5 +458,6 @@ module.exports={
     getTomorrowHoroscope,
     getWeekHoroscope,
     getMonthHoroscope,
-    getLaohuangli
+    getLaohuangli,
+    getLunar
 }
