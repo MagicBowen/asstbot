@@ -134,7 +134,7 @@ const apiHandle = async (req) => {
             break;
 
         case 'get-solar-from-lunar':
-            result = await arangoDb.getLunar(params.lunarYear, params.lunarMonth, params.lunarDay, params.leap)
+            result = await arangoDb.getLunar(params.lunarYear, params.lunarMonth, params.lunarDay, params.leap !== undefined ? params.leap : false)
             break;
 
         default:
