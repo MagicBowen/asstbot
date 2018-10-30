@@ -938,3 +938,158 @@ npm install fluent-ffmpeg
 ```bash
 sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --logappend  -fork -port 27017
 ```
+
+
+## 听写添加接口
+### 添加词语列表
+* 请求方式
+
+``` post http://localhost/dictateWords```
+
+* 参数
+
+```json
+{"openId"    : "oNijH5e8sdGfry-3tQWVN3SgskB0",
+ "dictateWords": {
+ 	"title": "语文第一课",
+ 	"active": false,
+ 	"words" : ["波浪","浪花","海浪","灯光","电灯","作文","工作"]
+ }
+}
+```
+* 返回值
+
+```json
+{
+    "result": "success",
+    "id": "52330249"
+}
+```
+
+### 更新词语列表
+* 请求方式
+
+``` put http://localhost/dictateWords```
+
+* 参数
+
+```json
+{"id"    : "52115059",
+ "dictateWords": {
+ 	"title": "语文第二课",
+ 	"active": false,
+ 	"words" : ["波浪","浪花","海浪","灯光","电灯","作文","工作"]
+ }
+}
+```
+
+* 返回值
+
+```json
+{
+    "result": "success",
+    "id": "52330249"
+}
+```
+
+### 删除词语列表
+* 请求方式
+
+``` delete http://localhost/dictateWords?id=52115059```
+
+* 返回值
+```json
+{
+    "result": "success",
+    "id": "52330249"
+}
+```
+
+### 查询所有的词语列表
+* 请求方式
+
+``` get http://localhost/dictateWords?openId=oNijH5e8sdGfry-3tQWVN3SgskB0```
+
+* 返回值
+```json
+{
+    "result": "success",
+    "data": [
+        {
+            "title": "语文第一课",
+            "active": false,
+            "words": [
+                "波浪",
+                "浪花",
+                "海浪",
+                "灯光",
+                "电灯",
+                "作文",
+                "工作"
+            ],
+            "darwinId": "weixin_oESUr5Arz8hmqlkTJjmrR_539Pz8",
+            "createTime": "2018-10-23",
+            "updateTime": "2018-10-23",
+            "id": "52330249"
+        },
+        {
+            "darwinId": "weixin_oESUr5Arz8hmqlkTJjmrR_539Pz8",
+            "active": true,
+            "words": [
+                "波浪",
+                "浪花",
+                "海浪",
+                "灯光",
+                "电灯",
+                "作文",
+                "工作"
+            ],
+            "id": "52086497"
+        }
+    ]
+}
+```
+
+
+##绑定用户接口
+### 绑定新用户
+
+* 请求方式
+
+``` post http://localhost/binding```
+
+* 参数
+
+```json
+{"openId"    : "oNijH5e8sdGfry-3tQWVN3SgskB0",
+ "bindingCode": 70364
+}
+```
+
+* 返回值
+
+```json
+{
+    "result": "success",
+    "state": true
+}
+```
+
+###查询绑定的设备
+
+* 请求方式
+
+``` get http://localhost/binding?openid=oNijH5e8sdGfry-3tQWVN3SgskB0```
+
+* 返回值
+
+```json
+{
+    "result": "success",
+    "bindingTypes": [
+        "小米",
+        "百度"
+    ]
+}
+```
+
