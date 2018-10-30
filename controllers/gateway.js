@@ -133,6 +133,10 @@ const apiHandle = async (req) => {
             result = await arangoDb.getLaohuangli(params.day)
             break;
 
+        case 'get-binding-device-type':
+            result = await arangoDb.getBindingUserType(userId)
+            break;
+
         default:
             result = 'unknown gateway api : ' + api;
             logger.error(result);
