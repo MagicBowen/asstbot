@@ -133,7 +133,7 @@ const apiHandle = async (req) => {
             result = await arangoDb.getLaohuangli(params.day)
             break;
 
-        case 'get-lunar':
+        case 'get-solar-from-lunar':
             result = await arangoDb.getLunar(params.lunarYear, params.lunarMonth, params.lunarDay, params.leap)
             break;
 
