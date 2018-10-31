@@ -951,9 +951,20 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 ```json
 {"openId"    : "oNijH5e8sdGfry-3tQWVN3SgskB0",
  "dictateWords": {
- 	"title": "语文第一课",
- 	"active": false,
- 	"words" : ["波浪","浪花","海浪","灯光","电灯","作文","工作"]
+ 	"title": "语文第二课",
+	"active": false,
+	"playWay" : "order", //disorder
+	"playTimes" : 1,
+	"intervel" : 5, //间隔
+	"words": [
+	{ "term": "波浪", "pinyin": "bolang"},
+	{ "term": "浪花","pinyin": "langhua"},
+	{ "term": "海浪","pinyin": "hailang"},
+	{ "term": "灯光","pinyin": "dangguang"},
+	{ "term": "电灯","pinyin": "diandeng"},
+	{ "term": "作文","pinyin": "zuowen"},
+	{ "term": "工作","pinyin": "gongzuo"}
+	]
  }
 }
 ```
@@ -977,8 +988,19 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 {"id"    : "52115059",
  "dictateWords": {
  	"title": "语文第二课",
- 	"active": false,
- 	"words" : ["波浪","浪花","海浪","灯光","电灯","作文","工作"]
+	"active": false,
+	"playWay" : "order", //disorder
+	"playTimes" : 1,
+	"intervel" : 5, //间隔
+	"words": [
+	{ "term": "波浪", "pinyin": "bolang"},
+	{ "term": "浪花","pinyin": "langhua"},
+	{ "term": "海浪","pinyin": "hailang"},
+	{ "term": "灯光","pinyin": "dangguang"},
+	{ "term": "电灯","pinyin": "diandeng"},
+	{ "term": "作文","pinyin": "zuowen"},
+	{ "term": "工作","pinyin": "gongzuo"}
+	]
  }
 }
 ```
@@ -1019,13 +1041,13 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
             "title": "语文第一课",
             "active": false,
             "words": [
-                "波浪",
-                "浪花",
-                "海浪",
-                "灯光",
-                "电灯",
-                "作文",
-                "工作"
+                { "term": "波浪", "pinyin": "bolang"},
+                { "term": "浪花","pinyin": "langhua"},
+                { "term": "海浪","pinyin": "hailang"},
+                { "term": "灯光","pinyin": "dangguang"},
+                { "term": "电灯","pinyin": "diandeng"},
+                { "term": "作文","pinyin": "zuowen"},
+                { "term": "工作","pinyin": "gongzuo"}
             ],
             "darwinId": "weixin_oESUr5Arz8hmqlkTJjmrR_539Pz8",
             "createTime": "2018-10-23",
@@ -1036,13 +1058,13 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
             "darwinId": "weixin_oESUr5Arz8hmqlkTJjmrR_539Pz8",
             "active": true,
             "words": [
-                "波浪",
-                "浪花",
-                "海浪",
-                "灯光",
-                "电灯",
-                "作文",
-                "工作"
+                { "term": "波浪", "pinyin": "bolang"},
+                { "term": "浪花","pinyin": "langhua"},
+                { "term": "海浪","pinyin": "hailang"},
+                { "term": "灯光","pinyin": "dangguang"},
+                { "term": "电灯","pinyin": "diandeng"},
+                { "term": "作文","pinyin": "zuowen"},
+                { "term": "工作","pinyin": "gongzuo"}
             ],
             "id": "52086497"
         }
@@ -1089,6 +1111,30 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
     "bindingTypes": [
         "小米",
         "百度"
+    ]
+}
+```
+
+
+###查询拼音
+
+* 请求方式
+
+```get http://106.15.177.105/asst/pinyin?sentence=子弹```
+
+* 返回值
+
+```json
+{
+    "result": "success",
+    "data": [
+        [
+            "zǐ"
+        ],
+        [
+            "dàn",
+            "tán"
+        ]
     ]
 }
 ```
