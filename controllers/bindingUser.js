@@ -18,7 +18,7 @@ const bindingUser = async (ctx) => {
 
 
 //////////////////////////////////////////////////////////////////
-const unBindingUser = async (ctx) => {
+const unbindingUser = async (ctx) => {
     try {
         const state = await arangoDb.unBindingUser(ctx.request.body.openId, ctx.request.body.type);
         ctx.response.type = "application/json";
@@ -49,5 +49,5 @@ const getBindingUserType = async(ctx) => {
 module.exports = {
     'GET /binding'  : getBindingUserType,
     'POST /binding' : bindingUser,
-    'POST /unBinding' : unBindingUser
+    'POST /unbinding' : unbindingUser
 };
