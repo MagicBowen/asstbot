@@ -368,11 +368,15 @@ async function getBindingUserType(openId) {
     }
     var bindingUserType = []
     if ("xiaomiId" in user) {
-        bindingUserType.push("小米")
+        if(user.xiaomiId != ""){
+            bindingUserType.push("xiaoai")
+        }
     }
 
     if ("duerosId" in user) {
-        bindingUserType.push("百度")
+        if(user.duerosId != ""){
+            bindingUserType.push("dueros")
+        }
     }
 
     return bindingUserType
@@ -380,11 +384,11 @@ async function getBindingUserType(openId) {
 }
 
 //////////////////////////////////////////////////////////////////
-async function bindingUser(openId, bindingCode){
+async function bindingUser(openId, bindingCode, userType){
     var timeStamp = getTimeStamp()
     var expireTimeStamp = timeStamp - 300
     var aql = `for doc in ${waitingBindingCollection} 
-    filter doc.bindingCode == ${bindingCode}  and doc.timestamp > ${expireTimeStamp}
+    filter doc.bindingCode == ${bindingCode}  and doc.userType =='${userType}' and doc.timestamp > ${expireTimeStamp}
     return doc `
     
     logger.info('query binding user aql', aql)
@@ -407,6 +411,38 @@ async function bindingUser(openId, bindingCode){
     }
     return ret
 }
+
+function getIdName(userType){
+    if(userType == 'xiaoai'){
+        return "xiaomiId"
+    }
+    if(userType == 'dueros'){
+        return "duerosId"
+    }
+    return "xiaomiId"
+}
+
+
+//////////////////////////////////////////////////////////////////
+async function unBindingUser(openId, userType){
+    var idName = getIdName(userType)
+    var aql = `for doc in ${userIdsCollection}
+               filter doc.openId== '${openId}'
+               update doc with {
+                   ${idName}: ""
+               } into ${userIdsCollection}`
+
+    return await db.query(aql).then(cursor => cursor.all())
+    .then(result => {
+        logger.info(`success unbinding user ${openId} type: ${userType}`)
+        return true
+    },
+    err => {
+        logger.error('Failed to un binding user')
+        return false
+    })
+}
+
 
 //////////////////////////////////////////////////////////////////
 async function getLaohuangli (day) {
@@ -454,6 +490,7 @@ module.exports={
     getTodayHoroscope,
     getHoroscope,
     bindingUser,
+    unBindingUser,
     getBindingUserType,
     getTomorrowHoroscope,
     getWeekHoroscope,
