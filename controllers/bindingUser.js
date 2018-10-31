@@ -5,7 +5,7 @@ const logger = require('../utils/logger').logger('bindingUser');
 //////////////////////////////////////////////////////////////////
 const bindingUser = async (ctx) => {
     try {
-        const state = await arangoDb.bindingUser(ctx.request.body.openId, ctx.request.body.bindingCode);
+        const state = await arangoDb.bindingUser(ctx.request.body.openId, ctx.request.body.bindingCode, ctx.request.body.voiceType);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success', state : state};

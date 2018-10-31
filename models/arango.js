@@ -368,11 +368,11 @@ async function getBindingUserType(openId) {
     }
     var bindingUserType = []
     if ("xiaomiId" in user) {
-        bindingUserType.push("小米")
+        bindingUserType.push("xiaoai")
     }
 
     if ("duerosId" in user) {
-        bindingUserType.push("百度")
+        bindingUserType.push("dueros")
     }
 
     return bindingUserType
@@ -380,11 +380,11 @@ async function getBindingUserType(openId) {
 }
 
 //////////////////////////////////////////////////////////////////
-async function bindingUser(openId, bindingCode){
+async function bindingUser(openId, bindingCode, voiceType){
     var timeStamp = getTimeStamp()
     var expireTimeStamp = timeStamp - 300
     var aql = `for doc in ${waitingBindingCollection} 
-    filter doc.bindingCode == ${bindingCode}  and doc.timestamp > ${expireTimeStamp}
+    filter doc.bindingCode == ${bindingCode}  and doc.userType =='${voiceType}' and doc.timestamp > ${expireTimeStamp}
     return doc `
     
     logger.info('query binding user aql', aql)
