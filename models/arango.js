@@ -368,11 +368,15 @@ async function getBindingUserType(openId) {
     }
     var bindingUserType = []
     if ("xiaomiId" in user) {
-        bindingUserType.push("xiaoai")
+        if(user.xiaomiId != ""){
+            bindingUserType.push("xiaoai")
+        }
     }
 
     if ("duerosId" in user) {
-        bindingUserType.push("dueros")
+        if(user.duerosId != ""){
+            bindingUserType.push("dueros")
+        }
     }
 
     return bindingUserType
