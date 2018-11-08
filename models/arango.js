@@ -397,7 +397,7 @@ async function addWaitingBinding(userId, skill, platform){
     doc.userType = platform
     doc.timestamp = getTimeStamp()
     doc.bindingCode = generateBindingCode()
-
+    var collection  = db.collection(waitingBindingCollection)
     await collection.save(doc).then(
         meta => { logger.info('Document saved:', meta._key); return meta._key },
         err => { logger.error('Failed to save document:', err); return "" }
@@ -437,9 +437,7 @@ async function getBindingCodeFor(userId, skill, platform){
     return doc `
     logger.info('query binding user aql', aql)
     var waitingUsers = queryByAql(aql)
-    logger.info("get binding user:", JSON.stringify(waitingUsers), "length", waitingUsers.length)
     if(isEmpty(waitingUsers)){
-        logger.info("is empty users .........")
         return await addWaitingBinding(userId, skill, platform)
     }
     var bindingUser = waitingUsers[0]
@@ -460,7 +458,7 @@ async function bindingUser(openId, bindingCode, userType){
     
     logger.info('query binding user aql', aql)
     var bindingUsers = await queryByAql(aql)
-    if (bindingUsers.length != 1){
+    if (isEmpty(bindingUsers)){
         logger.error('waiting binding user infos is ', JSON.stringify(bindingUsers))
         return false
     }
