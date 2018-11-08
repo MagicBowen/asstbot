@@ -437,7 +437,7 @@ async function getBindingCodeFor(userId, skill, platform){
     filter doc.userId == '${userId}'  and doc.userType =='${platform}' and doc.skill =='${skill}'
     return doc `
     logger.info('query binding user aql', aql)
-    var waitingUsers = queryByAql(aql)
+    var waitingUsers = await queryByAql(aql)
     logger.info("waitingUsers ......", JSON.stringify(waitingUsers))
     if(isEmpty(waitingUsers)){
         logger.info("comming here ......")
