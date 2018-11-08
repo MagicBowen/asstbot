@@ -45,9 +45,23 @@ const getBindingUserType = async(ctx) => {
     }
 }
 
+//////////////////////////////////////////////////////////////////
+const getBindingCode = async(ctx) => {
+    try {
+        const bindingCode = await arangoDb.getBindingCodeFor(ctx.request.body.userId, ctx.request.body.platform, ctx.request.body.skill);
+        ctx.response.type = "application/json";
+        ctx.response.status = 200;
+        ctx.response.body = {result : 'success', code : bindingCode};
+    } catch(err) {
+        ctx.response.status = 404;
+        ctx.response.body = {result : 'failed', cause : err.toString()};
+        logger.error(`add survey result error: ` + err.stack);
+    }
+}
 
 module.exports = {
     'GET /binding'  : getBindingUserType,
+    'POST /bindingCode' : getBindingCode,
     'POST /binding' : bindingUser,
     'POST /unbinding' : unbindingUser
 };

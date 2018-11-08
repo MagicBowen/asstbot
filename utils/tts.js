@@ -30,4 +30,4 @@ function getTtsAudioFile(text, speed, role, audioPath) {
 
 module.exports.getAudio = getTtsAudioFile
 
-// getTtsAudioFile('浪花', 1, 3, '../static/tts/')
+getTtsAudioFile('浪花', 1, 3, '../static/tts/')
