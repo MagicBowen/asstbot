@@ -426,7 +426,7 @@ async function queryByAql(aql){
 //////////////////////////////////////////////////////////////////
 async function getBindingCodeFor(userId, skill, platform){
     var aql = `for doc in ${waitingBindingCollection} 
-    filter doc.user == ${userId}  and doc.userType =='${platform}' and doc.skill =='${skill}'
+    filter doc.userId == '${userId}'  and doc.userType =='${platform}' and doc.skill =='${skill}'
     return doc `
     logger.info('query binding user aql', aql)
     var waitingUsers = queryByAql(aql)
@@ -434,6 +434,7 @@ async function getBindingCodeFor(userId, skill, platform){
         return await addWaitingBinding(userId, skill, platform)
     }
     var bindingUser = waitingUsers[0]
+    logger.info("get binding user:", JSON.stringify(bindingUser))
     if(isBindingCodeExpired(bindingUser.timeStamp)){
         await removeWaitingBindingUser(bindingUser)
         return await addWaitingBinding(userId, skill, platform)
