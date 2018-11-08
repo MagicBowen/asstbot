@@ -61,7 +61,7 @@ const getBindingCode = async(ctx) => {
 
 module.exports = {
     'GET /binding'  : getBindingUserType,
-    'post /bindingCode' : getBindingCode,
+    'POST /bindingCode' : getBindingCode,
     'POST /binding' : bindingUser,
     'POST /unbinding' : unbindingUser
 };
