@@ -430,7 +430,7 @@ async function getBindingCodeFor(userId, skill, platform){
     return doc `
     logger.info('query binding user aql', aql)
     var waitingUsers = queryByAql(aql)
-    logger.info("get binding user:", JSON.stringify(waitingUsers))
+    logger.info("get binding user:", JSON.stringify(waitingUsers), "length", waitingUsers.length)
     if(waitingUsers.length == 0){
         return await addWaitingBinding(userId, skill, platform)
     }
