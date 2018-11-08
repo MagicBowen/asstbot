@@ -396,7 +396,7 @@ async function addWaitingBinding(userId, skill, platform){
     doc.skill = skill
     doc.userType = platform
     doc.timestamp = getTimeStamp()
-    doc.bindingCode = generateBindingCode()
+    doc.bindingCode = bindingCode
     var collection  = db.collection(waitingBindingCollection)
     await collection.save(doc).then(
         meta => { logger.info('Document saved:', meta._key); return meta._key },
