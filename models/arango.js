@@ -395,7 +395,7 @@ async function addWaitingBinding(userId, skill, platform){
     doc.userId = userId
     doc.skill = skill
     doc.userType = platform
-    doc.timeStamp = getTimeStamp()
+    doc.timestamp = getTimeStamp()
     doc.bindingCode = generateBindingCode()
 
     await collection.save(doc).then(
@@ -435,7 +435,7 @@ async function getBindingCodeFor(userId, skill, platform){
     }
     var bindingUser = waitingUsers[0]
     logger.info("get binding user:", JSON.stringify(bindingUser))
-    if(isBindingCodeExpired(bindingUser.timeStamp)){
+    if(isBindingCodeExpired(bindingUser.timestamp)){
         await removeWaitingBindingUser(bindingUser)
         return await addWaitingBinding(userId, skill, platform)
     }
