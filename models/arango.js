@@ -322,11 +322,7 @@ async function updateBindingUser(openId, user){
     var userKey = await getUserKey(openId, darwinId)
 
     var bindingInfo = {}
-    if(user.userType == "xiaoai"){
-        bindingInfo.xiaomiId = user.userId
-    }else if (user.userType == "dueros"){
-        bindingInfo.duerosId = user.userId
-    }
+    bindingInfo[getIdName(user.userType)] = user.userId
     bindingInfo.openId = openId
     bindingInfo.courseId = darwinId
 
@@ -379,8 +375,70 @@ async function getBindingUserType(openId) {
         }
     }
 
-    return bindingUserType
-   
+    if("dingdongId" in user) {
+        if(user.dingdongId != ""){
+            bindingUserType.push("dingdong")
+        }
+    }
+    return bindingUserType 
+}
+
+//////////////////////////////////////////////////////////////////
+function generateBindingCode(){
+    return Math.floor(Math.random()*90000) + 10000
+}
+
+//////////////////////////////////////////////////////////////////
+async function addWaitingBinding(userId, skill, platform){
+    var bindingCode = generateBindingCode()
+    var doc = {}
+    doc.userId = userId
+    doc.skill = skill
+    doc.userType = platform
+    doc.timeStamp = getTimeStamp()
+    doc.bindingCode = generateBindingCode()
+
+    await collection.save(doc).then(
+        meta => { logger.info('Document saved:', meta._key); return meta._key },
+        err => { logger.error('Failed to save document:', err); return "" }
+    );
+    return bindingCode
+}
+
+//////////////////////////////////////////////////////////////////
+function isBindingCodeExpired(timeStamp){
+    var curTimeStamp = getTimeStamp()
+    return (curTimeStamp - timeStamp) > 300
+}
+
+//////////////////////////////////////////////////////////////////
+async function queryByAql(aql){
+    return await db.query(aql).then(cursor => cursor.all())
+    .then(result => {
+        return result
+    },
+    err => {
+        logger.error('Failed to fetch binding user')
+        return []
+    })
+}
+
+//////////////////////////////////////////////////////////////////
+async function getBindingCodeFor(userId, skill, platform){
+    var aql = `for doc in ${waitingBindingCollection} 
+    filter doc.user == ${userId}  and doc.userType =='${platform}' and doc.skill =='${skill}'
+    return doc `
+    logger.info('query binding user aql', aql)
+    var waitingUsers = queryByAql(aql)
+    if(waitingUsers.length == 0){
+        return await addWaitingBinding(userId, skill, platform)
+    }
+    var bindingUser = waitingUsers[0]
+    if(isBindingCodeExpired(bindingUser.timeStamp)){
+        await removeWaitingBindingUser(bindingUser)
+        return await addWaitingBinding(userId, skill, platform)
+    }
+    return bindingUser.bindingCode
 }
 
 //////////////////////////////////////////////////////////////////
@@ -392,14 +450,7 @@ async function bindingUser(openId, bindingCode, userType){
     return doc `
     
     logger.info('query binding user aql', aql)
-    var bindingUsers = await db.query(aql).then(cursor => cursor.all())
-    .then(result => {
-        return result
-    },
-    err => {
-        logger.error('Failed to fetch binding user')
-        return []
-    })
+    var bindingUsers = await queryByAql(aql)
     if (bindingUsers.length != 1){
         logger.error('waiting binding user infos is ', JSON.stringify(bindingUsers))
         return false
@@ -412,12 +463,16 @@ async function bindingUser(openId, bindingCode, userType){
     return ret
 }
 
+//////////////////////////////////////////////////////////////////
 function getIdName(userType){
     if(userType == 'xiaoai'){
         return "xiaomiId"
     }
     if(userType == 'dueros'){
         return "duerosId"
+    }
+    if(userType == 'dingdong'){
+        return "dingdongId"
     }
     return "xiaomiId"
 }
@@ -492,6 +547,7 @@ module.exports={
     bindingUser,
     unBindingUser,
     getBindingUserType,
+    getBindingCodeFor,
     getTomorrowHoroscope,
     getWeekHoroscope,
     getMonthHoroscope,
