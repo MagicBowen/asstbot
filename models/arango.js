@@ -423,6 +423,13 @@ async function queryByAql(aql){
     })
 }
 
+function isEmpty(users){
+    for (var name in users){
+        return false
+    }
+    return true
+}
+
 //////////////////////////////////////////////////////////////////
 async function getBindingCodeFor(userId, skill, platform){
     var aql = `for doc in ${waitingBindingCollection} 
@@ -431,7 +438,8 @@ async function getBindingCodeFor(userId, skill, platform){
     logger.info('query binding user aql', aql)
     var waitingUsers = queryByAql(aql)
     logger.info("get binding user:", JSON.stringify(waitingUsers), "length", waitingUsers.length)
-    if(waitingUsers.length == 0){
+    if(isEmpty(waitingUsers)){
+        logger.info("is empty users .........")
         return await addWaitingBinding(userId, skill, platform)
     }
     var bindingUser = waitingUsers[0]
