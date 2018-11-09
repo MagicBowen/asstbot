@@ -488,7 +488,7 @@ async function updateUserHoroscope(userId, horoscope){
         );
         return true
     }
-    var updateAql = `LET doc = DOCUMENT("${userExtrInfo}/${darwinId}")'
+    var updateAql = `LET doc = DOCUMENT("${userExtrInfo}/${darwinId}")
                      update doc with {
                         horoscope : '${horoscope}'
                      } in ${userExtrInfo}`
