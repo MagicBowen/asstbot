@@ -64,6 +64,7 @@ async function addNewUser(darwinId, openId){
 }
 
 async function querySingleDoc(aql){
+    logger.info("qery aql is: ", aql)
     return await db.query(aql).then(cursor => cursor.all())
     .then(docs => {
         if(docs.length == 0){
@@ -426,6 +427,7 @@ function getIdName(userType){
 }
 
 async function updateDoc(aql){
+    logger.info("update aql is :", aql)
     return await db.query(aql).then(cursor => cursor.all())
     .then(result => {
         logger.info(`update doc success`)
@@ -497,7 +499,6 @@ async function updateUserHoroscope(userId, horoscope){
 async function getUserHoroscope(userId){
     var darwinId = await getDarwinId(userId)
     var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc.horoscope`
-    logger.info("query user horo scope aql:  ", aql)
     return await querySingleDoc(aql)
 }
 
