@@ -63,17 +63,14 @@ async function addNewUser(darwinId, openId){
     );
 }
 
-//////////////////////////////////////////////////////////////////
-async function getDayCourseForUser(userId, weekday){
-    var courseId = await getDarwinId(userId)
-    var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable.${weekday}`
-    logger.info('execute aql', aql)
+async function querySingleDoc(aql){
+    logger.info("qery aql is: ", aql)
     return await db.query(aql).then(cursor => cursor.all())
-    .then(courses => {
-        if(courses.length == 0){
+    .then(docs => {
+        if(docs.length == 0){
             return null
         }else{
-            return courses[0]
+            return docs[0]
         }
     },
     err => {
@@ -82,24 +79,21 @@ async function getDayCourseForUser(userId, weekday){
     })
 }
 
+
+//////////////////////////////////////////////////////////////////
+async function getDayCourseForUser(userId, weekday){
+    var courseId = await getDarwinId(userId)
+    var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable.${weekday}`
+    logger.info('execute aql', aql)
+    return await querySingleDoc(aql)
+}
+
 //////////////////////////////////////////////////////////////////
 async function queryAllCourseForUser(userId) {
     var courseId = await getDarwinId(userId)
     var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable`
     logger.info('execute aql', aql)
-    return await db.query(aql).then(cursor => cursor.all())
-    .then(courses => {
-        if(courses.length == 0){
-            return null
-        }else{
-            return courses[0]
-        }
-    },
-    err => {
-        logger.error('Failed to fetch agent document:')
-        return null
-    })
-
+    return await querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -217,14 +211,7 @@ async function getTodayHoroscope (sign) {
         filter day == today && doc.name == '${sign}'
         return doc`
 
-    return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    return await querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -235,14 +222,7 @@ async function getTomorrowHoroscope (sign) {
         filter day == tomorrow && doc.name == '${sign}'
         return doc`
 
-    return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    return await querySingleDoc(aql)
 }
 
 async function getWeekHoroscope (sign) {
@@ -251,14 +231,7 @@ async function getWeekHoroscope (sign) {
         filter doc.weekth == week && doc.name == '${sign}'
         return doc`
 
-    return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    return await querySingleDoc(aql)
 }
 
 async function getMonthHoroscope (sign) {
@@ -267,14 +240,7 @@ async function getMonthHoroscope (sign) {
         filter doc.month == month && doc.name == '${sign}'
         return doc`
 
-    return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    return await querySingleDoc(aql)
 }
 
 async function getHoroscope (day, sign) {
@@ -284,14 +250,7 @@ async function getHoroscope (day, sign) {
     filter day == today && doc.name == '${sign}'
     return doc`
     
-    return await db.query(aql).then(cursor => cursor.all())
-    .then(result => {
-        if(result.length == 0){
-            return null
-        }else{
-            return result[0]
-        }
-    })
+    return await querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -304,16 +263,7 @@ function getTimeStamp(){
 async function getUserKey(openId, darwinId){
     var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' and user.courseId == '${darwinId}' return user._key`
     logger.info('execute aql', aql)
-    return await db.query(aql).then(cursor => cursor.all())
-          .then(users => {
-            if(users.length > 0){
-                return users[0]
-            }
-            return null
-          }, err => {
-             logger.error('Failed to fetch agent document:')
-             return null
-          })
+    return await querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -349,16 +299,7 @@ async function removeWaitingBindingUser(user){
 async function getBindingUserType(openId) {
     var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user`
     logger.info('execute aql', aql)
-    var user = await db.query(aql).then(cursor => cursor.all())
-          .then(users => {
-            if(users.length > 0){
-                return users[0]
-            }
-            return null
-          }, err => {
-             logger.error('Failed to fetch agent document:')
-             return null
-          })
+    var user = await querySingleDoc(aql)
     if (user == null){
         return []
     }
@@ -485,6 +426,19 @@ function getIdName(userType){
     return "xiaomiId"
 }
 
+async function updateDoc(aql){
+    logger.info("update aql is :", aql)
+    return await db.query(aql).then(cursor => cursor.all())
+    .then(result => {
+        logger.info(`update doc success`)
+        return true
+    },
+    err => {
+        logger.error('Failed to update doc')
+        return false
+    })
+}
+
 
 //////////////////////////////////////////////////////////////////
 async function unBindingUser(openId, userType){
@@ -494,16 +448,7 @@ async function unBindingUser(openId, userType){
                update doc with {
                    ${idName}: ""
                } into ${userIdsCollection}`
-
-    return await db.query(aql).then(cursor => cursor.all())
-    .then(result => {
-        logger.info(`success unbinding user ${openId} type: ${userType}`)
-        return true
-    },
-    err => {
-        logger.error('Failed to un binding user')
-        return false
-    })
+    return await updateDoc(aql)
 }
 
 
@@ -514,14 +459,7 @@ async function getLaohuangli (day) {
     limit 1
     return doc`
 
-    return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    return await querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -530,14 +468,38 @@ async function getLunar (lunarYear, lunarMonth, lunarDay, leap) {
         filter doc.lunarYear == ${lunarYear} and doc.lunarMonth == ${lunarMonth} and doc.lunarDay == ${lunarDay} and doc.leap == ${leap}
         return doc
     `
-    return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    return await querySingleDoc(aql)
+}
+
+const  userExtrInfo = "userExtrInfo" 
+
+async function updateUserHoroscope(userId, horoscope){
+    var darwinId = await getDarwinId(userId)
+    var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc`
+    var ret = await querySingleDoc(aql)
+    if(ret == null){
+        var doc = {}
+        doc._key = darwinId
+        doc.horoscope = horoscope
+        var collection  = db.collection(userExtrInfo)
+        await collection.save(doc).then(
+            meta => { logger.info('Document saved:', meta._key); return meta._key },
+            err => { logger.error('Failed to save document:', err); return "" }
+        );
+        return true
+    }
+    var updateAql = `LET doc = DOCUMENT("${userExtrInfo}/${darwinId}")
+                     update doc with {
+                        horoscope : '${horoscope}'
+                     } in ${userExtrInfo}`
+
+    return await updateDoc(updateAql)
+}
+
+async function getUserHoroscope(userId){
+    var darwinId = await getDarwinId(userId)
+    var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc.horoscope`
+    return await querySingleDoc(aql)
 }
 
 module.exports={
@@ -552,6 +514,8 @@ module.exports={
     getActiveDictationWords,
     getTodayHoroscope,
     getHoroscope,
+    getUserHoroscope,
+    updateUserHoroscope,
     bindingUser,
     unBindingUser,
     getBindingUserType,
@@ -560,5 +524,5 @@ module.exports={
     getWeekHoroscope,
     getMonthHoroscope,
     getLaohuangli,
-    getLunar
+    getLunar,
 }

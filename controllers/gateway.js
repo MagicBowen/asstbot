@@ -39,10 +39,13 @@ const apiHandle = async (req) => {
             result = await User.updateAsstBotTts(userId, params.ttsEnable);
             break;
         case 'update-asst-horoscope':
-            result = await User.updateHoroscope(userId, params.horoscope);
+            result = await arangoDb.updateUserHoroscope(userId, params.horoscope);
             break;
         case 'get-asst-horoscope':
-            result = await User.getHoroscope(userId);
+            result = await arangoDb.getUserHoroscope(userId)
+            if(result == null){
+                result = await User.getHoroscope(userId);
+            }
             break;
         case 'get-survey-by-id':
             result = await Survey.getSurveyById(params.id);
