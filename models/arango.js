@@ -472,7 +472,7 @@ async function getLunar (lunarYear, lunarMonth, lunarDay, leap) {
 const  userExtrInfo = "userExtrInfo" 
 
 async function updateUserHoroscope(userId, horoscope){
-    var darwinId = getDarwinId(userId)
+    var darwinId = await getDarwinId(userId)
     var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc`
     var ret = await querySingleDoc(aql)
     if(ret == null){
@@ -495,7 +495,7 @@ async function updateUserHoroscope(userId, horoscope){
 }
 
 async function getUserHoroscope(userId){
-    var darwinId = getDarwinId(userId)
+    var darwinId = await getDarwinId(userId)
     var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc.horoscope`
     logger.info("query user horo scope aql:  ", aql)
     return await querySingleDoc(aql)
