@@ -474,7 +474,7 @@ async function getLunar (lunarYear, lunarMonth, lunarDay, leap) {
 //////////////////////////////////////////////////////////////////
 function addFormId (openId, formId) {
     var aql = `UPSERT { openId: '${openId}' } 
-    INSERT { name: '${openId}', dataCreated: DATE_NOW(),  formIds: [{formId: '${formId}', timestamp: DATE_NOW()}] } 
+    INSERT { openId: '${openId}', dataCreated: DATE_NOW(),  formIds: [{formId: '${formId}', timestamp: DATE_NOW()}] } 
     UPDATE { formIds:APPEND(OLD.formIds,{formId: '${formId}', timestamp: DATE_NOW()}) } IN wechatFormId
     `
     db.query(aql)
