@@ -7,7 +7,7 @@ const arangoDb = require("./arango.js")
 async function sendTemplateMsg (openId, templateId, page, data) {
   const tocken = await accessTocken.getTocken()
   const url = 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=' + tocken
-  const formId = await arangoDb.getFormId()
+  const formId = await arangoDb.getFormId(openId)
 
   if (!formId) {
     logger.error('No available formId for openId:' + openId)
