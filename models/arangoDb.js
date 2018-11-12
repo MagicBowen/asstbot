@@ -58,7 +58,50 @@ async function addNewUser(darwinId, openId){
     );
 }
 
+//////////////////////////////////////////////////////////////////
+async function querySingleDoc(aql){
+    logger.info("qery aql is: ", aql)
+    return await db.query(aql).then(cursor => cursor.all())
+    .then(docs => {
+        if(docs.length == 0){
+            return null
+        }else{
+            return docs[0]
+        }
+    },
+    err => {
+        logger.error('Failed to fetch agent document:')
+        return null
+    })
+}
+
+//////////////////////////////////////////////////////////////////
+async function saveDoc(collectionName, doc){
+    var collection  = db.collection(collectionName)
+    await collection.save(doc).then(
+        meta => { logger.info('Document saved:', meta._key); return meta._key },
+        err => { logger.error('Failed to save document:', err); return "" }
+    );
+}
+
+//////////////////////////////////////////////////////////////////
+async function updateDoc(aql){
+    logger.info("update aql is :", aql)
+    return await db.query(aql).then(cursor => cursor.all())
+    .then(result => {
+        logger.info(`update doc success`)
+        return true
+    },
+    err => {
+        logger.error('Failed to update doc')
+        return false
+    })
+}
+
 module.exports={
     getDb,
-    getDarwinId
+    getDarwinId,
+    querySingleDoc,
+    updateDoc,
+    saveDoc
 }

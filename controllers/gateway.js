@@ -4,6 +4,7 @@ const Statistic = require('../models/statistic');
 const simplify = require('../utils/simplifier')
 const SimplifyResult = require('../models/simplifier')
 var arangoDb = require("../models/arango.js")
+var integralDb = require("../models/integral.js")
 const logger = require('../utils/logger').logger('gateway');
 
 function convert_to_openId(userId){
@@ -142,6 +143,14 @@ const apiHandle = async (req) => {
 
         case 'get-solar-from-lunar':
             result = await arangoDb.getLunar(params.lunarYear, params.lunarMonth, params.lunarDay, params.leap !== undefined ? params.leap : false)
+            break;
+
+        case 'start-integral':
+            result = await integralDb.startIntegral(userId)
+            break;
+
+        case 'stop-integral':
+            result = await integralDb.stopIntegral(userId)
             break;
 
         default:

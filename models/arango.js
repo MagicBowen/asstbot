@@ -10,28 +10,11 @@ const  waitingBindingCollection = "waitingBindingAccount"
 
 
 //////////////////////////////////////////////////////////////////
-async function querySingleDoc(aql){
-    logger.info("qery aql is: ", aql)
-    return await db.query(aql).then(cursor => cursor.all())
-    .then(docs => {
-        if(docs.length == 0){
-            return null
-        }else{
-            return docs[0]
-        }
-    },
-    err => {
-        logger.error('Failed to fetch agent document:')
-        return null
-    })
-}
-
-//////////////////////////////////////////////////////////////////
 async function getDayCourseForUser(userId, weekday){
     var courseId = await arangoDb.getDarwinId(userId)
     var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable.${weekday}`
     logger.info('execute aql', aql)
-    return await querySingleDoc(aql)
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -39,7 +22,7 @@ async function queryAllCourseForUser(userId) {
     var courseId = await arangoDb.getDarwinId(userId)
     var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable`
     logger.info('execute aql', aql)
-    return await querySingleDoc(aql)
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -157,7 +140,7 @@ async function getTodayHoroscope (sign) {
         filter day == today && doc.name == '${sign}'
         return doc`
 
-    return await querySingleDoc(aql)
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -168,7 +151,7 @@ async function getTomorrowHoroscope (sign) {
         filter day == tomorrow && doc.name == '${sign}'
         return doc`
 
-    return await querySingleDoc(aql)
+    return await arangoDb.querySingleDoc(aql)
 }
 
 async function getWeekHoroscope (sign) {
@@ -177,7 +160,7 @@ async function getWeekHoroscope (sign) {
         filter doc.weekth == week && doc.name == '${sign}'
         return doc`
 
-    return await querySingleDoc(aql)
+    return await arangoDb.querySingleDoc(aql)
 }
 
 async function getMonthHoroscope (sign) {
@@ -186,7 +169,7 @@ async function getMonthHoroscope (sign) {
         filter doc.month == month && doc.name == '${sign}'
         return doc`
 
-    return await querySingleDoc(aql)
+    return await arangoDb.querySingleDoc(aql)
 }
 
 async function getHoroscope (day, sign) {
@@ -196,7 +179,7 @@ async function getHoroscope (day, sign) {
     filter day == today && doc.name == '${sign}'
     return doc`
     
-    return await querySingleDoc(aql)
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -209,7 +192,7 @@ function getTimeStamp(){
 async function getUserKey(openId, darwinId){
     var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' and user.courseId == '${darwinId}' return user._key`
     logger.info('execute aql', aql)
-    return await querySingleDoc(aql)
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -245,7 +228,7 @@ async function removeWaitingBindingUser(user){
 async function getBindingUserType(openId) {
     var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user`
     logger.info('execute aql', aql)
-    var user = await querySingleDoc(aql)
+    var user = await arangoDb.querySingleDoc(aql)
     if (user == null){
         return []
     }
@@ -372,20 +355,6 @@ function getIdName(userType){
     return "xiaomiId"
 }
 
-async function updateDoc(aql){
-    logger.info("update aql is :", aql)
-    return await db.query(aql).then(cursor => cursor.all())
-    .then(result => {
-        logger.info(`update doc success`)
-        return true
-    },
-    err => {
-        logger.error('Failed to update doc')
-        return false
-    })
-}
-
-
 //////////////////////////////////////////////////////////////////
 async function unBindingUser(openId, userType){
     var idName = getIdName(userType)
@@ -394,7 +363,7 @@ async function unBindingUser(openId, userType){
                update doc with {
                    ${idName}: ""
                } into ${userIdsCollection}`
-    return await updateDoc(aql)
+    return await arangoDb.updateDoc(aql)
 }
 
 
@@ -405,7 +374,7 @@ async function getLaohuangli (day) {
     limit 1
     return doc`
 
-    return await querySingleDoc(aql)
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -414,7 +383,7 @@ async function getLunar (lunarYear, lunarMonth, lunarDay, leap) {
         filter doc.lunarYear == ${lunarYear} and doc.lunarMonth == ${lunarMonth} and doc.lunarDay == ${lunarDay} and doc.leap == ${leap}
         return doc
     `
-    return await querySingleDoc(aql)
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -448,7 +417,7 @@ const  userExtrInfo = "userExtrInfo"
 async function updateUserHoroscope(userId, horoscope){
     var darwinId = await arangoDb.getDarwinId(userId)
     var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc`
-    var ret = await querySingleDoc(aql)
+    var ret = await arangoDb.querySingleDoc(aql)
     if(ret == null){
         var doc = {}
         doc._key = darwinId
@@ -465,13 +434,13 @@ async function updateUserHoroscope(userId, horoscope){
                         horoscope : '${horoscope}'
                      } in ${userExtrInfo}`
 
-    return await updateDoc(updateAql)
+    return await arangoDb.updateDoc(updateAql)
 }
 
 async function getUserHoroscope(userId){
     var darwinId = await arangoDb.getDarwinId(userId)
     var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc.horoscope`
-    return await querySingleDoc(aql)
+    return await arangoDb.querySingleDoc(aql)
 }
 
 module.exports={
