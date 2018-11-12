@@ -17,20 +17,23 @@ const addFormId = async (ctx) => {
 
 const askRelogin = async (ctx) => {
   try {
-    const templateId = 'YGjezBcqhP178J0nQ5sFbd0QOv9uVk7-iTsXFn2z2fg'
+    const templateId = 'KS5Q1MoVjvleCKr_Ajf0561iEeIBakWij7Eh0GGTBK8'
     const openId = ctx.request.body.openId
     if (!openId) {
       throw new Error('openId is not exist')
     }
     const data = {
       keyword1: {
-        value: ctx.request.body.subject
+        value: ctx.request.body.hint
       },
       keyword2: {
-        value: ctx.request.body.course
+        value: ctx.request.body.activity
       },
       keyword3: {
-        value: ctx.request.body.text
+        value: ctx.request.body.score
+      },
+      keyword4: {
+        value: ctx.request.body.day
       }
     }
     const result = sendTemplateMsg(openId, templateId, 'pages/index/main', data)
@@ -49,5 +52,5 @@ const askRelogin = async (ctx) => {
 
 module.exports = {
   'PUT /formId'  : addFormId,
-  'POST /wechat/relogin' : askRelogin
+  'POST /notify/relogin' : askRelogin
 }
