@@ -19,14 +19,16 @@ function getTimeStamp(){
 //////////////////////////////////////////////////////////////////
 function buildDoc(darwinId){
     var doc = {}
+    doc._key = darwinId
     doc.timestamp = getTimeStamp()
     doc.createTime = getlocalDateString()
     doc.login = []
     doc.state = "active"
+    return doc
 }
 
 //////////////////////////////////////////////////////////////////
-async function startIntegral(darwinId){
+async function startIntegral(openId){
     var darwinId = await arangoDb.getDarwinId(openId)
     var queryAql = `for doc in ${integralCollection}  filter doc._key == '${darwinId}' return doc`
     var doc = await arangoDb.querySingleDoc(queryAql)
