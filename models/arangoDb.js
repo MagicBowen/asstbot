@@ -59,6 +59,21 @@ async function addNewUser(darwinId, openId){
 }
 
 //////////////////////////////////////////////////////////////////
+async function queryDocs(aql){
+    logger.info("qery aql is: ", aql)
+    return await db.query(aql).then(cursor => cursor.all())
+    .then(docs => {
+        return docs
+    },
+    err => {
+        logger.error('Failed to fetch agent document:')
+        return []
+    })
+}
+
+
+
+//////////////////////////////////////////////////////////////////
 async function querySingleDoc(aql){
     logger.info("qery aql is: ", aql)
     return await db.query(aql).then(cursor => cursor.all())

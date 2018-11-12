@@ -1,6 +1,7 @@
 const arangoDb = require("./arangoDb.js")
-var db = arangoDb.getDb() 
+var config = require('../config')
 const logger = require('../utils/logger').logger('integral');
+const postJson = require('../utils/postjson');
 
 const integralCollection = "userIntegral"
 
@@ -29,13 +30,12 @@ function buildDoc(darwinId){
 
 //////////////////////////////////////////////////////////////////
 async function startIntegral(openId){
-    var darwinId = await arangoDb.getDarwinId(openId)
-    var queryAql = `for doc in ${integralCollection}  filter doc._key == '${darwinId}' return doc`
+    var queryAql = `for doc in ${integralCollection}  filter doc._key == '${openId}' return doc`
     var doc = await arangoDb.querySingleDoc(queryAql)
     if(doc == null){
-        await arangoDb.saveDoc(integralCollection, buildDoc(darwinId))
+        await arangoDb.saveDoc(integralCollection, buildDoc(openId))
     }
-    var updateAql = `LET doc = DOCUMENT("${integralCollection}/${darwinId}")
+    var updateAql = `LET doc = DOCUMENT("${integralCollection}/${openId}")
     update doc with {
        state : 'active'
     } in ${integralCollection}`
@@ -45,8 +45,7 @@ async function startIntegral(openId){
 
 //////////////////////////////////////////////////////////////////
 async function stopIntegral(openId){
-    var darwinId = await arangoDb.getDarwinId(openId)
-    var updateAql = `LET doc = DOCUMENT("${integralCollection}/${darwinId}")
+    var updateAql = `LET doc = DOCUMENT("${integralCollection}/${openId}")
     update doc with {
        state : 'inActive'
     } in ${integralCollection}`
@@ -63,9 +62,8 @@ function buildLoginStatItem(){
 
 //////////////////////////////////////////////////////////////////
 async function userLoginStat(openId){
-    var darwinId = await arangoDb.getDarwinId(openId)
     var updateAql = `for doc in ${integralCollection} 
-    filter doc._key == '${darwinId}' and doc.state == 'active'
+    filter doc._key == '${openId}' and doc.state == 'active'
     update doc with {
         login: APPEND(doc.login, ${buildLoginStatItem()})
     } in ${integralCollection}`
@@ -87,13 +85,32 @@ async function eventChatStat(request, response){
     return true
 }
 
+async function sendNotifyFor(user){
+    var body = {
+        hint:  "今天你还没有登陆",
+        activity: "打开活动",
+        score: 1000,
+        openId: user._key,
+        day: getlocalDateString()
+    }
+
+    var ret = await postJson(config.sendNotifyUrl, body)
+    logger.info(`send notify url ${config.sendNotifyUrl} body  ${body} , ret = ${ret}`)
+}
+
+
 //////////////////////////////////////////////////////////////////
-async function queryUnloginUserToday(){
+async function  notifyUnLoginUsers(){
     var today = getlocalDateString()
     var queryAql = `for doc in ${integralCollection} 
                     let lastLogin = FIRST(doc.login)
-                    filter lastLogin.day != "${today}"
-                    return doc._key`
+                    filter lastLogin.day != '${today}' and doc.state == 'active'
+                    return doc`
+    var users = ararangoDb.queryDocs(queryAql)
+
+    users.forEach(user => {
+        sendNotifyFor(user)
+    });
 }
 
 
@@ -104,5 +121,5 @@ module.exports={
     userLoginStat,
     textChatStat,
     eventChatStat,
-    queryUnloginUserToday
+    notifyUnLoginUsers
 }
