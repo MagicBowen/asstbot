@@ -1,4 +1,4 @@
-const postJson = require('../utils/post-json')
+const postJson = require('../utils/postjson')
 const config = require('../config');
 const accessTocken = require('../utils/access-tocken');
 const logger = require('../utils/logger').logger('wechatNotify');
