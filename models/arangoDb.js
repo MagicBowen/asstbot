@@ -72,7 +72,6 @@ async function queryDocs(aql){
 }
 
 
-
 //////////////////////////////////////////////////////////////////
 async function querySingleDoc(aql){
     logger.info("qery aql is: ", aql)
@@ -118,5 +117,6 @@ module.exports={
     getDarwinId,
     querySingleDoc,
     updateDoc,
+    queryDocs,
     saveDoc
 }

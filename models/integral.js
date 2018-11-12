@@ -95,7 +95,7 @@ async function sendNotifyFor(user){
     }
 
     var ret = await postJson(config.sendNotifyUrl, body)
-    logger.info(`send notify url ${config.sendNotifyUrl} body  ${body} , ret = ${ret}`)
+    logger.info(`send notify url ${config.sendNotifyUrl} body  ${JSON.stringify(body)} , ret = ${JSON.stringify(ret)}`)
 }
 
 
@@ -103,16 +103,15 @@ async function sendNotifyFor(user){
 async function  notifyUnLoginUsers(){
     var today = getlocalDateString()
     var queryAql = `for doc in ${integralCollection} 
-                    let lastLogin = FIRST(doc.login)
+                    let lastLogin = LAST(doc.login)
                     filter lastLogin.day != '${today}' and doc.state == 'active'
                     return doc`
-    var users = ararangoDb.queryDocs(queryAql)
+    var users = await arangoDb.queryDocs(queryAql)
 
     users.forEach(user => {
         sendNotifyFor(user)
     });
 }
-
 
 
 module.exports={
