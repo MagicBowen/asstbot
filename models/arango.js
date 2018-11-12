@@ -427,6 +427,21 @@ function addFormId (openId, formId) {
     return
 }
 
+//////////////////////////////////////////////////////////////////
+async function getFormId (openId) {
+    var aql = `for FormId in wechatFormId
+    filter FormId.openId == '${openId}'
+    let date = DATE_SUBTRACT(DATE_NOW(), 7, "day")
+    let formIds = (for id in FormId.formIds
+        filter DATE_ISO8601(id.timestamp) > date
+        return id)
+    filter length(formIds) > 0
+    let retVal = FIRST(formIds)
+    let newformIds = SHIFT(formIds)
+    update FormId with {formIds: newformIds} in wechatFormId
+    return retVal`
+    return await querySingleDoc(aql)
+}
 
 const  userExtrInfo = "userExtrInfo" 
 
@@ -482,4 +497,5 @@ module.exports={
     getLaohuangli,
     getLunar,
     addFormId,
+    getFormId,
 }
