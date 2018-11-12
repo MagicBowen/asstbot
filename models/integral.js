@@ -65,17 +65,19 @@ function buildLoginStatItem(){
 async function userLoginStat(openId){
     var darwinId = await arangoDb.getDarwinId(openId)
     var updateAql = `for doc in ${integralCollection} 
-                       filter doc._key == '${darwinId}' and doc.state == 'active'
-                       update doc with {
-                           login: APPEND(doc.login, ${buildLoginStatItem()})
-                       } in ${integralCollection}`
+    filter doc._key == '${darwinId}' and doc.state == 'active'
+    update doc with {
+        login: APPEND(doc.login, ${buildLoginStatItem()})
+    } in ${integralCollection}`
     return await arangoDb.updateDoc(updateAql)
 }
 
+//////////////////////////////////////////////////////////////////
 async function textChatStat(request, response){
     return
 }
 
+//////////////////////////////////////////////////////////////////
 async function eventChatStat(request, response){
     var eventName = request.event.name
     var userId = request.session
@@ -85,10 +87,22 @@ async function eventChatStat(request, response){
     return true
 }
 
+//////////////////////////////////////////////////////////////////
+async function queryUnloginUserToday(){
+    var today = getlocalDateString()
+    var queryAql = `for doc in ${integralCollection} 
+                    let lastLogin = FIRST(doc.login)
+                    filter lastLogin.day != "${today}"
+                    return doc._key`
+}
+
+
+
 module.exports={
     startIntegral,
     stopIntegral,
     userLoginStat,
     textChatStat,
-    eventChatStat
+    eventChatStat,
+    queryUnloginUserToday
 }

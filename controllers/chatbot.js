@@ -20,7 +20,7 @@ class Chatbot {
         logger.debug('send to chatbot : ' + JSON.stringify(data));
 
         const response = await postJson(this.uri, data);
-        integralStat.textChatStat(data, response)
+        integral.textChatStat(data, response)
         return this.formatResponse(user, response);
     }
     
