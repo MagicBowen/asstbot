@@ -1,6 +1,6 @@
 var arango = require('arangojs');
 var config = require('../config.js')
-const logger = require('../utils/logger').logger('arangodb');
+const logger = require('../utils/logger.js').logger('arangodb');
 var db = null 
 
 function getDb(){
