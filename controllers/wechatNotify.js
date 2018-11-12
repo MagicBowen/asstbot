@@ -40,7 +40,7 @@ const askRelogin = async (ctx) => {
     ctx.response.type = "application/json"
     ctx.response.status = 200
     ctx.response.body = result
-  } catch {
+  } catch (err) {
     ctx.response.status = 404
     ctx.response.body = err
     logger.error('send template msg error: ' + err)
