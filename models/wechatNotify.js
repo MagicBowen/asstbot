@@ -22,7 +22,6 @@ async function sendTemplateMsg (openId, templateId, page, data) {
     touser: openId
   });
   logger.info(`send template  ${templateId} success `)
-  
   return true
 }
 

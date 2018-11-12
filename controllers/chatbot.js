@@ -3,6 +3,7 @@ const config = require('../config');
 const User = require('../models/user');
 const TTS = require('../utils/tts')
 const logger = require('../utils/logger').logger('chatbot');
+var  integral = require("../models/integral.js")
 
 class Chatbot {
     constructor(agent, uri) {
@@ -19,6 +20,7 @@ class Chatbot {
         logger.debug('send to chatbot : ' + JSON.stringify(data));
 
         const response = await postJson(this.uri, data);
+        integralStat.textChatStat(data, response)
         return this.formatResponse(user, response);
     }
     
@@ -29,6 +31,7 @@ class Chatbot {
                      userContext : user };
 
         const response = await postJson(this.uri, data);
+        integral.eventChatStat(data, response)
         return this.formatResponse(user, response);
     }
 

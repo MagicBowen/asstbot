@@ -71,8 +71,18 @@ async function userLoginStat(openId){
     return await arangoDb.updateDoc(updateAql)
 }
 
+async function textChatStat(request, response){
+
+}
+
+async function eventChatStat(request, response){
+    
+}
+
 module.exports={
     startIntegral,
     stopIntegral,
     userLoginStat,
+    textChatStat,
+    eventChatStat
 }
