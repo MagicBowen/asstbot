@@ -10,14 +10,14 @@ async function sendTemplateMsg (openId, templateId, page, data) {
   const formId = await arangoDb.getFormId(openId)
 
   if (!formId) {
-    logger.error('No available formId for openId:' + openId)
+    logger.error('No available formId for openId:' + openId, 'formId', formId)
     throw new Error('No available formId')
   }
 
   return await postJson(url, {
     template_id: templateId,
     page: page, // "plugin://myPlugin/chatDialog", 
-    form_id: formId,
+    form_id: formId.formId,
     data,
     emphasis_keyword: "keyword1.DATA",
     touser: openId
