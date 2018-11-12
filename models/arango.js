@@ -501,7 +501,6 @@ async function getUserHoroscope(userId){
 }
 
 module.exports={
-    init,
     getDayCourseForUser,
     queryAllCourseForUser,
     saveFeedbackForUser,
