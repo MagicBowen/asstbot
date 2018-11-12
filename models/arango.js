@@ -8,48 +8,8 @@ const  feedbackCollection = "userFeedbacks"
 const  dictateWordsCollection = "dictateWords"
 const  waitingBindingCollection = "waitingBindingAccount" 
 
-function convert_to_openId(userId){
-    var openId = (userId.length == 28) ? userId : userId.replace("_D_", "-")
-    return openId
-}
-
 
 //////////////////////////////////////////////////////////////////
-//此处主要为了解决和遗留数据的兼容问题，所以名字不统一，使用courseId作为darwin平台的统一ID。
-async function getDarwinId(userId) {
-    var openId = convert_to_openId(userId)
-    var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user.courseId`
-    logger.info('execute aql', aql)
-    var darwinId = await db.query(aql).then(cursor => cursor.all())
-          .then(users => {
-            if(users.length > 0){
-                return users[0]
-            }
-            return null
-          }, err => {
-             logger.error('Failed to fetch agent document:')
-             return null
-          })
-
-    if(darwinId == null){
-        darwinId = "darwin_" + openId
-        await addNewUser(darwinId, openId)
-    }
-    return darwinId
-}
-
-async function addNewUser(darwinId, openId){
-    var collection = db.collection(userIdsCollection)
-    var user = {}
-    //此处主要为了解决和遗留数据的兼容问题，所以名字不统一
-    user.courseId = darwinId
-    user.openId = openId
-    await collection.save(user).then(
-        meta => { logger.info('add new user  saved:', meta._key); return meta._key },
-        err => { logger.error('Failed to add new user', err); return "" }
-    );
-}
-
 async function querySingleDoc(aql){
     logger.info("qery aql is: ", aql)
     return await db.query(aql).then(cursor => cursor.all())
@@ -66,10 +26,9 @@ async function querySingleDoc(aql){
     })
 }
 
-
 //////////////////////////////////////////////////////////////////
 async function getDayCourseForUser(userId, weekday){
-    var courseId = await getDarwinId(userId)
+    var courseId = await arangoDb.getDarwinId(userId)
     var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable.${weekday}`
     logger.info('execute aql', aql)
     return await querySingleDoc(aql)
@@ -77,7 +36,7 @@ async function getDayCourseForUser(userId, weekday){
 
 //////////////////////////////////////////////////////////////////
 async function queryAllCourseForUser(userId) {
-    var courseId = await getDarwinId(userId)
+    var courseId = await arangoDb.getDarwinId(userId)
     var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable`
     logger.info('execute aql', aql)
     return await querySingleDoc(aql)
@@ -116,7 +75,7 @@ function getlocalDateString(){
 
 //////////////////////////////////////////////////////////////////
 async function addDictateWords(openId, dictateWords) {
-    var darwinId = await getDarwinId(openId)
+    var darwinId = await arangoDb.getDarwinId(openId)
     dictateWords.darwinId = darwinId
     dictateWords.timestamp = getTimeStamp()
     dictateWords.createTime = getlocalDateString()
@@ -162,7 +121,7 @@ function formatDictateWords(doc){
 
 //////////////////////////////////////////////////////////////////
 async function getAllDictateWords(openId){
-    var darwinId = await getDarwinId(openId)
+    var darwinId = await arangoDb.getDarwinId(openId)
     var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' SORT doc.timestamp DESC return doc`
     return await db.query(aql).then(cursor => cursor.all())
     .then(wordsList => { return wordsList.map(function(doc){
@@ -176,7 +135,7 @@ async function getAllDictateWords(openId){
 
 //////////////////////////////////////////////////////////////////
 async function getActiveDictationWords(openId){
-    var darwinId = await getDarwinId(openId)
+    var darwinId = await arangoDb.getDarwinId(openId)
     var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' and doc.active == true return doc.words`
     logger.info("query aql: ", aql)
     return await db.query(aql).then(cursor => cursor.all())
@@ -255,7 +214,7 @@ async function getUserKey(openId, darwinId){
 
 //////////////////////////////////////////////////////////////////
 async function updateBindingUser(openId, user){
-    var darwinId = await getDarwinId(openId)
+    var darwinId = await arangoDb.getDarwinId(openId)
     var userKey = await getUserKey(openId, darwinId)
 
     var bindingInfo = {}
@@ -472,7 +431,7 @@ function addFormId (openId, formId) {
 const  userExtrInfo = "userExtrInfo" 
 
 async function updateUserHoroscope(userId, horoscope){
-    var darwinId = await getDarwinId(userId)
+    var darwinId = await arangoDb.getDarwinId(userId)
     var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc`
     var ret = await querySingleDoc(aql)
     if(ret == null){
@@ -495,7 +454,7 @@ async function updateUserHoroscope(userId, horoscope){
 }
 
 async function getUserHoroscope(userId){
-    var darwinId = await getDarwinId(userId)
+    var darwinId = await arangoDb.getDarwinId(userId)
     var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc.horoscope`
     return await querySingleDoc(aql)
 }
