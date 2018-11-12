@@ -107,7 +107,7 @@ async function  notifyUnLoginUsers(){
                     filter lastLogin.day != '${today}' and doc.state == 'active'
                     return doc`
     var users = await arangoDb.queryDocs(queryAql)
-
+    logger.info(`send notify users num is: ${users.length}`)
     users.forEach(user => {
         sendNotifyFor(user)
     });
