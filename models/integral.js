@@ -21,6 +21,7 @@ function buildDoc(darwinId){
     var doc = {}
     doc.timestamp = getTimeStamp()
     doc.createTime = getlocalDateString()
+    doc.login = []
     doc.state = "active"
 }
 
