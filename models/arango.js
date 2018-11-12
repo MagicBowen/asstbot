@@ -1,5 +1,5 @@
-const arangoDB = require("./arangodb.js")
-var db = arangoDB.getDb() 
+const arangoDb = require("./arangoDb.js")
+var db = arangoDb.getDb() 
 const logger = require('../utils/logger').logger('arango');
 
 const  courseTableCollection = "courseTable2"
