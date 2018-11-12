@@ -1,4 +1,4 @@
-const arangoDB = require("./arandoDB.js")
+const arangoDB = require("./arangodb.js")
 var db = arangoDB.getDb() 
 const logger = require('../utils/logger').logger('arango');
 
