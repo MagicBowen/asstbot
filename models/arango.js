@@ -1,19 +1,6 @@
-var arango = require('arangojs');
-const config = require('../config')
-var db = null 
+const arangoDB = require("./arandoDB.js")
+var db = arangoDB.getDb() 
 const logger = require('../utils/logger').logger('arango');
-//////////////////////////////////////////////////////////////////
-function init(){
-    logger.info("read config ", JSON.stringify(config))
-    if(db == null){
-        Database = arango.Database;
-        db = new Database(`http://${config.arangoHost}:${config.arangoPort}`);
-        db.useDatabase('waterDrop');
-        db.useBasicAuth(config.arangoUser, config.arangoPassword)
-        logger.info("arango db init success")
-    }
-    return db
-}
 
 const  courseTableCollection = "courseTable2"
 const  userIdsCollection = "userIds"
