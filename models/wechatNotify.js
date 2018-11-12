@@ -2,7 +2,7 @@ const postJson = require('../utils/postjson')
 const config = require('../config');
 const accessTocken = require('../utils/access-tocken');
 const logger = require('../utils/logger').logger('wechatNotify');
-const arangoDb = require("./arangoDb.js")
+const arangoDb = require("./arango.js")
 
 async function sendTemplateMsg (openId, templateId, page, data) {
   const tocken = await accessTocken.getTocken()
