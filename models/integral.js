@@ -57,6 +57,7 @@ async function stopIntegral(openId){
 function buildLoginStatItem(){
     var doc = {}
     doc.day = getlocalDateString()
+    doc.timestamp = getTimeStamp()
     return JSON.stringify(doc)
 }
 
@@ -72,11 +73,16 @@ async function userLoginStat(openId){
 }
 
 async function textChatStat(request, response){
-
+    return
 }
 
 async function eventChatStat(request, response){
-    
+    var eventName = request.event.name
+    var userId = request.session
+    if(eventName == "login") {
+        await userLoginStat(userId)
+    }
+    return true
 }
 
 module.exports={
