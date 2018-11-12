@@ -355,20 +355,6 @@ function getIdName(userType){
     return "xiaomiId"
 }
 
-async function updateDoc(aql){
-    logger.info("update aql is :", aql)
-    return await db.query(aql).then(cursor => cursor.all())
-    .then(result => {
-        logger.info(`update doc success`)
-        return true
-    },
-    err => {
-        logger.error('Failed to update doc')
-        return false
-    })
-}
-
-
 //////////////////////////////////////////////////////////////////
 async function unBindingUser(openId, userType){
     var idName = getIdName(userType)
@@ -377,7 +363,7 @@ async function unBindingUser(openId, userType){
                update doc with {
                    ${idName}: ""
                } into ${userIdsCollection}`
-    return await updateDoc(aql)
+    return await arangoDb.updateDoc(aql)
 }
 
 
@@ -433,7 +419,7 @@ async function updateUserHoroscope(userId, horoscope){
                         horoscope : '${horoscope}'
                      } in ${userExtrInfo}`
 
-    return await updateDoc(updateAql)
+    return await arangoDb.updateDoc(updateAql)
 }
 
 async function getUserHoroscope(userId){
