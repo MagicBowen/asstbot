@@ -2,6 +2,7 @@ var arango = require('arangojs');
 var config = require('../config')
 const logger = require('../utils/logger').logger('arangoDb');
 var db = null 
+const  userIdsCollection = "userIds"
 
 function getDb(){
     logger.info("read config ", JSON.stringify(config))
