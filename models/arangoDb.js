@@ -58,7 +58,25 @@ async function addNewUser(darwinId, openId){
     );
 }
 
+//////////////////////////////////////////////////////////////////
+async function querySingleDoc(aql){
+    logger.info("qery aql is: ", aql)
+    return await db.query(aql).then(cursor => cursor.all())
+    .then(docs => {
+        if(docs.length == 0){
+            return null
+        }else{
+            return docs[0]
+        }
+    },
+    err => {
+        logger.error('Failed to fetch agent document:')
+        return null
+    })
+}
+
 module.exports={
     getDb,
-    getDarwinId
+    getDarwinId,
+    querySingleDoc
 }
