@@ -14,14 +14,18 @@ async function sendTemplateMsg (openId, templateId, page, data) {
     throw new Error('No available formId')
   }
 
-  return await postJson(url, {
+  await postJson(url, {
     template_id: templateId,
     page: page, // "plugin://myPlugin/chatDialog", 
     form_id: formId.formId,
     data,
-    emphasis_keyword: "keyword1.DATA",
     touser: openId
   });
+  logger.info(`send template  ${templateId} success `)
+  
+  return true
 }
 
-module.exports.sendTemplateMsg = sendTemplateMsg
+module.exports = {
+  sendTemplateMsg
+}
