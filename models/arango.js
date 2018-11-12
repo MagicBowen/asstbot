@@ -409,7 +409,7 @@ async function getFormId (openId) {
     let newformIds = SHIFT(formIds)
     update FormId with {formIds: newformIds} in wechatFormId
     return retVal`
-    return await querySingleDoc(aql)
+    return await arangoDb.querySingleDoc(aql)
 }
 
 const  userExtrInfo = "userExtrInfo" 
