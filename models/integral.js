@@ -24,6 +24,7 @@ function buildDoc(darwinId){
     doc.timestamp = getTimeStamp()
     doc.createTime = getlocalDateString()
     doc.login = []
+    doc.dictation = []
     doc.state = "active"
     return doc
 }
@@ -57,22 +58,33 @@ function buildLoginStatItem(){
     var doc = {}
     doc.day = getlocalDateString()
     doc.timestamp = getTimeStamp()
+    doc.collected = false
     return JSON.stringify(doc)
 }
 
 //////////////////////////////////////////////////////////////////
-async function userLoginStat(openId){
+async function addStat(event, openId){
     var updateAql = `for doc in ${integralCollection} 
     filter doc._key == '${openId}' and doc.state == 'active'
     update doc with {
-        login: APPEND(doc.login, ${buildLoginStatItem()})
+        ${event}: APPEND(doc.${event}, ${buildLoginStatItem()})
     } in ${integralCollection}`
     return await arangoDb.updateDoc(updateAql)
 }
 
+async function statByResponse(userId, response){
+    var ret = response.msgs.filter(msg => {
+        return msg.type == "redirect" && msg.url == "dictation"
+    })
+    if (ret.length > 0){
+        await addStat("dictation", userId)
+    }
+}
+
 //////////////////////////////////////////////////////////////////
 async function textChatStat(request, response){
-    return
+    await statByResponse(request.session, response)
+    return true
 }
 
 //////////////////////////////////////////////////////////////////
@@ -80,8 +92,10 @@ async function eventChatStat(request, response){
     var eventName = request.event.name
     var userId = request.session
     if(eventName == "login") {
-        await userLoginStat(userId)
+        await addStat("login", userId)
+        return true
     }
+    await statByResponse(request.session, response)
     return true
 }
 

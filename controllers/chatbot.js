@@ -20,8 +20,9 @@ class Chatbot {
         logger.debug('send to chatbot : ' + JSON.stringify(data));
 
         const response = await postJson(this.uri, data);
-        integral.textChatStat(data, response)
-        return this.formatResponse(user, response);
+        const formatRsp = this.formatResponse(user, response);
+        integral.textChatStat(data, formatRsp)
+        return formatRsp;
     }
     
     async replyToEvent(user, eventType, params) {
@@ -31,8 +32,9 @@ class Chatbot {
                      userContext : user };
 
         const response = await postJson(this.uri, data);
-        integral.eventChatStat(data, response)
-        return this.formatResponse(user, response);
+        const formatRsp = this.formatResponse(user, response);
+        integral.eventChatStat(data, formatRsp)
+        return formatRsp;
     }
 
     formatResponse(user, response) {
