@@ -108,7 +108,7 @@ async function doUpdateIntegal(event, openId, lastDay){
                     update doc with {
                         ${event}: APPEND(doc.${event}, ${lastEventItem}),
                         totalScore: doc.totalScore + ${addScore}
-                    }`
+                    } in ${integralCollection}`
     return await arangoDb.updateDoc(updateAql)
 }
 
