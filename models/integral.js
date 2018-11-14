@@ -64,8 +64,9 @@ function buildLoginStatItem(){
 
 //////////////////////////////////////////////////////////////////
 async function addStat(event, openId){
+    var today = getlocalDateString()
     var updateAql = `for doc in ${integralCollection} 
-    filter doc._key == '${openId}' and doc.state == 'active'
+    filter doc._key == '${openId}' and doc.state == 'active' and LAST(doc.login).day != '${today}'
     update doc with {
         ${event}: APPEND(doc.${event}, ${buildLoginStatItem()})
     } in ${integralCollection}`
