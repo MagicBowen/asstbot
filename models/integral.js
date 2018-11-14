@@ -30,6 +30,8 @@ function buildDoc(darwinId){
     doc.survey = []
     doc.nongli = []
     doc.state = "active"
+    doc.totalScore = 0
+    doc.usedScore = 0
     return doc
 }
 
