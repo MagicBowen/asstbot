@@ -131,7 +131,6 @@ async function  notifyUnLoginUsers(){
 module.exports={
     startIntegral,
     stopIntegral,
-    userLoginStat,
     textChatStat,
     eventChatStat,
     notifyUnLoginUsers
