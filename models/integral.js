@@ -58,11 +58,12 @@ async function startIntegral(openId){
 async function stopIntegral(openId){
     var updateAql = `LET doc = DOCUMENT("${integralCollection}/${openId}")
     update doc with {
-       state : 'inActive'
+        state : 'inActive'
     } in ${integralCollection}`
     return await arangoDb.updateDoc(updateAql)
 }
 
+//////////////////////////////////////////////////////////////////
 async function addIntegalInfo(openId){
     var queryAql = `for doc in ${integralCollection}  filter doc._key == '${openId}' return doc`
     var doc = await arangoDb.querySingleDoc(queryAql)
@@ -72,31 +73,68 @@ async function addIntegalInfo(openId){
 }
 
 //////////////////////////////////////////////////////////////////
-function buildLoginStatItem(){
+var _event_score_rule={
+    "login": {
+        score:  10,
+    },
+    "dictation": {
+        score: 5
+    }
+}
+
+//////////////////////////////////////////////////////////////////
+function clacAddScore(event, lastDay){
+    if(event in  _event_score_rule){
+        return _event_score_rule[event].score
+    }
+    return 0
+}
+
+//////////////////////////////////////////////////////////////////
+function buildLastEventItem(event, lastDay){
     var doc = {}
     doc.day = getlocalDateString()
     doc.time = getlocalTimeString()
-    doc.collected = false
+    doc.name = event
+    doc.lastDay = lastDay + 1
     return JSON.stringify(doc)
 }
 
 //////////////////////////////////////////////////////////////////
-async function addStat(event, openId){
-    var today = getlocalDateString()
-    var updateAql = `for doc in ${integralCollection} 
-    filter doc._key == '${openId}' and doc.state == 'active' and LAST(doc.${event}).day != '${today}'
-    update doc with {
-        ${event}: APPEND(doc.${event}, ${buildLoginStatItem()})
-    } in ${integralCollection}`
+async function doUpdateIntegal(event, openId, lastDay){
+    var addScore = clacAddScore(event, lastDay)
+    var lastEventItem = buildLastEventItem(event, lastDay)
+    var updateAql = `LET doc = DOCUMENT("${integralCollection}/${openId}
+                    update doc with {
+                        ${event}: APPEND(doc.${event}, ${lastEventItem}),
+                        totalScore: doc.totalScore + ${addScore}
+                    }`
     return await arangoDb.updateDoc(updateAql)
 }
 
+//////////////////////////////////////////////////////////////////
+async function addStatNew(event, openId){
+    var today = getlocalDateString()
+    var queryAql = `for doc in ${integralCollection} 
+    filter doc._key == '${openId}'
+    return LAST(doc.${event})`
+    var doc = await arangoDb.querySingleDoc(queryAql)
+    if(doc == null){
+        return await doUpdateIntegal(event, openId, 0)
+    }
+    if(doc.day == today){
+        return true
+    }
+    return await doUpdateIntegal(event, openId, doc.lastDay)
+}
+
+//////////////////////////////////////////////////////////////////
 async function statByResponse(userId, response){
     var ret = response.msgs.filter(msg => {
         return msg.type == "redirect" && msg.url == "dictation"
     })
     if (ret.length > 0){
-        await addStat("dictation", userId)
+        await addStatNew("dictation", userId)
     }
 }
 
@@ -112,13 +150,14 @@ async function eventChatStat(request, response){
     var userId = request.session
     if(eventName == "login") {
         await addIntegalInfo(userId)
-        await addStat("login", userId)
+        await addStatNew("login", userId)
         return true
     }
     await statByResponse(request.session, response)
     return true
 }
 
+//////////////////////////////////////////////////////////////////
 async function sendNotifyFor(user){
     var body = {
         hint:  "今天你还没有登陆",
