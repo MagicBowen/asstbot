@@ -104,7 +104,7 @@ function buildLastEventItem(event, lastDay){
 async function doUpdateIntegal(event, openId, lastDay){
     var addScore = clacAddScore(event, lastDay)
     var lastEventItem = buildLastEventItem(event, lastDay)
-    var updateAql = `LET doc = DOCUMENT("${integralCollection}/${openId}
+    var updateAql = `LET doc = DOCUMENT("${integralCollection}/${openId}")
                     update doc with {
                         ${event}: APPEND(doc.${event}, ${lastEventItem}),
                         totalScore: doc.totalScore + ${addScore}
