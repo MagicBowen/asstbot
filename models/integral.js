@@ -11,6 +11,10 @@ function getlocalDateString(){
     return myDate.toLocaleDateString()
 }
 
+function getlocalTimeString(){
+    return new Date().toLocaleString()
+}
+
 //////////////////////////////////////////////////////////////////
 function getTimeStamp(){
     var date = new Date()
@@ -22,7 +26,7 @@ function buildDoc(darwinId){
     var doc = {}
     doc._key = darwinId
     doc.timestamp = getTimeStamp()
-    doc.createTime = getlocalDateString()
+    doc.createTime = getlocalTimeString()
     doc.login = []
     doc.dictation = []
     doc.course = []
@@ -71,7 +75,7 @@ async function addIntegalInfo(openId){
 function buildLoginStatItem(){
     var doc = {}
     doc.day = getlocalDateString()
-    doc.timestamp = getTimeStamp()
+    doc.time = getlocalTimeString()
     doc.collected = false
     return JSON.stringify(doc)
 }
