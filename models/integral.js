@@ -25,6 +25,10 @@ function buildDoc(darwinId){
     doc.createTime = getlocalDateString()
     doc.login = []
     doc.dictation = []
+    doc.course = []
+    doc.horoscope = []
+    doc.survey = []
+    doc.nongli = []
     doc.state = "active"
     return doc
 }
@@ -51,6 +55,14 @@ async function stopIntegral(openId){
        state : 'inActive'
     } in ${integralCollection}`
     return await arangoDb.updateDoc(updateAql)
+}
+
+async function addIntegalInfo(openId){
+    var queryAql = `for doc in ${integralCollection}  filter doc._key == '${openId}' return doc`
+    var doc = await arangoDb.querySingleDoc(queryAql)
+    if(doc == null){
+        await arangoDb.saveDoc(integralCollection, buildDoc(openId))
+    }
 }
 
 //////////////////////////////////////////////////////////////////
@@ -93,6 +105,7 @@ async function eventChatStat(request, response){
     var eventName = request.event.name
     var userId = request.session
     if(eventName == "login") {
+        await addIntegalInfo(userId)
         await addStat("login", userId)
         return true
     }
