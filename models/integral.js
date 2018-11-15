@@ -229,7 +229,7 @@ async function allocAwardFor(openId, grand){
     var awardKey = "prize_" + grand
     logger.info("alloc awardInfo for", awardKey)
     var aql = `for doc in ${awardCollection}
-                filter doc._key==${awardKey} and doc.remainNum >= 1
+                filter doc._key=='${awardKey}' and doc.remainNum >= 1
                 UPDATE doc with{
                 remainNum: doc.remainNum-1,
                 prizeUsers : APPEND(doc.prizeUsers, {openId: ${openId}})
