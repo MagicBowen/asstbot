@@ -1,10 +1,12 @@
 var arangoDb = require("../models/arango.js")
+var integral = require("../models/integral.js")
 const logger = require('../utils/logger').logger('dictateWords');
 
 //////////////////////////////////////////////////////////////////
 const addDictateWords = async (ctx) => {
     try {
         const id = await arangoDb.addDictateWords(ctx.request.body.openId, ctx.request.body.dictateWords);
+        await integral.addNewDictationStat(ctx.request.body.openId)
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success', id : id};

@@ -139,8 +139,13 @@ async function statByResponse(userId, response){
 }
 
 //////////////////////////////////////////////////////////////////
+async function addNewDictationStat(userId){
+    await addStatNew("dictation", userId)
+}
+
+//////////////////////////////////////////////////////////////////
 async function textChatStat(request, response){
-    await statByResponse(request.session, response)
+    // await statByResponse(request.session, response)
     return true
 }
 
@@ -153,7 +158,7 @@ async function eventChatStat(request, response){
         await addStatNew("login", userId)
         return true
     }
-    await statByResponse(request.session, response)
+    // await statByResponse(request.session, response)
     return true
 }
 
@@ -218,5 +223,6 @@ module.exports={
     eventChatStat,
     notifyUnLoginUsers,
     queryUserIntegral,
+    addNewDictationStat,
     doLuckyDraw
 }
