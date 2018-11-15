@@ -92,7 +92,7 @@ async function querySingleDoc(aql){
 //////////////////////////////////////////////////////////////////
 async function saveDoc(collectionName, doc){
     var collection  = db.collection(collectionName)
-    await collection.save(doc).then(
+    return await collection.save(doc).then(
         meta => { logger.info('Document saved:', meta._key); return meta._key },
         err => { logger.error('Failed to save document:', err); return "" }
     );

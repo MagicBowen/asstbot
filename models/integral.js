@@ -45,6 +45,7 @@ async function startIntegral(openId){
     var doc = await arangoDb.querySingleDoc(queryAql)
     if(doc == null){
         await arangoDb.saveDoc(integralCollection, buildDoc(openId))
+        return true
     }
     var updateAql = `LET doc = DOCUMENT("${integralCollection}/${openId}")
     update doc with {
@@ -70,6 +71,7 @@ async function addIntegalInfo(openId){
     if(doc == null){
         await arangoDb.saveDoc(integralCollection, buildDoc(openId))
     }
+    return true
 }
 
 //////////////////////////////////////////////////////////////////
@@ -210,9 +212,43 @@ async function doLuckyDraw(openId){
     var luckyNum = Math.floor(Math.random()*10)
     var ret = {}
     if(luckyNum == 1){
-        ret.grand = 1
+        ret.grand = 2
+        var flag = await allocAwardFor(openId, ret.grand)
+        if(flag){
+            return ret
+        }       
     }
     ret.grand = 0
+    await allocAwardFor(openId, ret.grand)
+    return ret
+}
+
+//////////////////////////////////////////////////////////////////
+const awardCollection = "awardInfo"
+async function allocAwardFor(openId, grand){
+    var awardKey = "prize_" + grand
+    logger.info("alloc awardInfo for", awardKey)
+    var aql = `for doc in ${awardCollection}
+                filter doc._key==${awardKey} and doc.remainNum >= 1
+                UPDATE doc with{
+                remainNum: doc.remainNum-1,
+                prizeUsers : APPEND(doc.prizeUsers, {openId: ${openId}})
+                } in ${awardCollection}
+                LET previous = OLD 
+                RETURN previous._key`
+
+    var ret = await arangoDb.querySingleDoc(aql)
+    return ret != null
+}
+
+//////////////////////////////////////////////////////////////////
+async function addPrizeConnectWay(openId, grand, phone){
+    var doc = {}
+    doc.openId = openId
+    doc.grand = grand
+    doc.phone = phone 
+    doc.time = getlocalTimeString()
+    var ret = await arangoDb.saveDoc(doc)
     return ret
 }
 
@@ -224,5 +260,6 @@ module.exports={
     notifyUnLoginUsers,
     queryUserIntegral,
     addNewDictationStat,
+    addPrizeConnectWay,
     doLuckyDraw
 }
