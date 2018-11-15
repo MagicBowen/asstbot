@@ -178,6 +178,8 @@ async function sendNotifyFor(user){
     logger.info(`send notify url ${config.sendNotifyUrl} body  ${JSON.stringify(body)} , ret = ${JSON.stringify(ret)}`)
 }
 
+const luckyDrawScore = 200
+
 async function queryUserIntegral(openId){
     var queryAql = `for doc in ${integralCollection} 
     filter doc._key == '${openId}'
@@ -189,7 +191,7 @@ async function queryUserIntegral(openId){
     var ret = {}
     ret.totalScore = doc.totalScore,
     ret.usedScore = doc.usedScore,
-    ret.drawTimes = 0
+    ret.drawTimes = Math.floor((doc.totalScore - doc.usedScore)/luckyDrawScore)
     return ret
 }
 
@@ -207,20 +209,41 @@ async function  notifyUnLoginUsers(){
     });
 }
 
+async function deductIntegral(openId){
+    var aql =  `for doc in ${integralCollection}
+                filter doc._key=='${openId}' and doc.remainScore >= ${luckyDrawScore}
+                UPDATE doc with{
+                remainScore: doc.remainScore-${luckyDrawScore},
+                } in ${integralCollection}
+                LET previous = OLD 
+                RETURN previous._key`
+
+    var ret = await arangoDb.querySingleDoc(aql)
+    return ret != null
+}
+
 //////////////////////////////////////////////////////////////////
 async function doLuckyDraw(openId){
-    var luckyNum = Math.floor(Math.random()*10)
-    var ret = {}
-    if(luckyNum == 1){
-        ret.grand = 2
-        var flag = await allocAwardFor(openId, ret.grand)
-        if(flag){
-            return ret
-        }       
+    var deductFlag =   deductIntegral(openId)
+    if(deductFlag){
+        var luckyNum = Math.floor(Math.random()*10)
+        var ret = {}
+        if(luckyNum == 1){
+            ret.grand = 2
+            var flag = await allocAwardFor(openId, ret.grand)
+            if(flag){
+                return ret
+            }       
+        }
+        ret.grand = 0
+        await allocAwardFor(openId, ret.grand)
+        return ret
+    }else{
+        var ret = {
+            grand: 0
+        }
+        return ret
     }
-    ret.grand = 0
-    await allocAwardFor(openId, ret.grand)
-    return ret
 }
 
 //////////////////////////////////////////////////////////////////
