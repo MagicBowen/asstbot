@@ -171,6 +171,20 @@ async function sendNotifyFor(user){
     logger.info(`send notify url ${config.sendNotifyUrl} body  ${JSON.stringify(body)} , ret = ${JSON.stringify(ret)}`)
 }
 
+async function queryUserIntegral(openId){
+    var queryAql = `for doc in ${integralCollection} 
+    filter doc._key == '${openId}'
+    return doc`
+    var doc = await arangoDb.querySingleDoc(queryAql)
+    if(doc = null){
+        return {totalScore: 0, usedScore: 0}
+    }
+    var ret = {}
+    ret.totalScore = doc.totalScore,
+    ret.usedScore = doc.usedScore
+    return ret
+}
+
 
 //////////////////////////////////////////////////////////////////
 async function  notifyUnLoginUsers(){
@@ -192,5 +206,6 @@ module.exports={
     stopIntegral,
     textChatStat,
     eventChatStat,
-    notifyUnLoginUsers
+    notifyUnLoginUsers,
+    queryUserIntegral
 }
