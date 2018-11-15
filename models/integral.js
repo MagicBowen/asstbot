@@ -176,7 +176,7 @@ async function queryUserIntegral(openId){
     filter doc._key == '${openId}'
     return doc`
     var doc = await arangoDb.querySingleDoc(queryAql)
-    if(doc = null){
+    if(doc == null){
         return {totalScore: 0, usedScore: 0}
     }
     logger.info("qeury ret ", doc)
