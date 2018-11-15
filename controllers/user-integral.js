@@ -3,14 +3,14 @@ var  integral = require("../models/integral.js")
 
 const getUserIntegral = async (ctx) => {
     try {
-        var ret = await integral.getUserIntegral(ctx.request.query.id)
+        var ret = await integral.queryUserIntegral(ctx.request.query.id)
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success', data: ret};
     } catch(err) {
         ctx.response.status = 404;
         ctx.response.body = {result : 'failed'};
-        logger.error(`delete survey result error: ` + err.stack);
+        logger.error(`getUserIntegral error: ` + err.stack);
     }    
 };
 
@@ -23,7 +23,7 @@ const doLuckyDraw = async(ctx) => {
     } catch(err) {
         ctx.response.status = 404;
         ctx.response.body = {result : 'failed'};
-        logger.error(`delete survey result error: ` + err.stack);
+        logger.error(`doLuckyDraw error: ` + err.stack);
     }
 }
 
