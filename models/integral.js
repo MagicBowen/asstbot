@@ -179,7 +179,6 @@ async function queryUserIntegral(openId){
     if(doc == null){
         return {totalScore: 0, usedScore: 0}
     }
-    logger.info("qeury ret ", doc)
     var ret = {}
     ret.totalScore = doc.totalScore,
     ret.usedScore = doc.usedScore,
