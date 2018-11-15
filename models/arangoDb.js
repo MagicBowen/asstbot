@@ -74,7 +74,7 @@ async function queryDocs(aql){
 
 //////////////////////////////////////////////////////////////////
 async function querySingleDoc(aql){
-    logger.info("qery aql is: ", aql)
+    logger.info("query aql is: ", aql)
     return await db.query(aql).then(cursor => cursor.all())
     .then(docs => {
         if(docs.length == 0){

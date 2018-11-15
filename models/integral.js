@@ -213,7 +213,7 @@ async function deductIntegral(openId){
     var aql =  `for doc in ${integralCollection}
                 filter doc._key=='${openId}' and doc.remainScore >= ${luckyDrawScore}
                 UPDATE doc with{
-                remainScore: doc.remainScore-${luckyDrawScore},
+                remainScore: doc.remainScore-${luckyDrawScore}
                 } in ${integralCollection}
                 LET previous = OLD 
                 RETURN previous._key`
@@ -224,7 +224,7 @@ async function deductIntegral(openId){
 
 //////////////////////////////////////////////////////////////////
 async function doLuckyDraw(openId){
-    var deductFlag =   deductIntegral(openId)
+    var deductFlag = await deductIntegral(openId)
     if(deductFlag){
         var luckyNum = Math.floor(Math.random()*10)
         var ret = {}
