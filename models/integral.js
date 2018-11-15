@@ -211,9 +211,9 @@ async function  notifyUnLoginUsers(){
 
 async function deductIntegral(openId){
     var aql =  `for doc in ${integralCollection}
-                filter doc._key=='${openId}' and doc.remainScore >= ${luckyDrawScore}
+                filter doc._key=='${openId}' and (doc.totalScore - doc.usedScore) >= ${luckyDrawScore}
                 UPDATE doc with{
-                remainScore: doc.remainScore-${luckyDrawScore}
+                usedScore: doc.usedScore+${luckyDrawScore}
                 } in ${integralCollection}
                 LET previous = OLD 
                 RETURN previous._key`
