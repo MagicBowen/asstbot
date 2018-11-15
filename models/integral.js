@@ -232,7 +232,7 @@ async function allocAwardFor(openId, grand){
                 filter doc._key=='${awardKey}' and doc.remainNum >= 1
                 UPDATE doc with{
                 remainNum: doc.remainNum-1,
-                prizeUsers : APPEND(doc.prizeUsers, {openId: ${openId}})
+                prizeUsers : APPEND(doc.prizeUsers, {openId: '${openId}'})
                 } in ${awardCollection}
                 LET previous = OLD 
                 RETURN previous._key`
