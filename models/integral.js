@@ -181,18 +181,18 @@ async function queryUserIntegral(openId){
     }
     var ret = {}
     ret.totalScore = doc.totalScore,
-    ret.usedScore = doc.usedScore
+    ret.usedScore = doc.usedScore,
+    ret.drawTimes = 0
     return ret
 }
-
 
 //////////////////////////////////////////////////////////////////
 async function  notifyUnLoginUsers(){
     var today = getlocalDateString()
     var queryAql = `for doc in ${integralCollection} 
-                    let lastLogin = LAST(doc.login)
-                    filter lastLogin.day != '${today}' and doc.state == 'active'
-                    return doc`
+    let lastLogin = LAST(doc.login)
+    filter lastLogin.day != '${today}' and doc.state == 'active'
+    return doc`
     var users = await arangoDb.queryDocs(queryAql)
     logger.info(`send notify users num is: ${users.length}`)
     users.forEach(user => {
@@ -200,6 +200,16 @@ async function  notifyUnLoginUsers(){
     });
 }
 
+//////////////////////////////////////////////////////////////////
+async function doLuckyDraw(openId){
+    var luckyNum = Math.floor(Math.random()*10)
+    var ret = {}
+    if(luckyNum == 1){
+        ret.grand = 1
+    }
+    ret.grand = 0
+    return ret
+}
 
 module.exports={
     startIntegral,
@@ -207,5 +217,6 @@ module.exports={
     textChatStat,
     eventChatStat,
     notifyUnLoginUsers,
-    queryUserIntegral
+    queryUserIntegral,
+    doLuckyDraw
 }
