@@ -55,7 +55,9 @@ async function startIntegral(openId){
     var queryAql = `for doc in ${integralCollection}  filter doc._key == '${openId}' return doc`
     var doc = await arangoDb.querySingleDoc(queryAql)
     if(doc == null){
-        await arangoDb.saveDoc(integralCollection, await buildDoc(openId))
+        var userIntegral = await buildDoc(openId)
+        logger.info("user integral ", userIntegral)
+        await arangoDb.saveDoc(integralCollection, userIntegral)
         return true
     }
     var updateAql = `LET doc = DOCUMENT("${integralCollection}/${openId}")
@@ -80,7 +82,9 @@ async function addIntegalInfo(openId){
     var queryAql = `for doc in ${integralCollection}  filter doc._key == '${openId}' return doc`
     var doc = await arangoDb.querySingleDoc(queryAql)
     if(doc == null){
-        await arangoDb.saveDoc(integralCollection, buildDoc(openId))
+        var userIntegral = await buildDoc(openId)
+        logger.info("user integral ", userIntegral)
+        await arangoDb.saveDoc(integralCollection, userIntegral)
     }
     return true
 }
