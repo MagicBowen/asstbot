@@ -28,11 +28,11 @@ async function buildDoc(darwinId){
     var doc = {}
     doc.hasCourseTable = false
     doc.hasDictations = false
-    var courseTable = await arango.queryAllCourseForUser(darwinId)
-    if(courseTable != null){
-        totalScore = totalScore + 100
-        doc.hasCourseTable = true
-    }
+    // var courseTable = await arango.queryAllCourseForUser(darwinId)
+    // if(courseTable != null){
+    //     totalScore = totalScore + 100
+    //     doc.hasCourseTable = true
+    // }
     var dictations = await arango.getAllDictateWords(darwinId)
     if(dictations.length > 1) {
         totalScore = totalScore + 50
@@ -265,7 +265,7 @@ function calcDrawGrand(){
     if(luckyNum > 0 && luckyNum < 200){
         return 1
     }
-    if(luckyNum > 200 && luckyNum > 500){
+    if(luckyNum > 200 && luckyNum < 500){
         return 2
     }
     if(luckyNum > 500 && luckyNum < 800){
