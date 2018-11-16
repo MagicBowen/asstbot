@@ -1160,7 +1160,7 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 
 ###抽奖接口
 * 请求方式
-```post http://localhost/lukydraw```
+```post http://localhost/luckydraw```
 
 * 参数
 ```json

@@ -55,7 +55,7 @@ const addShareEvent = async(ctx) => {
 
 module.exports = {
     'GET /integral'    :  getUserIntegral,
-    'POST /lukydraw'   :  doLuckyDraw,
+    'POST /luckydraw'   :  doLuckyDraw,
     'POST /prizeuser'  :  savePrizeUser,
     'POST /shareEvent' :  addShareEvent
 };
