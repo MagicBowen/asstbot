@@ -2,6 +2,7 @@ const arangoDb = require("./arangoDb.js")
 var config = require('../config')
 const logger = require('../utils/logger').logger('integral');
 const postJson = require('../utils/postjson');
+const arango = require("./arango.js")
 
 const integralCollection = "userIntegral"
 
@@ -22,7 +23,17 @@ function getTimeStamp(){
 }
 
 //////////////////////////////////////////////////////////////////
-function buildDoc(darwinId){
+async function buildDoc(darwinId){
+    var totalScore = 0
+    var courseTable = await arango.queryAllCourseForUser(darwinId)
+    if(courseTable != null){
+        totalScore = totalScore + 100
+    }
+    var dictations = await arango.getAllDictateWords(darwinId)
+    if(dictations.length > 1) {
+        totalScore = totalScore + 50
+    }
+
     var doc = {}
     doc._key = darwinId
     doc.timestamp = getTimeStamp()
@@ -34,7 +45,7 @@ function buildDoc(darwinId){
     doc.survey = []
     doc.nongli = []
     doc.state = "active"
-    doc.totalScore = 0
+    doc.totalScore = totalScore
     doc.usedScore = 0
     return doc
 }
@@ -44,7 +55,7 @@ async function startIntegral(openId){
     var queryAql = `for doc in ${integralCollection}  filter doc._key == '${openId}' return doc`
     var doc = await arangoDb.querySingleDoc(queryAql)
     if(doc == null){
-        await arangoDb.saveDoc(integralCollection, buildDoc(openId))
+        await arangoDb.saveDoc(integralCollection, await buildDoc(openId))
         return true
     }
     var updateAql = `LET doc = DOCUMENT("${integralCollection}/${openId}")
@@ -307,6 +318,15 @@ async function addPrizeConnectWay(openId, grand, phone){
     return ret
 }
 
+//////////////////////////////////////////////////////////////////
+async function addShareStat(sourceId, destId, type){
+
+}
+
+//////////////////////////////////////////////////////////////////
+
+
+
 
 module.exports={
     startIntegral,
@@ -317,5 +337,6 @@ module.exports={
     queryUserIntegral,
     addNewDictationStat,
     addPrizeConnectWay,
-    doLuckyDraw
+    doLuckyDraw,
+    addShareStat
 }

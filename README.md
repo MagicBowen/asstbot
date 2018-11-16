@@ -1181,9 +1181,7 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 
 ###保存中奖联系方式
 * 请求方式
-
 ```post http://localhost/asst/prizeuser```
-
 
 * 参数
 ```json
