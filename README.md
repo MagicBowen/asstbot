@@ -1182,13 +1182,14 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 ###保存中奖联系方式
 * 请求方式
 
-```post http://localhost/lukydraw```
+```post http://localhost/asst/prizeuser```
 
 
 * 参数
 ```json
-{
-	"id"    : "oNijH5e8sdGfry-3tQWVN3SgskB0"
+{"id"    : "oNijH5dOWOgyvX75lpVubHqWILOk",
+ "grand" : 2,
+ "phone" : "18629022031"
 }
 ```
 
@@ -1196,9 +1197,7 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 ```json
 {
     "result": "success",
-    "data": {
-        "grand": 2
-    }
+    "data": "58600843"
 }
 ```
 
