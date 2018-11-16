@@ -25,16 +25,20 @@ function getTimeStamp(){
 //////////////////////////////////////////////////////////////////
 async function buildDoc(darwinId){
     var totalScore = 0
+    var doc = {}
+    doc.hasCourseTable = false
+    doc.hasDictations = false
     var courseTable = await arango.queryAllCourseForUser(darwinId)
     if(courseTable != null){
         totalScore = totalScore + 100
+        doc.hasCourseTable = true
     }
     var dictations = await arango.getAllDictateWords(darwinId)
     if(dictations.length > 1) {
         totalScore = totalScore + 50
+        doc.hasDictations = true
     }
 
-    var doc = {}
     doc._key = darwinId
     doc.timestamp = getTimeStamp()
     doc.createTime = getlocalTimeString()
