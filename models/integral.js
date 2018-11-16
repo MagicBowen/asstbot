@@ -226,6 +226,7 @@ async function  notifyUnLoginUsers(){
     });
 }
 
+//////////////////////////////////////////////////////////////////
 async function deductIntegral(openId){
     var aql =  `for doc in ${integralCollection}
                 filter doc._key=='${openId}' and (doc.totalScore - doc.usedScore) >= ${luckyDrawScore}
@@ -301,9 +302,10 @@ async function addPrizeConnectWay(openId, grand, phone){
     doc.grand = grand
     doc.phone = phone 
     doc.time = getlocalTimeString()
-    var ret = await arangoDb.saveDoc(doc)
+    var ret = await arangoDb.saveDoc(awardCollection, doc)
     return ret
 }
+
 
 module.exports={
     startIntegral,
