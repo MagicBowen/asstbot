@@ -24,7 +24,7 @@ function getTimeStamp(){
 
 //////////////////////////////////////////////////////////////////
 async function buildDoc(darwinId){
-    var totalScore = 0
+    var totalScore = 10000
     var doc = {}
     doc.hasCourseTable = false
     doc.hasDictations = false
