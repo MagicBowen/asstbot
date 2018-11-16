@@ -72,7 +72,7 @@ async function addDictateWords(openId, dictateWords) {
 }
 
 //////////////////////////////////////////////////////////////////
-async function udpateDictateWords(dictateWordsId, dictateWords){
+async function updateDicateWords(dictateWordsId, dictateWords){
     var collection = db.collection(dictateWordsCollection)
     dictateWords.updateTime = getlocalDateString()
     var dictateWordsId = await collection.update(dictateWordsId, dictateWords).then(
@@ -448,7 +448,7 @@ module.exports={
     queryAllCourseForUser,
     saveFeedbackForUser,
     addDictateWords,
-    udpateDictateWords,
+    updateDicateWords,
     deleteDictateWords,
     getAllDictateWords,
     getActiveDictationWords,
