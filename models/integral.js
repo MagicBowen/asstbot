@@ -131,7 +131,7 @@ async function doUpdateIntegal(event, openId, lastDay){
 }
 
 //////////////////////////////////////////////////////////////////
-async function addStatNew(event, openId){
+async function addDayStat(event, openId){
     var today = getlocalDateString()
     var queryAql = `for doc in ${integralCollection} 
     filter doc._key == '${openId}'
@@ -152,13 +152,13 @@ async function statByResponse(userId, response){
         return msg.type == "redirect" && msg.url == "dictation"
     })
     if (ret.length > 0){
-        await addStatNew("dictation", userId)
+        await addDayStat("dictation", userId)
     }
 }
 
 //////////////////////////////////////////////////////////////////
 async function addNewDictationStat(userId){
-    await addStatNew("dictation", userId)
+    await addDayStat("dictation", userId)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -173,7 +173,7 @@ async function eventChatStat(request, response){
     var userId = request.session
     if(eventName == "login") {
         await addIntegalInfo(userId)
-        await addStatNew("login", userId)
+        await addDayStat("login", userId)
         return true
     }
     // await statByResponse(request.session, response)
@@ -207,6 +207,7 @@ async function queryUserIntegral(openId){
     var ret = {}
     ret.totalScore = doc.totalScore,
     ret.usedScore = doc.usedScore,
+    ret.remainScore = doc.totalScore - doc.usedScore,
     ret.drawTimes = Math.floor((doc.totalScore - doc.usedScore)/luckyDrawScore)
     return ret
 }
