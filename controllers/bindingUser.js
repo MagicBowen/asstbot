@@ -20,7 +20,7 @@ const bindingUser = async (ctx) => {
 //////////////////////////////////////////////////////////////////
 const unbindingUser = async (ctx) => {
     try {
-        const state = await arangoDb.unBindingUser(ctx.request.body.openId, ctx.request.body.type);
+        const state = await arangoDb.unBindingUser(ctx.request.body.openId, ctx.request.body.type, ctx.request.body.skill);
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success', state : state};

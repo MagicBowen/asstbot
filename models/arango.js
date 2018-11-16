@@ -201,7 +201,7 @@ async function updateBindingUser(openId, user){
     var userKey = await getUserKey(openId, darwinId)
 
     var bindingInfo = {}
-    bindingInfo[getIdName(user.userType)] = user.userId
+    bindingInfo[getIdName(user.userType, user.skill)] = user.userId
     bindingInfo.openId = openId
     bindingInfo.courseId = darwinId
 
@@ -213,7 +213,6 @@ async function updateBindingUser(openId, user){
     )
     return key != ""
 }
-
 
 //////////////////////////////////////////////////////////////////
 async function removeWaitingBindingUser(user){
@@ -342,7 +341,18 @@ async function bindingUser(openId, bindingCode, userType){
 }
 
 //////////////////////////////////////////////////////////////////
-function getIdName(userType){
+function getIdNameForDingDong(skill){
+    if(!skill){
+        return "dingdongId"
+    }
+    if(skill == "course-record"){
+        return "dingdongId"
+    }
+    return "dingdong-" + skill+ "_Id"
+}
+
+//////////////////////////////////////////////////////////////////
+function getIdName(userType, skill){
     if(userType == 'xiaoai'){
         return "xiaomiId"
     }
@@ -350,14 +360,14 @@ function getIdName(userType){
         return "duerosId"
     }
     if(userType == 'dingdong'){
-        return "dingdongId"
+        return getIdNameForDingDong(skill)
     }
     return "xiaomiId"
 }
 
 //////////////////////////////////////////////////////////////////
-async function unBindingUser(openId, userType){
-    var idName = getIdName(userType)
+async function unBindingUser(openId, userType, skill){
+    var idName = getIdName(userType, skill)
     var aql = `for doc in ${userIdsCollection}
                filter doc.openId== '${openId}'
                update doc with {

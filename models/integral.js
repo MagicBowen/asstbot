@@ -262,6 +262,7 @@ async function deductIntegral(openId){
 //////////////////////////////////////////////////////////////////
 function calcDrawGrand(){
     var luckyNum = Math.floor(Math.random()*1000)
+    logger.info("lucky num ",luckyNum)
     if(luckyNum > 0 && luckyNum < 200){
         return 1
     }
