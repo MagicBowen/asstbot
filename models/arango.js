@@ -214,6 +214,7 @@ async function updateBindingUser(openId, user){
     return key != ""
 }
 
+
 //////////////////////////////////////////////////////////////////
 async function removeWaitingBindingUser(user){
     var collection  = db.collection(waitingBindingCollection)
