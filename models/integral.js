@@ -262,13 +262,13 @@ async function deductIntegral(openId){
 //////////////////////////////////////////////////////////////////
 function calcDrawGrand(){
     var luckyNum = Math.floor(Math.random()*1000)
-    if(luckyNum > 100 && luckyNum < 105){
+    if(luckyNum > 0 && luckyNum < 200){
         return 1
     }
-    if(luckyNum > 200 && luckyNum > 250){
+    if(luckyNum > 200 && luckyNum > 500){
         return 2
     }
-    if(luckyNum > 300 && luckyNum < 500){
+    if(luckyNum > 500 && luckyNum < 800){
         return 3
     }
     return 0
@@ -330,7 +330,6 @@ async function addPrizeConnectWay(openId, grand, phone){
 async function addShareStat(sourceId, destId, type){
 
 }
-
 //////////////////////////////////////////////////////////////////
 
 
