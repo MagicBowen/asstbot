@@ -76,18 +76,34 @@ async function addIntegalInfo(openId){
 
 //////////////////////////////////////////////////////////////////
 var _event_score_rule={
-    "login": {
-        score:  10,
-    },
-    "dictation": {
-        score: 5
-    }
+    "login": [
+        { start: 1,
+          end: 6,
+          score:  10},
+        { start: 7,
+          end: 20,
+          score:  20},
+        { start: 21,
+          end: 100000,
+          score:  20}
+    ],
+    "dictation": [
+        { start: 1,
+          end: 100000,
+          score:  20}
+    ]
 }
 
 //////////////////////////////////////////////////////////////////
 function clacAddScore(event, lastDay){
     if(event in  _event_score_rule){
-        return _event_score_rule[event].score
+        var matchRules = _event_score_rule[event].filter(rule =>{
+            return rule.start <= lastDay && rule.end >= lastDay
+        })
+        if(matchRules.length == 0){
+            return 10
+        }
+        return matchRules[0].score
     }
     return 0
 }
@@ -98,7 +114,7 @@ function buildLastEventItem(event, lastDay){
     doc.day = getlocalDateString()
     doc.time = getlocalTimeString()
     doc.name = event
-    doc.lastDay = lastDay + 1
+    doc.lastDay = lastDay
     return JSON.stringify(doc)
 }
 
@@ -122,12 +138,12 @@ async function addStatNew(event, openId){
     return LAST(doc.${event})`
     var doc = await arangoDb.querySingleDoc(queryAql)
     if(doc == null){
-        return await doUpdateIntegal(event, openId, 0)
+        return await doUpdateIntegal(event, openId, 1)
     }
     if(doc.day == today){
         return true
     }
-    return await doUpdateIntegal(event, openId, doc.lastDay)
+    return await doUpdateIntegal(event, openId, doc.lastDay + 1)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -223,18 +239,31 @@ async function deductIntegral(openId){
 }
 
 //////////////////////////////////////////////////////////////////
+function calcDrawGrand(){
+    var luckyNum = Math.floor(Math.random()*1000)
+    if(luckyNum > 100 && luckyNum < 105){
+        return 1
+    }
+    if(luckyNum > 200 && luckyNum > 250){
+        return 2
+    }
+    if(luckyNum > 300 && luckyNum < 500){
+        return 3
+    }
+    return 0
+}
+
+//////////////////////////////////////////////////////////////////
 async function doLuckyDraw(openId){
     var deductFlag = await deductIntegral(openId)
     if(deductFlag){
-        var luckyNum = Math.floor(Math.random()*10)
         var ret = {}
-        if(luckyNum == 1){
-            ret.grand = 2
-            var flag = await allocAwardFor(openId, ret.grand)
-            if(flag){
-                return ret
-            }       
-        }
+        var grand = calcDrawGrand()
+        var flag = await allocAwardFor(openId, grand)
+        if(flag){
+            ret.grand = grand
+            return ret
+        }       
         ret.grand = 0
         await allocAwardFor(openId, ret.grand)
         return ret
