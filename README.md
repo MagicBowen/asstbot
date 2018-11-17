@@ -1120,7 +1120,7 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 
 * 请求方式
 
-```get http://106.15.177.105/asst/pinyin?sentence=子弹```
+```get http://localhost/pinyin?sentence=子弹```
 
 * 返回值
 
@@ -1136,6 +1136,66 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
             "tán"
         ]
     ]
+}
+```
+
+###查询积分
+* 请求方式
+
+```get http://localHost/integral?id=oNijH5dOWOgyvX75lpVubHqWILOk```
+
+
+* 返回值
+```json
+{
+    "result": "success",
+    "data": {
+        "totalScore": 1000,
+        "usedScore": 600,
+        "remainScore": 400,
+        "drawTimes": 2
+    }
+}
+```
+
+###抽奖接口
+* 请求方式
+```post http://localhost/luckydraw```
+
+* 参数
+```json
+{
+	"id"    : "oNijH5e8sdGfry-3tQWVN3SgskB0"
+}
+```
+
+* 返回值
+```json
+{
+    "result": "success",
+    "data": {
+        "grand": 2
+    }
+}
+```
+
+###保存中奖联系方式
+* 请求方式
+```post http://localhost/asst/prizeuser```
+
+* 参数
+```json
+{"id"    : "oNijH5dOWOgyvX75lpVubHqWILOk",
+ "grand" : 2,
+ "phone" : "18629022031"
+}
+```
+
+* 返回值
+```json
+{
+    "result": "success",
+    "data": "58600843"
 }
 ```
 

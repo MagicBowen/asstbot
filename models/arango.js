@@ -72,7 +72,7 @@ async function addDictateWords(openId, dictateWords) {
 }
 
 //////////////////////////////////////////////////////////////////
-async function udpateDictateWords(dictateWordsId, dictateWords){
+async function updateDicateWords(dictateWordsId, dictateWords){
     var collection = db.collection(dictateWordsCollection)
     dictateWords.updateTime = getlocalDateString()
     var dictateWordsId = await collection.update(dictateWordsId, dictateWords).then(
@@ -201,7 +201,7 @@ async function updateBindingUser(openId, user){
     var userKey = await getUserKey(openId, darwinId)
 
     var bindingInfo = {}
-    bindingInfo[getIdName(user.userType)] = user.userId
+    bindingInfo[getIdName(user.userType, user.skill)] = user.userId
     bindingInfo.openId = openId
     bindingInfo.courseId = darwinId
 
@@ -251,6 +251,49 @@ async function getBindingUserType(openId) {
         }
     }
     return bindingUserType 
+}
+
+//////////////////////////////////////////////////////////////////
+function getBindingUserTypesBy(user){
+    var bindingUserType = []
+    for(var key in user){
+        if(key == "xiaomiId" && user[key] != ""){
+            bindingUserType.push({platType: "xiaoai"})
+            continue
+        }
+        if(key == "duerosId" && user[key] != ""){
+            bindingUserType.push({platType: "dueros"})
+            continue
+        }
+
+        if(key == "dingdongId" && user[key] != ""){
+            bindingUserType.push({platType: "dingdong", skill: "course-record"})
+            continue
+        }
+
+        if(key.indexOf("dingdong") >=0 && user[key]!= ""){
+            var strs = key.split("_")
+            if(strs.length != 3){
+                continue
+            }
+            bindingUserType.push({platType: "dingdong", skill: str[1]})
+        }
+
+    }
+
+    return bindingUserType
+}
+
+
+//////////////////////////////////////////////////////////////////
+async function getBindingPlat(openId){
+    var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user`
+    logger.info('execute aql', aql)
+    var user = await arangoDb.querySingleDoc(aql)
+    if (user == null){
+        return []
+    }
+    return getBindingUserTypesBy(user)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -320,12 +363,17 @@ async function getBindingCodeFor(userId, platform, skill){
 }
 
 //////////////////////////////////////////////////////////////////
-async function bindingUser(openId, bindingCode, userType){
+async function bindingUser(openId, bindingCode, userType, skill){
     var timeStamp = getTimeStamp()
     var expireTimeStamp = timeStamp - 300
     var aql = `for doc in ${waitingBindingCollection} 
     filter doc.bindingCode == ${bindingCode}  and doc.userType =='${userType}' and doc.timestamp > ${expireTimeStamp}
     return doc `
+    if(skill){
+        aql = `for doc in ${waitingBindingCollection} 
+            filter doc.bindingCode == ${bindingCode}  and doc.userType =='${userType}' and doc.skill == '${skill}' and doc.timestamp > ${expireTimeStamp}
+            return doc `
+    }
     
     logger.info('query binding user aql', aql)
     var bindingUsers = await queryByAql(aql)
@@ -342,7 +390,18 @@ async function bindingUser(openId, bindingCode, userType){
 }
 
 //////////////////////////////////////////////////////////////////
-function getIdName(userType){
+function getIdNameForDingDong(skill){
+    if(!skill){
+        return "dingdongId"
+    }
+    if(skill == "course-record"){
+        return "dingdongId"
+    }
+    return "dingdong_" + skill+ "_Id"
+}
+
+//////////////////////////////////////////////////////////////////
+function getIdName(userType, skill){
     if(userType == 'xiaoai'){
         return "xiaomiId"
     }
@@ -350,14 +409,14 @@ function getIdName(userType){
         return "duerosId"
     }
     if(userType == 'dingdong'){
-        return "dingdongId"
+        return getIdNameForDingDong(skill)
     }
     return "xiaomiId"
 }
 
 //////////////////////////////////////////////////////////////////
-async function unBindingUser(openId, userType){
-    var idName = getIdName(userType)
+async function unBindingUser(openId, userType, skill){
+    var idName = getIdName(userType, skill)
     var aql = `for doc in ${userIdsCollection}
                filter doc.openId== '${openId}'
                update doc with {
@@ -448,7 +507,7 @@ module.exports={
     queryAllCourseForUser,
     saveFeedbackForUser,
     addDictateWords,
-    udpateDictateWords,
+    updateDicateWords,
     deleteDictateWords,
     getAllDictateWords,
     getActiveDictationWords,
@@ -458,6 +517,7 @@ module.exports={
     updateUserHoroscope,
     bindingUser,
     unBindingUser,
+    getBindingPlat,
     getBindingUserType,
     getBindingCodeFor,
     getTomorrowHoroscope,

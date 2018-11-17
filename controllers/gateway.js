@@ -4,7 +4,7 @@ const Statistic = require('../models/statistic');
 const simplify = require('../utils/simplifier')
 const SimplifyResult = require('../models/simplifier')
 var arangoDb = require("../models/arango.js")
-var integralDb = require("../models/integral.js")
+var integral = require("../models/integral.js")
 const logger = require('../utils/logger').logger('gateway');
 
 function convert_to_openId(userId){
@@ -146,11 +146,11 @@ const apiHandle = async (req) => {
             break;
 
         case 'start-integral':
-            result = await integralDb.startIntegral(userId)
+            result = await integral.startIntegral(userId)
             break;
 
         case 'stop-integral':
-            result = await integralDb.stopIntegral(userId)
+            result = await integral.stopIntegral(userId)
             break;
 
         default:
