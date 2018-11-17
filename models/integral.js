@@ -314,7 +314,7 @@ async function allocAwardFor(openId, grand){
     return ret != null
 }
 
-const connectWayCollection = "userConnectWay"
+const userAwardCollection = "userAwardInfo"
 
 async function queryAwardInfoBy(grand){
     var awardKey = "prize_" + grand
@@ -336,13 +336,13 @@ async function addPrizeConnectWay(openId, grand, phone){
     }
     doc.phone = phone 
     doc.time = getlocalTimeString()
-    var ret = await arangoDb.saveDoc(connectWayCollection, doc)
+    var ret = await arangoDb.saveDoc(userAwardCollection, doc)
     return ret
 }
 
 //////////////////////////////////////////////////////////////////
 async function queryUserAwards(openId){
-    var aql = `for doc in ${connectWayCollection}
+    var aql = `for doc in ${userAwardCollection}
                filter doc.openId=='${openId}'
                return doc` 
     var ret = await arangoDb.queryDocs(aql)
