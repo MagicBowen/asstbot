@@ -34,6 +34,7 @@ async function buildDoc(darwinId){
     doc.horoscope = []
     doc.survey = []
     doc.nongli = []
+    doc.luckyDraw = []
     doc.state = "active"
     doc.totalScore = totalScore
     doc.usedScore = 0
@@ -96,6 +97,11 @@ var _event_score_rule={
         { start: 1,
           end: 100000,
           score:  20}
+    ],
+    "luckyDraw" : [
+        { start: 1,
+           end: 100000,
+           score:  100}
     ]
 }
 
@@ -245,6 +251,10 @@ async function deductIntegral(openId){
     return ret != null
 }
 
+async function awardInegral(openId){
+    return await doUpdateIntegal("luckyDraw", openId, 1)
+}
+
 //////////////////////////////////////////////////////////////////
 function calcDrawGrand(){
     var luckyNum = Math.floor(Math.random()*1000)
@@ -270,6 +280,9 @@ async function doLuckyDraw(openId){
         var flag = await allocAwardFor(openId, grand)
         if(flag){
             ret.grand = grand
+            if(grand == 3){
+                await awardInegral(openId)
+            }
             return ret
         }       
         ret.grand = 0
@@ -318,8 +331,6 @@ async function addShareStat(sourceId, destId, type){
 
 }
 //////////////////////////////////////////////////////////////////
-
-
 
 
 module.exports={
