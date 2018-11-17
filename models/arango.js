@@ -254,6 +254,49 @@ async function getBindingUserType(openId) {
 }
 
 //////////////////////////////////////////////////////////////////
+function getBindingUserTypesBy(user){
+    var bindingUserType = []
+    for(var key in user){
+        if(key == "xiaomiId" && user[key] != ""){
+            bindingUserType.push({platType: "xiaoai"})
+            continue
+        }
+        if(key == "duerosId" && user[key] != ""){
+            bindingUserType.push({platType: "dueros"})
+            continue
+        }
+
+        if(key == "dingdongId" && user[key] != ""){
+            bindingUserType.push({platType: "dingdong", skill: "course-record"})
+            continue
+        }
+
+        if(key.indexOf("dingdong") >=0 && user[key]!= ""){
+            var strs = key.split("_")
+            if(strs.length != 3){
+                continue
+            }
+            bindingUserType.push({platType: "dingdong", skill: str[1]})
+        }
+
+    }
+
+    return bindingUserType
+}
+
+
+//////////////////////////////////////////////////////////////////
+async function getBindingPlat(openId){
+    var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user`
+    logger.info('execute aql', aql)
+    var user = await arangoDb.querySingleDoc(aql)
+    if (user == null){
+        return []
+    }
+    return getBindingUserTypesBy(user)
+}
+
+//////////////////////////////////////////////////////////////////
 function generateBindingCode(){
     return Math.floor(Math.random()*90000) + 10000
 }
@@ -320,12 +363,17 @@ async function getBindingCodeFor(userId, platform, skill){
 }
 
 //////////////////////////////////////////////////////////////////
-async function bindingUser(openId, bindingCode, userType){
+async function bindingUser(openId, bindingCode, userType, skill){
     var timeStamp = getTimeStamp()
     var expireTimeStamp = timeStamp - 300
     var aql = `for doc in ${waitingBindingCollection} 
     filter doc.bindingCode == ${bindingCode}  and doc.userType =='${userType}' and doc.timestamp > ${expireTimeStamp}
     return doc `
+    if(skill){
+        aql = `for doc in ${waitingBindingCollection} 
+            filter doc.bindingCode == ${bindingCode}  and doc.userType =='${userType}' and doc.skill == '${skill}' and doc.timestamp > ${expireTimeStamp}
+            return doc `
+    }
     
     logger.info('query binding user aql', aql)
     var bindingUsers = await queryByAql(aql)
@@ -349,7 +397,7 @@ function getIdNameForDingDong(skill){
     if(skill == "course-record"){
         return "dingdongId"
     }
-    return "dingdong-" + skill+ "_Id"
+    return "dingdong_" + skill+ "_Id"
 }
 
 //////////////////////////////////////////////////////////////////
@@ -469,6 +517,7 @@ module.exports={
     updateUserHoroscope,
     bindingUser,
     unBindingUser,
+    getBindingPlat,
     getBindingUserType,
     getBindingCodeFor,
     getTomorrowHoroscope,

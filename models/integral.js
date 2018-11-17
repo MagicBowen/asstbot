@@ -2,7 +2,6 @@ const arangoDb = require("./arangoDb.js")
 var config = require('../config')
 const logger = require('../utils/logger').logger('integral');
 const postJson = require('../utils/postjson');
-const arango = require("./arango.js")
 
 const integralCollection = "userIntegral"
 
@@ -26,19 +25,6 @@ function getTimeStamp(){
 async function buildDoc(darwinId){
     var totalScore = 10000
     var doc = {}
-    doc.hasCourseTable = false
-    doc.hasDictations = false
-    var courseTable = await arango.queryAllCourseForUser(darwinId)
-    if(courseTable != null){
-        totalScore = totalScore + 100
-        doc.hasCourseTable = true
-    }
-    var dictations = await arango.getAllDictateWords(darwinId)
-    if(dictations.length > 1) {
-        totalScore = totalScore + 50
-        doc.hasDictations = true
-    }
-
     doc._key = darwinId
     doc.timestamp = getTimeStamp()
     doc.createTime = getlocalTimeString()
