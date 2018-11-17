@@ -6,7 +6,7 @@ const skillList = async (ctx) => {
   const skill = require('../models/dingDongSkill.json')
   ctx.response.type = "application/json";
   ctx.response.status = 200;
-  ctx.response.body = JSON.parse(skill);
+  ctx.response.body = skill;
 };
 
 module.exports = {
