@@ -1098,7 +1098,7 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 ```
 
 ###查询绑定的设备
-
+#### 旧接口
 * 请求方式
 
 ``` get http://localhost/binding?openid=oNijH5e8sdGfry-3tQWVN3SgskB0```
@@ -1109,12 +1109,33 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 {
     "result": "success",
     "bindingTypes": [
-        "小米",
-        "百度"
+        "xiaoai",
+        "dingdong"
     ]
 }
 ```
 
+#### 新接口
+* 请求方式
+
+``` get http://localhost/bindingPlat?openId=oNijH5e8sdGfry-3tQWVN3SgskB0 ```
+
+* 返回值
+
+```json
+{
+    "result": "success",
+    "bindingTypes": [
+        {
+            "platType": "xiaoai"
+        },
+        {
+            "platType": "dingdong",
+            "skill": "course-record"
+        }
+    ]
+}
+```
 
 ###查询拼音
 
