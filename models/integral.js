@@ -320,10 +320,9 @@ async function queryAwardInfoBy(grand){
     var awardKey = "prize_" + grand
     var aql = `for doc in ${awardCollection}
                filter doc._key=='${awardKey}'
-               return doc` 
+               return doc.awardDesc` 
     return await arangoDb.querySingleDoc(aql)
 }
-
 
 //////////////////////////////////////////////////////////////////
 async function addPrizeConnectWay(openId, grand, phone){
@@ -332,7 +331,7 @@ async function addPrizeConnectWay(openId, grand, phone){
     doc.openId = openId
     doc.grand = grand
     if(award){
-        doc.awardDesc = award.awardDesc
+        doc.awardDesc = award
     }
     doc.phone = phone 
     doc.time = getlocalTimeString()
