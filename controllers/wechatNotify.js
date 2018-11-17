@@ -31,9 +31,6 @@ const askRelogin = async (ctx) => {
       },
       keyword3: {
         value: ctx.request.body.score
-      },
-      keyword4: {
-        value: ctx.request.body.day
       }
     }
     const result = sendTemplateMsg(openId, templateId, 'pages/index/main', data)
