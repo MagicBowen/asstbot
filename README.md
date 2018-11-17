@@ -1178,6 +1178,31 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 }
 ```
 
+###查询奖品
+* 请求方式
+
+```get http://localHost/awards?id=oNijH5dOWOgyvX75lpVubHqWILOk```
+
+* 返回值
+```json
+{
+    "result": "success",
+    "data": [
+        {
+            "grand": 1,
+            "awardDesc": "小度在家音箱",
+            "time": "2018-11-17 20:13:51"
+        },
+        {
+            "grand": 1,
+            "awardDesc": "小度在家音箱",
+            "time": "2018-11-17 20:15:39"
+        }
+    ]
+}
+```
+
+
 ###抽奖接口
 * 请求方式
 ```post http://localhost/luckydraw```
