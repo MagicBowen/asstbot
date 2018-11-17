@@ -1138,7 +1138,6 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 ```
 
 ###查询拼音
-
 * 请求方式
 
 ```get http://localhost/pinyin?sentence=子弹```

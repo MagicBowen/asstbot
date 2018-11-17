@@ -276,7 +276,7 @@ function getBindingUserTypesBy(user){
             if(strs.length != 3){
                 continue
             }
-            bindingUserType.push({platType: "dingdong", skill: str[1]})
+            bindingUserType.push({platType: "dingdong", skill: strs[1]})
         }
 
     }
