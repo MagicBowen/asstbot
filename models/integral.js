@@ -315,15 +315,45 @@ async function allocAwardFor(openId, grand){
 }
 
 const connectWayCollection = "userConnectWay"
+
+async function queryAwardInfoBy(grand){
+    var awardKey = "prize_" + grand
+    var aql = `for doc in ${awardCollection}
+               filter doc._key=='${awardKey}'
+               return doc` 
+    return await arangoDb.querySingleDoc(aql)
+}
+
+
 //////////////////////////////////////////////////////////////////
 async function addPrizeConnectWay(openId, grand, phone){
+    var award = await queryAwardInfoBy(grand)
     var doc = {}
     doc.openId = openId
     doc.grand = grand
+    if(award){
+        doc.awardDesc = award.awardDesc
+    }
     doc.phone = phone 
     doc.time = getlocalTimeString()
     var ret = await arangoDb.saveDoc(connectWayCollection, doc)
     return ret
+}
+
+//////////////////////////////////////////////////////////////////
+async function queryUserAwards(openId){
+    var aql = `for doc in ${connectWayCollection}
+               filter doc.openId=='${openId}'
+               return doc` 
+    var ret = await arangoDb.queryDocs(aql)
+
+    return ret.map( item => {
+        var baseInfo = {}
+        baseInfo.grand = item.grand
+        baseInfo.awardDesc = item.awardDesc
+        baseInfo.time = item.time
+        return baseInfo
+    })
 }
 
 //////////////////////////////////////////////////////////////////
@@ -343,5 +373,6 @@ module.exports={
     addNewDictationStat,
     addPrizeConnectWay,
     doLuckyDraw,
-    addShareStat
+    addShareStat,
+    queryUserAwards
 }

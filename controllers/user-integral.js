@@ -14,6 +14,19 @@ const getUserIntegral = async (ctx) => {
     }    
 };
 
+const getUserAwards = async (ctx) => {
+    try {
+        var ret = await integral.queryUserAwards(ctx.request.query.id)
+        ctx.response.type = "application/json";
+        ctx.response.status = 200;
+        ctx.response.body = {result : 'success', data: ret};
+    } catch(err) {
+        ctx.response.status = 404;
+        ctx.response.body = {result : 'failed'};
+        logger.error(`getUserIntegral error: ` + err.stack);
+    }    
+};
+
 const doLuckyDraw = async(ctx) => {
     try {
         var ret = await integral.doLuckyDraw(ctx.request.body.id)
@@ -55,6 +68,7 @@ const addShareEvent = async(ctx) => {
 
 module.exports = {
     'GET /integral'    :  getUserIntegral,
+    'GET /awards'      :  getUserAwards,
     'POST /luckydraw'   :  doLuckyDraw,
     'POST /prizeuser'  :  savePrizeUser,
     'POST /shareEvent' :  addShareEvent
