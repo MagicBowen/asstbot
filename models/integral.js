@@ -331,6 +331,7 @@ async function addPrizeConnectWay(openId, grand, phone){
     var doc = {}
     doc.openId = openId
     doc.grand = grand
+    logger.info("award is ", award)
     if(award){
         doc.awardDesc = award.awardDesc
     }
