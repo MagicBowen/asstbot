@@ -372,7 +372,7 @@ async function addShareStat(sourceId, destId, scene){
         return event.destId == destId && event.scene == scene
     })
     if(sameEvents.length == 0){
-        return await doUpdateIntegal("shareEvent", openId, 1, {destId, scene})
+        return await doUpdateIntegal("shareEvent", sourceId, 1, {destId, scene})
     }
     return true
 }
