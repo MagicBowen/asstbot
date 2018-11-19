@@ -103,6 +103,11 @@ var _event_score_rule={
         { start: 1,
            end: 100000,
            score:  100}
+    ],
+    "shareEvent" : [
+        { start: 1,
+            end: 100000,
+            score:  10}
     ]
 }
 
@@ -131,7 +136,7 @@ function buildLastEventItem(event, lastDay){
 }
 
 //////////////////////////////////////////////////////////////////
-async function doUpdateIntegal(event, openId, lastDay){
+async function doUpdateIntegal(event, openId, lastDay, eventInfo){
     var addScore = clacAddScore(event, lastDay)
     var lastEventItem = buildLastEventItem(event, lastDay)
     var updateAql = `LET doc = DOCUMENT("${integralCollection}/${openId}")
@@ -150,12 +155,12 @@ async function addDayStat(event, openId){
     return LAST(doc.${event})`
     var doc = await arangoDb.querySingleDoc(queryAql)
     if(doc == null){
-        return await doUpdateIntegal(event, openId, 1)
+        return await doUpdateIntegal(event, openId, 1, {})
     }
     if(doc.day == today){
         return true
     }
-    return await doUpdateIntegal(event, openId, doc.lastDay + 1)
+    return await doUpdateIntegal(event, openId, doc.lastDay + 1, {})
 }
 
 //////////////////////////////////////////////////////////////////
@@ -253,7 +258,7 @@ async function deductIntegral(openId){
 }
 
 async function awardInegral(openId){
-    return await doUpdateIntegal("luckyDraw", openId, 1)
+    return await doUpdateIntegal("luckyDraw", openId, 1, {})
 }
 
 //////////////////////////////////////////////////////////////////
@@ -362,9 +367,13 @@ async function addShareStat(sourceId, destId, scence){
     filter doc._key == '${sourceId}'
     return doc.shareEvent`
     var doc = await arangoDb.queryDocs(queryAql)
-    // if(doc.length){
-    //     return await doUpdateIntegal(event, openId, 1)
-    // }
+    var sameEvents = doc.filter(event => {
+        return event.destId == destId && event.scence == scence
+    })
+    if(sameEvents.length == 0){
+        return await doUpdateIntegal("shareEvent", openId, 1, {destId, scence})
+    }
+    return true
 }
 
 //////////////////////////////////////////////////////////////////

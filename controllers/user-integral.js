@@ -55,7 +55,7 @@ const savePrizeUser = async(ctx) => {
 
 const addShareEvent = async(ctx) => {
     try {
-        var ret = await integral.addShareStat(ctx.request.body.sourceId, ctx.request.body.destId, ctx.request.body.type)
+        var ret = await integral.addShareStat(ctx.request.body.sourceId, ctx.request.body.destId, ctx.request.body.scence)
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {result : 'success', data: ret};
