@@ -126,19 +126,20 @@ function clacAddScore(event, lastDay){
 }
 
 //////////////////////////////////////////////////////////////////
-function buildLastEventItem(event, lastDay){
+function buildLastEventItem(event, lastDay, eventInfo){
     var doc = {}
     doc.day = getlocalDateString()
     doc.time = getlocalTimeString()
     doc.name = event
     doc.lastDay = lastDay
+    Object.assign(doc, eventInfo)
     return JSON.stringify(doc)
 }
 
 //////////////////////////////////////////////////////////////////
 async function doUpdateIntegal(event, openId, lastDay, eventInfo){
     var addScore = clacAddScore(event, lastDay)
-    var lastEventItem = buildLastEventItem(event, lastDay)
+    var lastEventItem = buildLastEventItem(event, lastDay,eventInfo)
     var updateAql = `LET doc = DOCUMENT("${integralCollection}/${openId}")
                     update doc with {
                         ${event}: APPEND(doc.${event}, ${lastEventItem}),
