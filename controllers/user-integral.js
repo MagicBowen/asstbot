@@ -66,10 +66,24 @@ const addShareEvent = async(ctx) => {
     }
 }
 
+const loginScene = async(ctx) => {
+    try {
+        var ret = await integral.loginScene(ctx.request.body)
+        ctx.response.type = "application/json";
+        ctx.response.status = 200;
+        ctx.response.body = {result : 'success', data: ret};
+    } catch(err) {
+        ctx.response.status = 404;
+        ctx.response.body = {result : 'failed'};
+        logger.error(`doLuckyDraw error: ` + err.stack);
+    }
+}
+
 module.exports = {
     'GET /integral'    :  getUserIntegral,
     'GET /awards'      :  getUserAwards,
-    'POST /luckydraw'   :  doLuckyDraw,
+    'POST /luckydraw'  :  doLuckyDraw,
     'POST /prizeuser'  :  savePrizeUser,
-    'POST /shareEvent' :  addShareEvent
+    'POST /shareEvent' :  addShareEvent,
+    'POST /loginScene' :  loginScene
 };

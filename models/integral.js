@@ -35,6 +35,7 @@ async function buildDoc(darwinId){
     doc.survey = []
     doc.nongli = []
     doc.luckyDraw = []
+    doc.shareEvent = []
     doc.state = "active"
     doc.totalScore = totalScore
     doc.usedScore = 0
@@ -356,11 +357,20 @@ async function queryUserAwards(openId){
 }
 
 //////////////////////////////////////////////////////////////////
-async function addShareStat(sourceId, destId, type){
-
+async function addShareStat(sourceId, destId, scence){
+    var queryAql = `for doc in ${integralCollection} 
+    filter doc._key == '${sourceId}'
+    return doc.shareEvent`
+    var doc = await arangoDb.queryDocs(queryAql)
+    // if(doc.length){
+    //     return await doUpdateIntegal(event, openId, 1)
+    // }
 }
-//////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////
+async function loginScene(body){
+    logger.info("loginScene is ", body)
+}
 
 module.exports={
     startIntegral,
@@ -373,5 +383,6 @@ module.exports={
     addPrizeConnectWay,
     doLuckyDraw,
     addShareStat,
-    queryUserAwards
+    queryUserAwards,
+    loginScene
 }
