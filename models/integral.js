@@ -363,22 +363,27 @@ async function queryUserAwards(openId){
 }
 
 //////////////////////////////////////////////////////////////////
-async function addShareStat(sourceId, destId, scence){
+async function addShareStat(sourceId, destId, scene){
     var queryAql = `for doc in ${integralCollection} 
     filter doc._key == '${sourceId}'
     return doc.shareEvent`
     var doc = await arangoDb.queryDocs(queryAql)
     var sameEvents = doc.filter(event => {
-        return event.destId == destId && event.scence == scence
+        return event.destId == destId && event.scene == scene
     })
     if(sameEvents.length == 0){
-        return await doUpdateIntegal("shareEvent", openId, 1, {destId, scence})
+        return await doUpdateIntegal("shareEvent", openId, 1, {destId, scene})
     }
     return true
 }
 
 //////////////////////////////////////////////////////////////////
 async function loginScene(body){
+    var scene = body.scene
+    var query = body.query
+    if(scene == 1007 || scene == 1008){
+        return addShareStat(query.from, query.user, query.scene)
+    }
     logger.info("loginScene is ", body)
 }
 
