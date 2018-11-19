@@ -23,7 +23,7 @@ function getTimeStamp(){
 
 //////////////////////////////////////////////////////////////////
 async function buildDoc(darwinId){
-    var totalScore = 10000
+    var totalScore = 0
     var doc = {}
     doc._key = darwinId
     doc.timestamp = getTimeStamp()
@@ -266,13 +266,13 @@ async function awardInegral(openId){
 function calcDrawGrand(){
     var luckyNum = Math.floor(Math.random()*1000)
     logger.info("lucky num ",luckyNum)
-    if(luckyNum > 0 && luckyNum < 200){
+    if(luckyNum > 200 && luckyNum <= 201){
         return 1
     }
-    if(luckyNum > 200 && luckyNum < 500){
+    if(luckyNum > 300 && luckyNum <= 310){
         return 2
     }
-    if(luckyNum > 500 && luckyNum < 800){
+    if(luckyNum > 400 && luckyNum <= 450){
         return 3
     }
     return 0
@@ -364,6 +364,9 @@ async function queryUserAwards(openId){
 
 //////////////////////////////////////////////////////////////////
 async function addShareStat(sourceId, destId, scene){
+    if(sourceId == destId){
+        return true
+    }
     var queryAql = `for doc in ${integralCollection} 
     filter doc._key == '${sourceId}'
     return doc.shareEvent`
@@ -381,10 +384,10 @@ async function addShareStat(sourceId, destId, scene){
 async function loginScene(body){
     var scene = body.scene
     var query = body.query
+    logger.info("loginScene is ", body)
     if(scene == 1007 || scene == 1008){
         return addShareStat(query.from, query.user, query.scene)
     }
-    logger.info("loginScene is ", body)
 }
 
 module.exports={
