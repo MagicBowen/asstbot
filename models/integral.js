@@ -212,13 +212,39 @@ async function sendNotifyFor(user){
     logger.info(`send notify url ${config.sendNotifyUrl} body  ${JSON.stringify(body)} , ret = ${JSON.stringify(ret)}`)
 }
 
-const luckyDrawScore = 200
-
-async function queryUserIntegral(openId){
+//////////////////////////////////////////////////////////////////
+async function getUserIntegralDoc(openId){
     var queryAql = `for doc in ${integralCollection} 
     filter doc._key == '${openId}'
     return doc`
-    var doc = await arangoDb.querySingleDoc(queryAql)
+    return await arangoDb.querySingleDoc(queryAql)    
+}
+
+//////////////////////////////////////////////////////////////////
+function buildNotifyMsg(integralInfo){
+    var body = {
+        hint:  "今天你还没有登陆",
+        activity: "打开活动",
+        score: 1000,
+        openId: user._key,
+        day: getlocalDateString()
+    }
+    return body
+}
+
+//////////////////////////////////////////////////////////////////
+async function sendAwardNotifyFor(openId){
+    var doc = await getUserIntegralDoc(openId)
+    var body = buildNotifyMsg(doc)
+    logger.info(`send notify url ${config.sendNotifyUrl} msg  ${JSON.stringify(body)} `)
+    var ret = await postJson(config.sendNotifyUrl, body)
+    logger.info(`receive response is ${JSON.stringify(ret)}`)
+}
+
+//////////////////////////////////////////////////////////////////
+const luckyDrawScore = 200
+async function queryUserIntegral(openId){
+    var doc = await getUserIntegralDoc(openId)
     if(doc == null){
         return {totalScore: 0, usedScore: 0}
     }
@@ -423,5 +449,6 @@ module.exports={
     addShareStat,
     queryUserAwards,
     loginScene,
-    notifyAwardLuckyDraw
+    notifyAwardLuckyDraw,
+    sendAwardNotifyFor
 }
