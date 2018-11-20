@@ -7,7 +7,7 @@ model.init();
 const  scheduleCronstyle = ()=>{  
     schedule.scheduleJob('30 * * * * *',()=>{
         console.log('schedule 30s Cronstyle:' + new Date());
-        integral.notifyUnLoginUsers()
+        integral.notifyAwardLuckyDraw()
     }); 
 }
 

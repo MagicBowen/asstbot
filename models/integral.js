@@ -245,6 +245,26 @@ async function  notifyUnLoginUsers(){
 }
 
 //////////////////////////////////////////////////////////////////
+async function getNotifyUserFor(notifyEvent, count){
+    var aql = `for FormId in wechatFormId
+    filter FormId.notifyEvent != '${notifyEvent}'
+    limit ${count}
+    update FormId with{
+        notifyEvent:'${notifyEvent}'
+    } in wechatFormId
+    return FormId.openId`
+    return await arangoDb.queryDocs(aql)
+} 
+
+//////////////////////////////////////////////////////////////////
+async function notifyAwardLuckyDraw(){
+    var openIds = await getNotifyUserFor('awardNotify', 1)
+    openIds.forEach(openId => {
+        logger.info('notify to openId', openId)
+    })
+}
+
+//////////////////////////////////////////////////////////////////
 async function deductIntegral(openId){
     var aql =  `for doc in ${integralCollection}
                 filter doc._key=='${openId}' and (doc.totalScore - doc.usedScore) >= ${luckyDrawScore}
@@ -402,5 +422,6 @@ module.exports={
     doLuckyDraw,
     addShareStat,
     queryUserAwards,
-    loginScene
+    loginScene,
+    notifyAwardLuckyDraw
 }

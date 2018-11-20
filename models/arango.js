@@ -471,19 +471,6 @@ async function getFormId (openId) {
     return await arangoDb.querySingleDoc(aql)
 }
 
-
-//////////////////////////////////////////////////////////////////
-async function getNotifyUserFor(notifyEvent, count){
-    var aql = `for FormId in wechatFormId
-    filter FormId.notifyEvent != '${notifyEvent}'
-    limit ${count}
-    update FormId with{
-        notifyEvent:'${notifyEvent}'
-    } in wechatFormId
-    return FormId.openId`
-    return await arangoDb.queryDocs(aql)
-} 
-
 //////////////////////////////////////////////////////////////////
 const  userExtrInfo = "userExtrInfo" 
 async function updateUserHoroscope(userId, horoscope){
@@ -540,6 +527,5 @@ module.exports={
     getLaohuangli,
     getLunar,
     addFormId,
-    getFormId,
-    getNotifyUserFor
+    getFormId
 }
