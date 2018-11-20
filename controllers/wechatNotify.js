@@ -47,7 +47,31 @@ const askRelogin = async (ctx) => {
   }
 }
 
+const sendNotify = async (ctx) => {
+  try {
+    const templateId = ctx.request.body.templateId
+    const openId = ctx.request.body.openId
+    const loginUrl = ctx.request.body.loginUrl ? ctx.request.body.loginUrl : 'pages/index/main'
+    const data = ctx.request.body.data
+    if (!openId || !templateId)  {
+      throw new Error('openId or template Id is not exist')
+    }
+    logger.debug(`send template msg: ${JSON.stringify(data)}`)
+    const result = sendTemplateMsg(openId, templateId, loginUrl, data)
+    logger.debug(`send template msg result : ${JSON.stringify(result)}`)
+    ctx.response.type = "application/json"
+    ctx.response.status = 200
+    ctx.response.body = result
+  } catch (err) {
+    ctx.response.status = 404
+    ctx.response.body = err
+    logger.error('send template msg error: ' + err)
+  }
+
+}
+
 module.exports = {
   'PUT /formId'  : addFormId,
-  'POST /notify/relogin' : askRelogin
+  'POST /notify/relogin' : askRelogin,
+  'POST /sendNotify': sendNotify
 }

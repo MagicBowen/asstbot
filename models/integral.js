@@ -221,7 +221,12 @@ async function getUserIntegralDoc(openId){
 }
 
 //////////////////////////////////////////////////////////////////
-function buildNotifyMsg(integralInfo){
+function buildNotifyMsg(doc){
+    if(doc == null){
+        return {
+            hint:  "增加了积分提示",    
+        }
+    }
     var body = {
         hint:  "今天你还没有登陆",
         activity: "打开活动",
