@@ -471,8 +471,21 @@ async function getFormId (openId) {
     return await arangoDb.querySingleDoc(aql)
 }
 
-const  userExtrInfo = "userExtrInfo" 
 
+//////////////////////////////////////////////////////////////////
+async function getNotifyUserFor(notifyEvent, count){
+    var aql = `for FormId in wechatFormId
+    filter FormId.notifyEvent != '${notifyEvent}'
+    limit ${count}
+    update FormId with{
+        notifyEvent:'${notifyEvent}'
+    } in wechatFormId
+    return FormId.openId`
+    return await arangoDb.queryDocs(aql)
+} 
+
+//////////////////////////////////////////////////////////////////
+const  userExtrInfo = "userExtrInfo" 
 async function updateUserHoroscope(userId, horoscope){
     var darwinId = await arangoDb.getDarwinId(userId)
     var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc`
@@ -496,6 +509,7 @@ async function updateUserHoroscope(userId, horoscope){
     return await arangoDb.updateDoc(updateAql)
 }
 
+//////////////////////////////////////////////////////////////////
 async function getUserHoroscope(userId){
     var darwinId = await arangoDb.getDarwinId(userId)
     var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc.horoscope`
@@ -527,4 +541,5 @@ module.exports={
     getLunar,
     addFormId,
     getFormId,
+    getNotifyUserFor
 }
