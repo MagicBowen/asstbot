@@ -284,12 +284,15 @@ async function getNotifyUserFor(notifyEvent, count){
 
 //////////////////////////////////////////////////////////////////
 async function notifyAwardLuckyDraw(){
-    await sendAwardNotifyFor("oNijH5e8sdGfry-3tQWVN3SgskB0")
-    // var openIds = await getNotifyUserFor('awardNotify', 1)
-    // openIds.forEach(openId => {
-    //     logger.info('notify to openId', openId)
-    //     sendAwardNotifyFor(openId)
-    // })
+    var openIds = await getNotifyUserFor('awardNotify', 10)
+    if(openIds.length == 0){
+        logger.info('all user is notified ....')
+        return
+    }
+    openIds.forEach(openId => {
+        logger.info('notify to openId', openId)
+        sendAwardNotifyFor(openId)
+    })
 }
 
 //////////////////////////////////////////////////////////////////
@@ -428,14 +431,17 @@ async function addShareStat(sourceId, destId, scene){
     return true
 }
 
+const loginScenceCollection = "userLoginScene"
+
 //////////////////////////////////////////////////////////////////
 async function loginScene(body){
     var scene = body.scene
     var query = body.query
     logger.info("loginScene is ", body)
     if(scene == 1007 || scene == 1008){
-        return addShareStat(query.from, query.user, query.scene)
+        await addShareStat(query.from, query.user, query.scene)
     }
+    await arangoDb.saveDoc(loginScenceCollection, body)
 }
 
 module.exports={
