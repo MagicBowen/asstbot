@@ -245,9 +245,10 @@ async function getBindingUserType(openId) {
         }
     }
 
-    if(key == "huaweiId" && user[key] != ""){
-        bindingUserType.push({platType: "huawei"})
-        continue
+    if ("huaweiId" in user) {
+        if(user.duerosId != ""){
+            bindingUserType.push("huawei")
+        }
     }
 
     if("dingdongId" in user) {
