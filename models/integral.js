@@ -284,7 +284,7 @@ async function getNotifyUserFor(notifyEvent, count){
 
 //////////////////////////////////////////////////////////////////
 async function notifyAwardLuckyDraw(){
-    var openIds = await getNotifyUserFor('awardNotify', 10)
+    var openIds = await getNotifyUserFor('awardNotify', 50)
     if(openIds.length == 0){
         logger.info('all user is notified ....')
         return
