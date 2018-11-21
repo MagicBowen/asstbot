@@ -438,10 +438,12 @@ async function loginScene(body){
     var scene = body.scene
     var query = body.query
     logger.info("loginScene is ", body)
-    if(scene == 1007 || scene == 1008){
-        await addShareStat(query.from, query.user, query.scene)
-    }
     await arangoDb.saveDoc(loginScenceCollection, body)
+    if(scene == 1007 || scene == 1008){
+        if(query.from && query.user){
+            await addShareStat(query.from, query.user, query.scene)
+        }
+    }
 }
 
 module.exports={
