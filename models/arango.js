@@ -266,6 +266,11 @@ function getBindingUserTypesBy(user){
             continue
         }
 
+        if(key == "huaweiId" && user[key] != ""){
+            bindingUserType.push({platType: "huawei"})
+            continue
+        }
+
         if(key == "dingdongId" && user[key] != ""){
             bindingUserType.push({platType: "dingdong", skill: "course-record"})
             continue
