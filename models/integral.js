@@ -221,27 +221,21 @@ async function getUserIntegralDoc(openId){
 }
 
 //////////////////////////////////////////////////////////////////
-function buildNotifyMsg(doc){
-    if(doc == null){
-        return {
-            hint:  "增加了积分提示", 
-               
-        }
-    }
+function buildNotifyMsg(openId){
     var body = {
-        hint:  "今天你还没有登陆",
-        activity: "打开活动",
-        score: 1000,
-        openId: user._key,
-        day: getlocalDateString()
+        "templateId": "KS5Q1MoVjvleCKr_Ajf05xi25-G0t0dDIk4p5EDWyc0",
+        "openId": openId,
+        "data": {
+            "keyword1": { "value": "打卡换积分抽奖活动" },
+            "keyword2": { "value": "打开“哒尔文”小程序,点击“积分抽奖”按钮,查看积分说明。" }
+        }
     }
     return body
 }
 
 //////////////////////////////////////////////////////////////////
 async function sendAwardNotifyFor(openId){
-    var doc = await getUserIntegralDoc(openId)
-    var body = buildNotifyMsg(doc)
+    var body = buildNotifyMsg(openId)
     logger.info(`send notify url ${config.sendNotifyUrl} msg  ${JSON.stringify(body)} `)
     var ret = await postJson(config.sendNotifyUrl, body)
     logger.info(`receive response is ${JSON.stringify(ret)}`)
@@ -290,10 +284,12 @@ async function getNotifyUserFor(notifyEvent, count){
 
 //////////////////////////////////////////////////////////////////
 async function notifyAwardLuckyDraw(){
-    var openIds = await getNotifyUserFor('awardNotify', 1)
-    openIds.forEach(openId => {
-        logger.info('notify to openId', openId)
-    })
+    await sendAwardNotifyFor("oNijH5e8sdGfry-3tQWVN3SgskB0")
+    // var openIds = await getNotifyUserFor('awardNotify', 1)
+    // openIds.forEach(openId => {
+    //     logger.info('notify to openId', openId)
+    //     sendAwardNotifyFor(openId)
+    // })
 }
 
 //////////////////////////////////////////////////////////////////
