@@ -246,7 +246,7 @@ async function getBindingUserType(openId) {
     }
 
     if ("huaweiId" in user) {
-        if(user.duerosId != ""){
+        if(user.huaweiId != ""){
             bindingUserType.push("huawei")
         }
     }
