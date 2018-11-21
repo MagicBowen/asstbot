@@ -225,6 +225,35 @@ async function removeWaitingBindingUser(user){
 }
 
 //////////////////////////////////////////////////////////////////
+async function getBindingUserType(openId) {
+    var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user`
+    logger.info('execute aql', aql)
+    var user = await arangoDb.querySingleDoc(aql)
+    if (user == null){
+        return []
+    }
+    var bindingUserType = []
+    if ("xiaomiId" in user) {
+        if(user.xiaomiId != ""){
+            bindingUserType.push("xiaoai")
+        }
+    }
+
+    if ("duerosId" in user) {
+        if(user.duerosId != ""){
+            bindingUserType.push("dueros")
+        }
+    }
+
+    if("dingdongId" in user) {
+        if(user.dingdongId != ""){
+            bindingUserType.push("dingdong")
+        }
+    }
+    return bindingUserType 
+}
+
+//////////////////////////////////////////////////////////////////
 function getBindingUserTypesBy(user){
     var bindingUserType = []
     for(var key in user){
