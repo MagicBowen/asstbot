@@ -438,7 +438,7 @@ async function loginScene(body){
     var scene = body.scene
     var query = body.query
     logger.info("loginScene is ", body)
-    body.date = getlocalTimeString()
+    body.time = getlocalTimeString()
     await arangoDb.saveDoc(loginScenceCollection, body)
     if(scene == 1007 || scene == 1008){
         if(query.from && body.user){
