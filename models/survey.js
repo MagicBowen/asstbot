@@ -29,6 +29,7 @@ const SubjectSchema = new Schema({
     question : String,
     imageUrl : String,
     urlType  : String,
+    score    : Number,
     mediaInfo : MediaInfo,
     answers  : [AnswerSchema]
 });
