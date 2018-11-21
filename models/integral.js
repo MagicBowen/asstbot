@@ -440,8 +440,8 @@ async function loginScene(body){
     logger.info("loginScene is ", body)
     await arangoDb.saveDoc(loginScenceCollection, body)
     if(scene == 1007 || scene == 1008){
-        if(query.from && query.user){
-            await addShareStat(query.from, query.user, query.scene)
+        if(query.from && body.user){
+            await addShareStat(query.from, body.user, query.scene)
         }
     }
 }
