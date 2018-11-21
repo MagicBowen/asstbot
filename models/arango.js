@@ -263,38 +263,29 @@ async function getBindingUserType(openId) {
 function getBindingUserTypesBy(user){
     var bindingUserType = []
     for(var key in user){
-        if(key == "xiaomiId" && user[key] != ""){
+        if(user[key] == ""){
+            continue
+        }
+        if(key == "xiaomiId"){
             bindingUserType.push({platType: "xiaoai"})
             continue
         }
-        if(key == "duerosId" && user[key] != ""){
-            bindingUserType.push({platType: "dueros"})
-            continue
-        }
-
-        if(key == "huaweiId" && user[key] != ""){
-            bindingUserType.push({platType: "huawei"})
-            continue
-        }
-
-        if(key == "dingdongId" && user[key] != ""){
+        if(key == "dingdongId"){
             bindingUserType.push({platType: "dingdong", skill: "course-record"})
             continue
         }
-
-        if(key.indexOf("dingdong") >=0 && user[key]!= ""){
+        if(key.indexOf("dingdong") >=0){
             var strs = key.split("_")
             if(strs.length != 3){
                 continue
             }
             bindingUserType.push({platType: "dingdong", skill: strs[1]})
+            continue
         }
-
+        bindingUserType.push({platType: key.replace("Id","")})
     }
-
     return bindingUserType
 }
-
 
 //////////////////////////////////////////////////////////////////
 async function getBindingPlat(openId){

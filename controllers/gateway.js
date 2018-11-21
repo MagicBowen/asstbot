@@ -138,7 +138,7 @@ const apiHandle = async (req) => {
             break;
             
         case 'get-binding-device-type':
-            result = await arangoDb.getBindingUserType(userId)
+            result = await arangoDb.getBindingPlat(userId)
             break;
 
         case 'get-solar-from-lunar':
