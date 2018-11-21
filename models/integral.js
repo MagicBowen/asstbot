@@ -224,7 +224,8 @@ async function getUserIntegralDoc(openId){
 function buildNotifyMsg(doc){
     if(doc == null){
         return {
-            hint:  "增加了积分提示",    
+            hint:  "增加了积分提示", 
+               
         }
     }
     var body = {

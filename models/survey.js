@@ -14,6 +14,7 @@ const MediaInfo = new Schema({
 const AnswerSchema = new Schema({
     value : String,
     imageUrl : String,
+    score    : Number,
     urlType  : String,
     mediaInfo : MediaInfo,
     correct : Boolean,
