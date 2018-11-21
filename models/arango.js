@@ -259,11 +259,15 @@ async function getBindingUserType(openId) {
     return bindingUserType 
 }
 
+function isInValid(key){
+    return  key === "_key" || key === "_id" || key === "_rev" || key === "courseId" || key === "openId" || key === "phone"
+}
+
 //////////////////////////////////////////////////////////////////
 function getBindingUserTypesBy(user){
     var bindingUserType = []
     for(var key in user){
-        if(user[key] == ""){
+        if(user[key] == "" || isInValid(key)){
             continue
         }
         if(key == "xiaomiId"){
