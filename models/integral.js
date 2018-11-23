@@ -279,7 +279,8 @@ async function  notifyUnLoginUsers(notifyEvent, count){
     var sixDayBefore = getDateSixDayBefore()
     var queryAql = `for doc in ${integralCollection} 
     let lastLogin = LAST(doc.login)
-    filter lastLogin.day == '${yestoday}' or lastLogin.day == '${sixDayBefore}' or doc.notifyDay != '${today}'
+    filter lastLogin.day == '${yestoday}' or lastLogin.day == '${sixDayBefore}'
+    filter doc.notifyDay != '${today}'
     limit ${count}
     update doc with {
         notifyDay: '${today}'
