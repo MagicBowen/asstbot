@@ -286,7 +286,7 @@ function getloginLastDay(doc){
     if(doc.login.length == 0){
         return 1
     }
-    return doc.login[doc.length -1].lastDay
+    return doc.login[doc.login.length-1].lastDay
 }
 
 function getShareTimes(doc){
