@@ -294,7 +294,7 @@ function getShareTimes(doc){
         return 1
     }
     var today = getlocalDateString()
-    var shareTodays = doc.sameEvent.filter( event => {
+    var shareTodays = doc.shareEvent.filter( event => {
         return event.day == today
     })
     return shareTodays.length
