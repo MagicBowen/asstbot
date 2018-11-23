@@ -259,16 +259,54 @@ async function sendAwardNotifyFor(openId){
 
 //////////////////////////////////////////////////////////////////
 const luckyDrawScore = 200
-async function queryUserIntegral(openId){
-    var doc = await getUserIntegralDoc(openId)
+
+function getScoreInfoFor(doc){
     if(doc == null){
-        return {totalScore: 0, usedScore: 0}
+        return {totalScore: 0, usedScore: 0, remainScore: 0, drawTimes:0}
     }
     var ret = {}
     ret.totalScore = doc.totalScore,
     ret.usedScore = doc.usedScore,
     ret.remainScore = doc.totalScore - doc.usedScore,
     ret.drawTimes = Math.floor((doc.totalScore - doc.usedScore)/luckyDrawScore)
+    return ret
+}
+
+
+async function queryUserIntegral(openId){
+    var doc = await getUserIntegralDoc(openId)
+    return getScoreInfoFor(doc)
+}
+
+//////////////////////////////////////////////////////////////////
+function getloginLastDay(doc){
+    if(doc == null || !doc.login){
+        return 1
+    }
+    if(doc.login.length == 0){
+        return 1
+    }
+    return doc.login[doc.length -1].lastDay
+}
+
+function getShareTimes(doc){
+    if(doc == null || !doc.shareEvent){
+        return 1
+    }
+    var today = getlocalDateString()
+    var shareTodays = doc.sameEvents.filter( event => {
+        return event.day == today
+    })
+    return shareTodays.length
+}
+
+//////////////////////////////////////////////////////////////////
+async function queryUserIntegralDetail(openId){
+    var doc = await getUserIntegralDoc(openId)
+    var ret = {}
+    ret.loginLastDay = getloginLastDay(doc)
+    ret.showTimes = getShareTimes(doc)
+    Object.assign(ret, getScoreInfoFor(doc))
     return ret
 }
 
@@ -480,5 +518,6 @@ module.exports={
     queryUserAwards,
     loginScene,
     notifyAwardLuckyDraw,
-    sendAwardNotifyFor
+    sendAwardNotifyFor,
+    queryUserIntegralDetail
 }

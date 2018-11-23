@@ -152,6 +152,10 @@ const apiHandle = async (req) => {
         case 'stop-integral':
             result = await integral.stopIntegral(userId)
             break;
+        
+        case 'get-integral-detail':
+            result = await integral.queryUserIntegralDetail(userId)
+            break;
 
         default:
             result = 'unknown gateway api : ' + api;
