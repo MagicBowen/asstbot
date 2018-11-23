@@ -21,6 +21,22 @@ function getTimeStamp(){
     return parseInt(date.getTime() / 1000)
 }
 
+const ONE_DAY = 1000*60*60*24
+
+//////////////////////////////////////////////////////////////////
+function getYestodayDateString(){
+    var date = new Date()
+    date.setTime(date.getTime() - ONE_DAY)
+    return date.toLocaleDateString()
+}
+
+//////////////////////////////////////////////////////////////////
+function getDateSixDayBefore(){
+    var date = new Date()
+    date.setTime(date.getTime() - 6 * ONE_DAY)
+    return date.toLocaleDateString()
+}
+
 //////////////////////////////////////////////////////////////////
 async function buildDoc(darwinId){
     var totalScore = 0
@@ -257,17 +273,19 @@ async function queryUserIntegral(openId){
 }
 
 //////////////////////////////////////////////////////////////////
-async function  notifyUnLoginUsers(){
+async function  notifyUnLoginUsers(notifyEvent, count){
+    var yestoday = getYestodayDateString()
     var today = getlocalDateString()
+    var sixDayBefore = getDateSixDayBefore()
     var queryAql = `for doc in ${integralCollection} 
     let lastLogin = LAST(doc.login)
-    filter lastLogin.day != '${today}' and doc.state == 'active'
-    return doc`
-    var users = await arangoDb.queryDocs(queryAql)
-    logger.info(`send notify users num is: ${users.length}`)
-    users.forEach(user => {
-        sendNotifyFor(user)
-    });
+    filter lastLogin.day == '${yestoday}' or lastLogin.day == '${sixDayBefore}' or notifyDay != '${today}'
+    limit ${count}
+    update doc with {
+        notifyDay: '${today}'
+    } in ${integralCollection}
+    return doc._key`
+    return await arangoDb.queryDocs(queryAql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -284,14 +302,14 @@ async function getNotifyUserFor(notifyEvent, count){
 
 //////////////////////////////////////////////////////////////////
 async function notifyAwardLuckyDraw(){
-    var openIds = await getNotifyUserFor('awardNotify', 50)
+    var openIds = await notifyUnLoginUsers('awardNotify', 50)
     if(openIds.length == 0){
         logger.info('all user is notified ....')
         return
     }
     openIds.forEach(openId => {
         logger.info('notify to openId', openId)
-        sendAwardNotifyFor(openId)
+        // sendAwardNotifyFor(openId)
     })
 }
 
