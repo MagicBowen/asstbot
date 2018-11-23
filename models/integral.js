@@ -302,7 +302,7 @@ async function getNotifyUserFor(notifyEvent, count){
 
 //////////////////////////////////////////////////////////////////
 async function notifyAwardLuckyDraw(){
-    var openIds = await notifyUnLoginUsers('awardNotify', 1)
+    var openIds = await notifyUnLoginUsers('awardNotify', 20)
     if(openIds.length == 0){
         logger.info('all user is notified ....')
         return
