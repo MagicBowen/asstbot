@@ -305,7 +305,7 @@ async function queryUserIntegralDetail(openId){
     var doc = await getUserIntegralDoc(openId)
     var ret = {}
     ret.loginLastDay = getloginLastDay(doc)
-    ret.showTimes = getShareTimes(doc)
+    ret.shareTimesToday = getShareTimes(doc)
     Object.assign(ret, getScoreInfoFor(doc))
     return ret
 }
