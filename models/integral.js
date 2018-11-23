@@ -243,7 +243,7 @@ function buildNotifyMsg(openId){
         "openId": openId,
         "data": {
             "keyword1": { "value": "打卡换积分抽奖活动" },
-            "keyword2": { "value": "打开“哒尔文”小程序,点击“积分抽奖”按钮,查看积分说明。" }
+            "keyword2": { "value": "连续登录可以快速累积积分参与抽奖，现在登录看看你积分吧。" }
         }
     }
     return body
