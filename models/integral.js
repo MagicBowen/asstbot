@@ -279,7 +279,7 @@ async function  notifyUnLoginUsers(notifyEvent, count){
     var sixDayBefore = getDateSixDayBefore()
     var queryAql = `for doc in ${integralCollection} 
     let lastLogin = LAST(doc.login)
-    filter lastLogin.day == '${yestoday}' or lastLogin.day == '${sixDayBefore}' or notifyDay != '${today}'
+    filter lastLogin.day == '${yestoday}' or lastLogin.day == '${sixDayBefore}' or doc.notifyDay != '${today}'
     limit ${count}
     update doc with {
         notifyDay: '${today}'
@@ -302,14 +302,14 @@ async function getNotifyUserFor(notifyEvent, count){
 
 //////////////////////////////////////////////////////////////////
 async function notifyAwardLuckyDraw(){
-    var openIds = await notifyUnLoginUsers('awardNotify', 50)
+    var openIds = await notifyUnLoginUsers('awardNotify', 1)
     if(openIds.length == 0){
         logger.info('all user is notified ....')
         return
     }
     openIds.forEach(openId => {
         logger.info('notify to openId', openId)
-        // sendAwardNotifyFor(openId)
+        sendAwardNotifyFor(openId)
     })
 }
 
