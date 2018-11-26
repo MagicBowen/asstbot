@@ -6,7 +6,9 @@ async function getTtsResult(ctx) {
         const text = ctx.request.body.text
         const speed = ctx.request.body.speed
         const role = ctx.request.body.role
-        const audioFile = await TTS.getAudio(text, speed, role)
+        const pit = ctx.request.body.pit
+        const vol = ctx.request.body.vol
+        const audioFile = await TTS.getAudio(text, speed, role, pit, vol)
         ctx.response.type = "application/json";
         ctx.response.status = 200;
         ctx.response.body = {url : 'tts/' + audioFile};
