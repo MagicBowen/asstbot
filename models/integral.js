@@ -215,20 +215,6 @@ async function eventChatStat(request, response){
 }
 
 //////////////////////////////////////////////////////////////////
-async function sendNotifyFor(user){
-    var body = {
-        hint:  "今天你还没有登陆",
-        activity: "打开活动",
-        score: 1000,
-        openId: user._key,
-        day: getlocalDateString()
-    }
-
-    var ret = await postJson(config.sendNotifyUrl, body)
-    logger.info(`send notify url ${config.sendNotifyUrl} body  ${JSON.stringify(body)} , ret = ${JSON.stringify(ret)}`)
-}
-
-//////////////////////////////////////////////////////////////////
 async function getUserIntegralDoc(openId){
     var queryAql = `for doc in ${integralCollection} 
     filter doc._key == '${openId}'
@@ -374,13 +360,13 @@ async function awardInegral(openId){
 function calcDrawGrand(){
     var luckyNum = Math.floor(Math.random()*1000)
     logger.info("lucky num ",luckyNum)
-    if(luckyNum > 200 && luckyNum <= 201){
+    if(luckyNum > 200 && luckyNum <= 210){
         return 1
     }
-    if(luckyNum > 300 && luckyNum <= 310){
+    if(luckyNum > 300 && luckyNum <= 350){
         return 2
     }
-    if(luckyNum > 400 && luckyNum <= 450){
+    if(luckyNum > 400 && luckyNum <= 500){
         return 3
     }
     return 0
