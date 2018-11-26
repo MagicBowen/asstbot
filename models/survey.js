@@ -14,6 +14,7 @@ const MediaInfo = new Schema({
 const AnswerSchema = new Schema({
     value : String,
     imageUrl : String,
+    score    : Number,
     urlType  : String,
     mediaInfo : MediaInfo,
     correct : Boolean,
@@ -28,6 +29,7 @@ const SubjectSchema = new Schema({
     question : String,
     imageUrl : String,
     urlType  : String,
+    score    : Number,
     mediaInfo : MediaInfo,
     answers  : [AnswerSchema]
 });

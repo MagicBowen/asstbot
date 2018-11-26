@@ -4,6 +4,7 @@ const Statistic = require('../models/statistic');
 const simplify = require('../utils/simplifier')
 const SimplifyResult = require('../models/simplifier')
 var arangoDb = require("../models/arango.js")
+var integral = require("../models/integral.js")
 const logger = require('../utils/logger').logger('gateway');
 
 function convert_to_openId(userId){
@@ -39,10 +40,13 @@ const apiHandle = async (req) => {
             result = await User.updateAsstBotTts(userId, params.ttsEnable);
             break;
         case 'update-asst-horoscope':
-            result = await User.updateHoroscope(userId, params.horoscope);
+            result = await arangoDb.updateUserHoroscope(userId, params.horoscope);
             break;
         case 'get-asst-horoscope':
-            result = await User.getHoroscope(userId);
+            result = await arangoDb.getUserHoroscope(userId)
+            if(result == null){
+                result = await User.getHoroscope(userId);
+            }
             break;
         case 'get-survey-by-id':
             result = await Survey.getSurveyById(params.id);
@@ -132,9 +136,25 @@ const apiHandle = async (req) => {
         case 'get-laohuangli':
             result = await arangoDb.getLaohuangli(params.day)
             break;
+            
+        case 'get-binding-device-type':
+            result = await arangoDb.getBindingPlat(userId)
+            break;
 
         case 'get-solar-from-lunar':
             result = await arangoDb.getLunar(params.lunarYear, params.lunarMonth, params.lunarDay, params.leap !== undefined ? params.leap : false)
+            break;
+
+        case 'start-integral':
+            result = await integral.startIntegral(userId)
+            break;
+
+        case 'stop-integral':
+            result = await integral.stopIntegral(userId)
+            break;
+        
+        case 'get-integral-detail':
+            result = await integral.queryUserIntegralDetail(userId)
             break;
 
         default:

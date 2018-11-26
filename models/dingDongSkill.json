@@ -1,0 +1,52 @@
+[
+  {
+    "name": "course-record",
+    "zhname": "我的课表",
+    "bindHelp": [
+      {
+        "image": "http://xiaodamp.cn/asst/resource/dingdong1.png",
+        "desc": "在App\"叮咚音箱\"技能页面搜索\"我的课表\"技能"
+      },
+      {
+        "image": "http://xiaodamp.cn/asst/resource/dingdong2.png",
+        "desc": "点击\"授权\"按钮"
+      },
+      {
+        "image": "http://xiaodamp.cn/asst/resource/dingdong3.png",
+        "desc": "在这里输入上面看到的5位数字，点击\"绑定\"按钮"
+      },
+      {
+        "image": "http://xiaodamp.cn/asst/resource/dingdong4.png",
+        "desc": "完成关联，在本小程序里输入课程，就可以在叮咚音箱上使用“我的课表”技能了"
+      }
+    ],
+    "bindHint": "你已经成功地关联\"我的课表\"技能，到小程序里录入课程吧",
+    "unbindHint": "你还没有关联\"我的课表\"技能",
+    "title": "关联我的课表"
+  },
+  {
+    "name": "dictation",
+    "zhname": "生词听写",
+    "bindHelp": [
+      {
+        "image": "http://xiaodamp.cn/asst/resource/dictation1.png",
+        "desc": "在App\"叮咚音箱\"技能页面搜索\"生词听写\"技能"
+      },
+      {
+        "image": "http://xiaodamp.cn/asst/resource/dictation2.png",
+        "desc": "点击\"授权\"按钮"
+      },
+      {
+        "image": "http://xiaodamp.cn/asst/resource/dictation3.png",
+        "desc": "在这里输入上面看到的5位数字，点击\"绑定\"按钮"
+      },
+      {
+        "image": "http://xiaodamp.cn/asst/resource/dictation4.png",
+        "desc": "完成关联，在本小程序里输入课程，就可以在叮咚音箱上使用“生词听写”技能了"
+      }
+    ],
+    "bindHint": "你已经成功地关联\"生词听写\"技能，到小程序里录入课程吧",
+    "unbindHint": "你还没有关联\"生词听写\"技能",
+    "title": "关联生词听写"
+  }
+]

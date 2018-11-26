@@ -1,19 +1,6 @@
-var arango = require('arangojs');
-const config = require('../config')
-var db = null 
+const arangoDb = require("./arangoDb.js")
+var db = arangoDb.getDb() 
 const logger = require('../utils/logger').logger('arango');
-//////////////////////////////////////////////////////////////////
-function init(){
-    logger.info("read config ", JSON.stringify(config))
-    if(db == null){
-        Database = arango.Database;
-        db = new Database(`http://${config.arangoHost}:${config.arangoPort}`);
-        db.useDatabase('waterDrop');
-        db.useBasicAuth(config.arangoUser, config.arangoPassword)
-        logger.info("arango db init success")
-    }
-    return db
-}
 
 const  courseTableCollection = "courseTable2"
 const  userIdsCollection = "userIds"
@@ -21,85 +8,21 @@ const  feedbackCollection = "userFeedbacks"
 const  dictateWordsCollection = "dictateWords"
 const  waitingBindingCollection = "waitingBindingAccount" 
 
-function convert_to_openId(userId){
-    var openId = (userId.length == 28) ? userId : userId.replace("_D_", "-")
-    return openId
-}
-
-
-//////////////////////////////////////////////////////////////////
-//此处主要为了解决和遗留数据的兼容问题，所以名字不统一，使用courseId作为darwin平台的统一ID。
-async function getDarwinId(userId) {
-    var openId = convert_to_openId(userId)
-    var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user.courseId`
-    logger.info('execute aql', aql)
-    var darwinId = await db.query(aql).then(cursor => cursor.all())
-          .then(users => {
-            if(users.length > 0){
-                return users[0]
-            }
-            return null
-          }, err => {
-             logger.error('Failed to fetch agent document:')
-             return null
-          })
-
-    if(darwinId == null){
-        darwinId = "darwin_" + openId
-        await addNewUser(darwinId, openId)
-    }
-    return darwinId
-}
-
-async function addNewUser(darwinId, openId){
-    var collection = db.collection(userIdsCollection)
-    var user = {}
-    //此处主要为了解决和遗留数据的兼容问题，所以名字不统一
-    user.courseId = darwinId
-    user.openId = openId
-    await collection.save(user).then(
-        meta => { logger.info('add new user  saved:', meta._key); return meta._key },
-        err => { logger.error('Failed to add new user', err); return "" }
-    );
-}
 
 //////////////////////////////////////////////////////////////////
 async function getDayCourseForUser(userId, weekday){
-    var courseId = await getDarwinId(userId)
+    var courseId = await arangoDb.getDarwinId(userId)
     var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable.${weekday}`
     logger.info('execute aql', aql)
-    return await db.query(aql).then(cursor => cursor.all())
-    .then(courses => {
-        if(courses.length == 0){
-            return null
-        }else{
-            return courses[0]
-        }
-    },
-    err => {
-        logger.error('Failed to fetch agent document:')
-        return null
-    })
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
 async function queryAllCourseForUser(userId) {
-    var courseId = await getDarwinId(userId)
+    var courseId = await arangoDb.getDarwinId(userId)
     var aql = `FOR doc IN ${courseTableCollection} filter doc._key=='${courseId}' return doc.courseTable`
     logger.info('execute aql', aql)
-    return await db.query(aql).then(cursor => cursor.all())
-    .then(courses => {
-        if(courses.length == 0){
-            return null
-        }else{
-            return courses[0]
-        }
-    },
-    err => {
-        logger.error('Failed to fetch agent document:')
-        return null
-    })
-
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -135,7 +58,7 @@ function getlocalDateString(){
 
 //////////////////////////////////////////////////////////////////
 async function addDictateWords(openId, dictateWords) {
-    var darwinId = await getDarwinId(openId)
+    var darwinId = await arangoDb.getDarwinId(openId)
     dictateWords.darwinId = darwinId
     dictateWords.timestamp = getTimeStamp()
     dictateWords.createTime = getlocalDateString()
@@ -149,7 +72,7 @@ async function addDictateWords(openId, dictateWords) {
 }
 
 //////////////////////////////////////////////////////////////////
-async function udpateDictateWords(dictateWordsId, dictateWords){
+async function updateDicateWords(dictateWordsId, dictateWords){
     var collection = db.collection(dictateWordsCollection)
     dictateWords.updateTime = getlocalDateString()
     var dictateWordsId = await collection.update(dictateWordsId, dictateWords).then(
@@ -181,7 +104,7 @@ function formatDictateWords(doc){
 
 //////////////////////////////////////////////////////////////////
 async function getAllDictateWords(openId){
-    var darwinId = await getDarwinId(openId)
+    var darwinId = await arangoDb.getDarwinId(openId)
     var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' SORT doc.timestamp DESC return doc`
     return await db.query(aql).then(cursor => cursor.all())
     .then(wordsList => { return wordsList.map(function(doc){
@@ -195,7 +118,7 @@ async function getAllDictateWords(openId){
 
 //////////////////////////////////////////////////////////////////
 async function getActiveDictationWords(openId){
-    var darwinId = await getDarwinId(openId)
+    var darwinId = await arangoDb.getDarwinId(openId)
     var aql = `FOR doc in ${dictateWordsCollection} filter doc.darwinId == '${darwinId}' and doc.active == true return doc.words`
     logger.info("query aql: ", aql)
     return await db.query(aql).then(cursor => cursor.all())
@@ -217,14 +140,7 @@ async function getTodayHoroscope (sign) {
         filter day == today && doc.name == '${sign}'
         return doc`
 
-    return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -235,14 +151,7 @@ async function getTomorrowHoroscope (sign) {
         filter day == tomorrow && doc.name == '${sign}'
         return doc`
 
-    return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    return await arangoDb.querySingleDoc(aql)
 }
 
 async function getWeekHoroscope (sign) {
@@ -251,14 +160,7 @@ async function getWeekHoroscope (sign) {
         filter doc.weekth == week && doc.name == '${sign}'
         return doc`
 
-    return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    return await arangoDb.querySingleDoc(aql)
 }
 
 async function getMonthHoroscope (sign) {
@@ -267,14 +169,7 @@ async function getMonthHoroscope (sign) {
         filter doc.month == month && doc.name == '${sign}'
         return doc`
 
-    return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    return await arangoDb.querySingleDoc(aql)
 }
 
 async function getHoroscope (day, sign) {
@@ -284,14 +179,7 @@ async function getHoroscope (day, sign) {
     filter day == today && doc.name == '${sign}'
     return doc`
     
-    return await db.query(aql).then(cursor => cursor.all())
-    .then(result => {
-        if(result.length == 0){
-            return null
-        }else{
-            return result[0]
-        }
-    })
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -304,29 +192,16 @@ function getTimeStamp(){
 async function getUserKey(openId, darwinId){
     var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' and user.courseId == '${darwinId}' return user._key`
     logger.info('execute aql', aql)
-    return await db.query(aql).then(cursor => cursor.all())
-          .then(users => {
-            if(users.length > 0){
-                return users[0]
-            }
-            return null
-          }, err => {
-             logger.error('Failed to fetch agent document:')
-             return null
-          })
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
 async function updateBindingUser(openId, user){
-    var darwinId = await getDarwinId(openId)
+    var darwinId = await arangoDb.getDarwinId(openId)
     var userKey = await getUserKey(openId, darwinId)
 
     var bindingInfo = {}
-    if(user.userType == "xiaoai"){
-        bindingInfo.xiaomiId = user.userId
-    }else if (user.userType == "dueros"){
-        bindingInfo.duerosId = user.userId
-    }
+    bindingInfo[getIdName(user.userType, user.skill)] = user.userId
     bindingInfo.openId = openId
     bindingInfo.courseId = darwinId
 
@@ -353,42 +228,111 @@ async function removeWaitingBindingUser(user){
 async function getBindingUserType(openId) {
     var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user`
     logger.info('execute aql', aql)
-    var user = await db.query(aql).then(cursor => cursor.all())
-          .then(users => {
-            if(users.length > 0){
-                return users[0]
-            }
-            return null
-          }, err => {
-             logger.error('Failed to fetch agent document:')
-             return null
-          })
+    var user = await arangoDb.querySingleDoc(aql)
     if (user == null){
         return []
     }
     var bindingUserType = []
     if ("xiaomiId" in user) {
-        bindingUserType.push("小米")
+        if(user.xiaomiId != ""){
+            bindingUserType.push("xiaoai")
+        }
     }
 
     if ("duerosId" in user) {
-        bindingUserType.push("百度")
+        if(user.duerosId != ""){
+            bindingUserType.push("dueros")
+        }
     }
 
-    return bindingUserType
-   
+    if ("huaweiId" in user) {
+        if(user.huaweiId != ""){
+            bindingUserType.push("huawei")
+        }
+    }
+
+    if("dingdongId" in user) {
+        if(user.dingdongId != ""){
+            bindingUserType.push("dingdong")
+        }
+    }
+    return bindingUserType 
+}
+
+function isInValid(key){
+    return  key === "_key" || key === "_id" || key === "_rev" || key === "courseId" || key === "openId" || key === "phone"
 }
 
 //////////////////////////////////////////////////////////////////
-async function bindingUser(openId, bindingCode){
-    var timeStamp = getTimeStamp()
-    var expireTimeStamp = timeStamp - 300
-    var aql = `for doc in ${waitingBindingCollection} 
-    filter doc.bindingCode == ${bindingCode}  and doc.timestamp > ${expireTimeStamp}
-    return doc `
-    
-    logger.info('query binding user aql', aql)
-    var bindingUsers = await db.query(aql).then(cursor => cursor.all())
+function getBindingUserTypesBy(user){
+    var bindingUserType = []
+    for(var key in user){
+        if(user[key] == "" || isInValid(key)){
+            continue
+        }
+        if(key == "xiaomiId"){
+            bindingUserType.push({platType: "xiaoai"})
+            continue
+        }
+        if(key == "dingdongId"){
+            bindingUserType.push({platType: "dingdong", skill: "course-record"})
+            continue
+        }
+        if(key.indexOf("dingdong") >=0){
+            var strs = key.split("_")
+            if(strs.length != 3){
+                continue
+            }
+            bindingUserType.push({platType: "dingdong", skill: strs[1]})
+            continue
+        }
+        bindingUserType.push({platType: key.replace("Id","")})
+    }
+    return bindingUserType
+}
+
+//////////////////////////////////////////////////////////////////
+async function getBindingPlat(openId){
+    var aql = `FOR user in ${userIdsCollection} filter user.openId == '${openId}' return user`
+    logger.info('execute aql', aql)
+    var user = await arangoDb.querySingleDoc(aql)
+    if (user == null){
+        return []
+    }
+    return getBindingUserTypesBy(user)
+}
+
+//////////////////////////////////////////////////////////////////
+function generateBindingCode(){
+    return Math.floor(Math.random()*90000) + 10000
+}
+
+//////////////////////////////////////////////////////////////////
+async function addWaitingBinding(userId, skill, platform){
+    var bindingCode = generateBindingCode()
+    var doc = {}
+    doc.userId = userId
+    doc.skill = skill
+    doc.userType = platform
+    doc.timestamp = getTimeStamp()
+    doc.bindingCode = bindingCode
+    var collection  = db.collection(waitingBindingCollection)
+    await collection.save(doc).then(
+        meta => { logger.info('Document saved:', meta._key); return meta._key },
+        err => { logger.error('Failed to save document:', err); return "" }
+    );
+    return bindingCode
+}
+
+//////////////////////////////////////////////////////////////////
+function isBindingCodeExpired(timeStamp){
+    var curTimeStamp = getTimeStamp()
+    return (curTimeStamp - timeStamp) > 300
+}
+
+//////////////////////////////////////////////////////////////////
+async function queryByAql(aql){
+    return await db.query(aql).then(cursor => cursor.all())
     .then(result => {
         return result
     },
@@ -396,7 +340,50 @@ async function bindingUser(openId, bindingCode){
         logger.error('Failed to fetch binding user')
         return []
     })
-    if (bindingUsers.length != 1){
+}
+
+function isEmpty(users){
+    for (var name in users){
+        logger.info("comming here ..........")
+        return false
+    }
+    return true
+}
+
+//////////////////////////////////////////////////////////////////
+async function getBindingCodeFor(userId, platform, skill){
+    var aql = `for doc in ${waitingBindingCollection} 
+    filter doc.userId == '${userId}'  and doc.userType =='${platform}' and doc.skill =='${skill}'
+    return doc `
+    logger.info('query binding user aql', aql)
+    var waitingUsers = await queryByAql(aql)
+    if(isEmpty(waitingUsers)){
+        return await addWaitingBinding(userId, skill, platform)
+    }
+    var bindingUser = waitingUsers[0]
+    if(isBindingCodeExpired(bindingUser.timestamp)){
+        await removeWaitingBindingUser(bindingUser)
+        return await addWaitingBinding(userId, skill, platform)
+    }
+    return bindingUser.bindingCode
+}
+
+//////////////////////////////////////////////////////////////////
+async function bindingUser(openId, bindingCode, userType, skill){
+    var timeStamp = getTimeStamp()
+    var expireTimeStamp = timeStamp - 300
+    var aql = `for doc in ${waitingBindingCollection} 
+    filter doc.bindingCode == ${bindingCode}  and doc.userType =='${userType}' and doc.timestamp > ${expireTimeStamp}
+    return doc `
+    if(skill){
+        aql = `for doc in ${waitingBindingCollection} 
+            filter doc.bindingCode == ${bindingCode}  and doc.userType =='${userType}' and doc.skill == '${skill}' and doc.timestamp > ${expireTimeStamp}
+            return doc `
+    }
+    
+    logger.info('query binding user aql', aql)
+    var bindingUsers = await queryByAql(aql)
+    if (isEmpty(bindingUsers)){
         logger.error('waiting binding user infos is ', JSON.stringify(bindingUsers))
         return false
     }
@@ -409,20 +396,50 @@ async function bindingUser(openId, bindingCode){
 }
 
 //////////////////////////////////////////////////////////////////
+function getIdNameForDingDong(skill){
+    if(!skill){
+        return "dingdongId"
+    }
+    if(skill == "course-record"){
+        return "dingdongId"
+    }
+    return "dingdong_" + skill+ "_Id"
+}
+
+//////////////////////////////////////////////////////////////////
+function getIdName(userType, skill){
+    if(userType == 'xiaoai'){
+        return "xiaomiId"
+    }
+    if(userType == 'dueros'){
+        return "duerosId"
+    }
+    if(userType == 'dingdong'){
+        return getIdNameForDingDong(skill)
+    }
+    return userType + "Id"
+}
+
+//////////////////////////////////////////////////////////////////
+async function unBindingUser(openId, userType, skill){
+    var idName = getIdName(userType, skill)
+    var aql = `for doc in ${userIdsCollection}
+               filter doc.openId== '${openId}'
+               update doc with {
+                   ${idName}: ""
+               } into ${userIdsCollection}`
+    return await arangoDb.updateDoc(aql)
+}
+
+
+//////////////////////////////////////////////////////////////////
 async function getLaohuangli (day) {
     var aql = `for doc in laohuangli
     filter doc.yangli == "${day}"
     limit 1
     return doc`
 
-    return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    return await arangoDb.querySingleDoc(aql)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -431,33 +448,90 @@ async function getLunar (lunarYear, lunarMonth, lunarDay, leap) {
         filter doc.lunarYear == ${lunarYear} and doc.lunarMonth == ${lunarMonth} and doc.lunarDay == ${lunarDay} and doc.leap == ${leap}
         return doc
     `
-    return await db.query(aql).then(cursor => cursor.all())
-        .then(result => {
-            if(result.length == 0){
-                return null
-            }else{
-                return result[0]
-            }
-        })
+    return await arangoDb.querySingleDoc(aql)
+}
+
+//////////////////////////////////////////////////////////////////
+function addFormId (openId, formId) {
+    var aql = `UPSERT { openId: '${openId}' } 
+    INSERT { openId: '${openId}', dataCreated: DATE_NOW(),  formIds: [{formId: '${formId}', timestamp: DATE_NOW()}] } 
+    UPDATE { formIds:APPEND(OLD.formIds,{formId: '${formId}', timestamp: DATE_NOW()}) } IN wechatFormId
+    `
+    db.query(aql)
+    return
+}
+
+//////////////////////////////////////////////////////////////////
+async function getFormId (openId) {
+    var aql = `for FormId in wechatFormId
+    filter FormId.openId == '${openId}'
+    let date = DATE_SUBTRACT(DATE_NOW(), 7, "day")
+    let formIds = (for id in FormId.formIds
+        filter DATE_ISO8601(id.timestamp) > date
+        return id)
+    filter length(formIds) > 0
+    let retVal = FIRST(formIds)
+    let newformIds = SHIFT(formIds)
+    update FormId with {formIds: newformIds} in wechatFormId
+    return retVal`
+    return await arangoDb.querySingleDoc(aql)
+}
+
+//////////////////////////////////////////////////////////////////
+const  userExtrInfo = "userExtrInfo" 
+async function updateUserHoroscope(userId, horoscope){
+    var darwinId = await arangoDb.getDarwinId(userId)
+    var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc`
+    var ret = await arangoDb.querySingleDoc(aql)
+    if(ret == null){
+        var doc = {}
+        doc._key = darwinId
+        doc.horoscope = horoscope
+        var collection  = db.collection(userExtrInfo)
+        await collection.save(doc).then(
+            meta => { logger.info('Document saved:', meta._key); return meta._key },
+            err => { logger.error('Failed to save document:', err); return "" }
+        );
+        return true
+    }
+    var updateAql = `LET doc = DOCUMENT("${userExtrInfo}/${darwinId}")
+                     update doc with {
+                        horoscope : '${horoscope}'
+                     } in ${userExtrInfo}`
+
+    return await arangoDb.updateDoc(updateAql)
+}
+
+//////////////////////////////////////////////////////////////////
+async function getUserHoroscope(userId){
+    var darwinId = await arangoDb.getDarwinId(userId)
+    var aql = `for doc in ${userExtrInfo}  filter doc._key == '${darwinId}' return doc.horoscope`
+    return await arangoDb.querySingleDoc(aql)
 }
 
 module.exports={
-    init,
     getDayCourseForUser,
     queryAllCourseForUser,
     saveFeedbackForUser,
     addDictateWords,
-    udpateDictateWords,
+    updateDicateWords,
     deleteDictateWords,
     getAllDictateWords,
     getActiveDictationWords,
     getTodayHoroscope,
     getHoroscope,
+    getUserHoroscope,
+    updateUserHoroscope,
     bindingUser,
+    unBindingUser,
+    getBindingPlat,
     getBindingUserType,
+    getBindingCodeFor,
     getTomorrowHoroscope,
     getWeekHoroscope,
     getMonthHoroscope,
     getLaohuangli,
-    getLunar
+    getLunar,
+    addFormId,
+    getFormId
 }

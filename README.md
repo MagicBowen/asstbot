@@ -951,9 +951,20 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 ```json
 {"openId"    : "oNijH5e8sdGfry-3tQWVN3SgskB0",
  "dictateWords": {
- 	"title": "语文第一课",
- 	"active": false,
- 	"words" : ["波浪","浪花","海浪","灯光","电灯","作文","工作"]
+ 	"title": "语文第二课",
+	"active": false,
+	"playWay" : "order", //disorder
+	"playTimes" : 1,
+	"intervel" : 5, //间隔
+	"words": [
+	{ "term": "波浪", "pinyin": "bolang"},
+	{ "term": "浪花","pinyin": "langhua"},
+	{ "term": "海浪","pinyin": "hailang"},
+	{ "term": "灯光","pinyin": "dangguang"},
+	{ "term": "电灯","pinyin": "diandeng"},
+	{ "term": "作文","pinyin": "zuowen"},
+	{ "term": "工作","pinyin": "gongzuo"}
+	]
  }
 }
 ```
@@ -977,8 +988,19 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 {"id"    : "52115059",
  "dictateWords": {
  	"title": "语文第二课",
- 	"active": false,
- 	"words" : ["波浪","浪花","海浪","灯光","电灯","作文","工作"]
+	"active": false,
+	"playWay" : "order", //disorder
+	"playTimes" : 1,
+	"intervel" : 5, //间隔
+	"words": [
+	{ "term": "波浪", "pinyin": "bolang"},
+	{ "term": "浪花","pinyin": "langhua"},
+	{ "term": "海浪","pinyin": "hailang"},
+	{ "term": "灯光","pinyin": "dangguang"},
+	{ "term": "电灯","pinyin": "diandeng"},
+	{ "term": "作文","pinyin": "zuowen"},
+	{ "term": "工作","pinyin": "gongzuo"}
+	]
  }
 }
 ```
@@ -1019,13 +1041,13 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
             "title": "语文第一课",
             "active": false,
             "words": [
-                "波浪",
-                "浪花",
-                "海浪",
-                "灯光",
-                "电灯",
-                "作文",
-                "工作"
+                { "term": "波浪", "pinyin": "bolang"},
+                { "term": "浪花","pinyin": "langhua"},
+                { "term": "海浪","pinyin": "hailang"},
+                { "term": "灯光","pinyin": "dangguang"},
+                { "term": "电灯","pinyin": "diandeng"},
+                { "term": "作文","pinyin": "zuowen"},
+                { "term": "工作","pinyin": "gongzuo"}
             ],
             "darwinId": "weixin_oESUr5Arz8hmqlkTJjmrR_539Pz8",
             "createTime": "2018-10-23",
@@ -1036,13 +1058,13 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
             "darwinId": "weixin_oESUr5Arz8hmqlkTJjmrR_539Pz8",
             "active": true,
             "words": [
-                "波浪",
-                "浪花",
-                "海浪",
-                "灯光",
-                "电灯",
-                "作文",
-                "工作"
+                { "term": "波浪", "pinyin": "bolang"},
+                { "term": "浪花","pinyin": "langhua"},
+                { "term": "海浪","pinyin": "hailang"},
+                { "term": "灯光","pinyin": "dangguang"},
+                { "term": "电灯","pinyin": "diandeng"},
+                { "term": "作文","pinyin": "zuowen"},
+                { "term": "工作","pinyin": "gongzuo"}
             ],
             "id": "52086497"
         }
@@ -1076,7 +1098,7 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 ```
 
 ###查询绑定的设备
-
+#### 旧接口
 * 请求方式
 
 ``` get http://localhost/binding?openid=oNijH5e8sdGfry-3tQWVN3SgskB0```
@@ -1087,9 +1109,138 @@ sudo mongod --dbpath /var/lib/mongodb/ --logpath /var/log/mongodb/mongod.log --l
 {
     "result": "success",
     "bindingTypes": [
-        "小米",
-        "百度"
+        "xiaoai",
+        "dingdong"
     ]
+}
+```
+
+#### 新接口
+* 请求方式
+
+``` get http://localhost/bindingPlat?openId=oNijH5e8sdGfry-3tQWVN3SgskB0 ```
+
+* 返回值
+
+```json
+{
+    "result": "success",
+    "bindingTypes": [
+        {
+            "platType": "xiaoai"
+        },
+        {
+            "platType": "dingdong",
+            "skill": "course-record"
+        }
+    ]
+}
+```
+
+###查询拼音
+* 请求方式
+
+```get http://localhost/pinyin?sentence=子弹```
+
+* 返回值
+
+```json
+{
+    "result": "success",
+    "data": [
+        [
+            "zǐ"
+        ],
+        [
+            "dàn",
+            "tán"
+        ]
+    ]
+}
+```
+
+###查询积分
+* 请求方式
+
+```get http://localHost/integral?id=oNijH5dOWOgyvX75lpVubHqWILOk```
+
+
+* 返回值
+```json
+{
+    "result": "success",
+    "data": {
+        "totalScore": 1000,
+        "usedScore": 600,
+        "remainScore": 400,
+        "drawTimes": 2
+    }
+}
+```
+
+###查询奖品
+* 请求方式
+
+```get http://localHost/awards?id=oNijH5dOWOgyvX75lpVubHqWILOk```
+
+* 返回值
+```json
+{
+    "result": "success",
+    "data": [
+        {
+            "grand": 1,
+            "awardDesc": "小度在家音箱",
+            "time": "2018-11-17 20:13:51"
+        },
+        {
+            "grand": 1,
+            "awardDesc": "小度在家音箱",
+            "time": "2018-11-17 20:15:39"
+        }
+    ]
+}
+```
+
+
+###抽奖接口
+* 请求方式
+```post http://localhost/luckydraw```
+
+* 参数
+```json
+{
+	"id"    : "oNijH5e8sdGfry-3tQWVN3SgskB0"
+}
+```
+
+* 返回值
+```json
+{
+    "result": "success",
+    "data": {
+        "grand": 2
+    }
+}
+```
+
+###保存中奖联系方式
+* 请求方式
+```post http://localhost/asst/prizeuser```
+
+* 参数
+```json
+{"id"    : "oNijH5dOWOgyvX75lpVubHqWILOk",
+ "grand" : 2,
+ "phone" : "18629022031"
+}
+```
+
+* 返回值
+```json
+{
+    "result": "success",
+    "data": "58600843"
 }
 ```
 
