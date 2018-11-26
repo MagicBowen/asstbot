@@ -31,9 +31,9 @@ class Chatbot {
                      agent   : this.agent,
                      userContext : user };
 
+        integral.eventChatStat(data, formatRsp)
         const response = await postJson(this.uri, data);
         const formatRsp = this.formatResponse(user, response);
-        integral.eventChatStat(data, formatRsp)
         return formatRsp;
     }
 
