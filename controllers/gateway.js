@@ -160,9 +160,9 @@ const apiHandle = async (req) => {
             break;
 
         case 'get-text-tts':
-            var path = 'static/v1/tts'
+            var path = 'static/tts/v1'
             result = await TTS.getAudio(params.text, params.speed, params.role, params.pit, params.vol, path)
-            result = config.homeUrl + '/v1/tts/' +  result
+            result = config.homeUrl + '/tts/v1/' +  result
             break;
 
         default:
