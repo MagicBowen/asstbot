@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Survey = require('../models/survey');
 const TTS = require('../utils/tts')
+const config = require('../config')
 const Statistic = require('../models/statistic');
 const simplify = require('../utils/simplifier')
 const SimplifyResult = require('../models/simplifier')
@@ -160,8 +161,9 @@ const apiHandle = async (req) => {
 
         case 'get-text-tts':
             result = await TTS.getAudio(params.text, params.speed, params.role, params.pit, params.vol)
+            result = config.homeUrl + '/tts/' +  result
             break;
-            
+
         default:
             result = 'unknown gateway api : ' + api;
             logger.error(result);
