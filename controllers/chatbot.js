@@ -98,7 +98,8 @@ const addTtsForMsgs = async (userId, response) => {
         }
         if (!reply) continue
         try {
-            msg.tts = await TTS.getAudio(reply)
+            msg.tts = await TTS.getDarwinAudio(reply)
+            msg.tts = 'tmp/' + msg.tts
         } catch (err) {
             logger.error(`text msg ${JSON.stringify(msg)} get tts error ${err}`)
         }

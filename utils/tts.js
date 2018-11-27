@@ -30,7 +30,13 @@ function getTtsAudioFile(text, speed, role, pit, vol, audioPath) {
     })
 }
 
+function getDarwinAudio (text) {
+    return getTtsAudioFile(text, 5, 4, 5, 5, 'static/tts/tmp')
+}
+
 module.exports.getAudio = getTtsAudioFile
+module.exports.getDarwinAudio = getDarwinAudio
+
 
 // const text = "从前有座山，山上有座庙，庙里有个老和尚，再给小和尚讲故事。他说：“从前有座山，山里有座庙，庙里有个老和尚，再给小和尚讲故事。”"
 // getTtsAudioFile(text, 5, 1, 5, 5, '../static/tts/')
