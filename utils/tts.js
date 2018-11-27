@@ -15,7 +15,7 @@ function getTtsAudioFile(text, speed, role, pit, vol, audioPath) {
     return new Promise( (resolve, reject) => {
         client.text2audio(text, {spd: speed, per: role, pit: pit, vol: vol}).then(function(result) {
             if (result.data) {
-                const filename = uuid.v1() + '.wav'
+                const filename = uuid.v1() + '.mp3'
                 const filepath = audioPath + filename
                 fs.writeFileSync(filepath, result.data)
                 logger.debug('get tts audio from baidu: ' + filepath)
