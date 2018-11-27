@@ -31,7 +31,7 @@ function getTtsAudioFile(text, speed, role, pit, vol, audioPath) {
 }
 
 function getDarwinAudio (text) {
-    return getTtsAudioFile(text, 5, 4, 5, 5, 'static/tts/tmp')
+    return getTtsAudioFile(text, 5, 4, 5, 5, 'static/tts/tmp/')
 }
 
 module.exports.getAudio = getTtsAudioFile
