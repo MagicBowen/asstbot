@@ -215,31 +215,28 @@ model.getHoroscope = async (userId) => {
     return user.asstBot.horoscope
 }
 
-model.eventFired = async (request) => {
-    var eventName = request.event.name
-    var userId = request.session
+model.updateLastLoginDay = async (userId) => {
     var localDateString = getlocalDateString();
-    if(eventName == "login") {
-        const oriUser = await User.findOne({id : userId}).exec();
-        if (oriUser) {
-            let newUser = oriUser.toObject();
-            if(!newUser.asstBot){
-                newUser.asstBot = {}
-            }
+    const oriUser = await User.findOne({id : userId}).exec();
+    if (oriUser) {
+        let newUser = oriUser.toObject();
+        if (!newUser.asstBot) {
+            newUser.asstBot = {}
+        }
+        if (newUser.asstBot.lastLoginDay != localDateString) {
             newUser.asstBot.lastLoginDay = localDateString
             oriUser.set(newUser);
             await oriUser.save();
-            logger.debug(`update lastLoginDay ${localDateString} of user ${userId} successful!`);
-            return;
         }
-    
-        const user = new User({
-            id : userId,
-            asstBot : {lastLoginDay : localDateString},
-        });
-        await user.save();
-        logger.debug(`Add new user ${userId} by asstbot lastLoginDay ${localDateString} successful!`);
+        logger.debug(`update lastLoginDay ${localDateString} of user ${userId} successful!`);
+        return;
     }
+    const user = new User({
+        id : userId,
+        asstBot : {lastLoginDay : localDateString},
+    });
+    await user.save();
+    logger.debug(`Add new user ${userId} by asstbot lastLoginDay ${localDateString} successful!`);
     return
 }
 

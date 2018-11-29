@@ -4,7 +4,6 @@ const User = require('../models/user');
 const TTS = require('../utils/tts')
 const logger = require('../utils/logger').logger('chatbot');
 var  integral = require("../models/integral.js")
-var  USER = require("../models/user.js")
 
 class Chatbot {
     constructor(agent, uri) {
@@ -35,7 +34,6 @@ class Chatbot {
         integral.eventChatStat(data, {})
         const response = await postJson(this.uri, data);
         const formatRsp = this.formatResponse(user, response);
-        USER.eventFired(data)
         return formatRsp;
     }
 
