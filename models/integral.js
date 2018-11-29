@@ -15,6 +15,12 @@ function getlocalTimeString(){
     return new Date().toLocaleString()
 }
 
+function getYesterdayDateString(){
+    var myDate = new Date()
+    myDate.setDate(myDate.getDate() - 1);
+    return myDate.toLocaleDateString()
+}
+
 //////////////////////////////////////////////////////////////////
 function getTimeStamp(){
     var date = new Date()
@@ -177,7 +183,10 @@ async function addDayStat(event, openId){
     if(doc.day == today){
         return true
     }
-    return await doUpdateIntegal(event, openId, doc.lastDay + 1, {})
+    if(doc.day == getYesterdayDateString()) {
+        return await doUpdateIntegal(event, openId, doc.lastDay + 1, {})
+    }
+    return await doUpdateIntegal(event, openId, 1, {})
 }
 
 //////////////////////////////////////////////////////////////////
