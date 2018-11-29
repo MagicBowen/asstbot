@@ -218,7 +218,7 @@ model.getHoroscope = async (userId) => {
 model.eventFired = async (reqest) => {
     var eventName = request.event.name
     var userId = request.session
-    var localData = getlocalDateString();
+    var localDateString = getlocalDateString();
     if(eventName == "login") {
         const oriUser = await User.findOne({id : userId}).exec();
         if (oriUser) {
@@ -226,19 +226,19 @@ model.eventFired = async (reqest) => {
             if(!newUser.asstBot){
                 newUser.asstBot = {}
             }
-            newUser.asstBot.lastLoginDay = localData
+            newUser.asstBot.lastLoginDay = localDateString
             oriUser.set(newUser);
             await oriUser.save();
-            logger.debug(`update lastLoginDay ${localData} of user ${userId} successful!`);
+            logger.debug(`update lastLoginDay ${localDateString} of user ${userId} successful!`);
             return;
         }
     
         const user = new User({
             id : userId,
-            asstBot : {lastLoginDay : localData},
+            asstBot : {lastLoginDay : localDateString},
         });
         await user.save();
-        logger.debug(`Add new user ${userId} by asstbot lastLoginDay ${localData} successful!`);
+        logger.debug(`Add new user ${userId} by asstbot lastLoginDay ${localDateString} successful!`);
     }
     return
 }
