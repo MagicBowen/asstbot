@@ -2,6 +2,11 @@ const logger = require('../utils/logger').logger('mongo-user');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+function getlocalDateString(){
+    var myDate = new Date()
+    return myDate.toLocaleDateString()
+}
+
 mongoose.model('Users', new Schema({
     id: { type: String, unique: true, required: true},
     wechat: {
@@ -14,12 +19,13 @@ mongoose.model('Users', new Schema({
         language : String
     },
     asstBot: {
-        nickName : String,
-        gender   : String,
-        avatarUrl: String,
-        masterTitle : String,
-        horoscope : String, 
-        tts      : Boolean
+        nickName     : String,
+        gender       : String,
+        avatarUrl    : String,
+        masterTitle  : String,
+        horoscope    : String, 
+        tts          : Boolean,
+        lastLoginDay : String
     }
 }));
 
@@ -209,5 +215,45 @@ model.getHoroscope = async (userId) => {
     return user.asstBot.horoscope
 }
 
+model.eventFired = async (reqest) => {
+    var eventName = request.event.name
+    var userId = request.session
+    var localData = getlocalDateString();
+    if(eventName == "login") {
+        const oriUser = await User.findOne({id : userId}).exec();
+        if (oriUser) {
+            let newUser = oriUser.toObject();
+            if(!newUser.asstBot){
+                newUser.asstBot = {}
+            }
+            newUser.asstBot.lastLoginDay = localData
+            oriUser.set(newUser);
+            await oriUser.save();
+            logger.debug(`update lastLoginDay ${localData} of user ${userId} successful!`);
+            return;
+        }
+    
+        const user = new User({
+            id : userId,
+            asstBot : {lastLoginDay : localData},
+        });
+        await user.save();
+        logger.debug(`Add new user ${userId} by asstbot lastLoginDay ${localData} successful!`);
+    }
+    return
+}
+
+
+model.getLastLoginDay = async (userId) => {
+    const oriUser = await User.findOne({id : userId}).exec();
+    if(!oriUser){
+        return null
+    }
+    const user = oriUser.toObject();
+    if(!user.asstBot){
+         return null
+    }
+    return user.asstBot.lastLoginDay
+}
 
 module.exports = model;
