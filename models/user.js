@@ -215,7 +215,7 @@ model.getHoroscope = async (userId) => {
     return user.asstBot.horoscope
 }
 
-model.eventFired = async (reqest) => {
+model.eventFired = async (request) => {
     var eventName = request.event.name
     var userId = request.session
     var localDateString = getlocalDateString();
