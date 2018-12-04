@@ -41,6 +41,12 @@ const apiHandle = async (req) => {
         case 'update-asst-tts':
             result = await User.updateAsstBotTts(userId, params.ttsEnable);
             break;
+        case 'get-last-login-day':
+            result = await User.getLastLoginDay(userId);
+            break;
+        case 'update-last-login-day':
+            result = await User.updateLastLoginDay(userId);
+            break;
         case 'update-asst-horoscope':
             result = await arangoDb.updateUserHoroscope(userId, params.horoscope);
             break;
