@@ -366,7 +366,7 @@ function calcDrawGrand(){
     if(luckyNum > 300 && luckyNum <= 350){
         return 2
     }
-    if(luckyNum > 400 && luckyNum <= 500){
+    if(luckyNum > 400 && luckyNum <= 900){
         return 3
     }
     return 0
