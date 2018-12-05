@@ -40,10 +40,9 @@ function getQrCodeImageFromWechat(savePath, url, scene, source) {
             reject(err)
         })
         .on('response', function(response) {
-            logger.debug('statusCode', response.statusCode) // 200
             logger.debug('content type', response.headers['content-type']) // 'image/png'
-            if(response.errcode) {
-                reject(err)
+            if(response.headers['content-type'] !== 'image/jpeg') {
+                reject(new Error('tencent not return jpeg file'))
             }
         })      
         .pipe(file);
