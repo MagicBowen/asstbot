@@ -71,7 +71,7 @@ async function getQrCodeImage(url, scene, source) {
     const targetQrcodeImageName = scene + '.png';
     const targetQrCodeImagePath = path.join('static/image', scene + '.png');
 
-    if (!fs.existsSync(targetQrCodeImagePath)) {
+    if (!fs.existsSync(targetQrCodeImagePath) || fs.statSync(targetQrCodeImagePath).size < 300) {
         await getQrCodeImageFromWechat(targetQrCodeImagePath, url, scene, source);
     }
     return targetQrcodeImageName    
