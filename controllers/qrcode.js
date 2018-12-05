@@ -38,7 +38,12 @@ function getQrCodeImageFromWechat(savePath, url, scene, source) {
         .on('error', function(err) {
             logger.error('download qrcode from wechat error: ' + err)
             reject(err)
-        })        
+        })
+        .on('response', function(response) {
+            if(response.errcode) {
+                reject(err)
+            }
+        })      
         .pipe(file);
     });
 }

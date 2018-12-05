@@ -18,7 +18,7 @@ class AccessTocken {
 
     get isExpired() {
         const now = Math.floor(Date.now() / 1000);
-        return (this.expiryTimeStamp - now) < 300;
+        return (this.expiryTimeStamp - now) < 600;
     }
 
     async updateTocken() {
