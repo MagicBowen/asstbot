@@ -8,6 +8,7 @@ const SimplifyResult = require('../models/simplifier')
 var arangoDb = require("../models/arango.js")
 var integral = require("../models/integral.js")
 const logger = require('../utils/logger').logger('gateway');
+const pitchShift = require('../utils/pitch-shift')
 
 function convert_to_openId(userId){
     var openId = (userId.length == 28) ? userId : userId.replace("_D_", "-")
@@ -168,6 +169,7 @@ const apiHandle = async (req) => {
         case 'get-text-tts':
             var path = 'static/tts/v1/'
             result = await TTS.getAudio(params.text, params.speed, params.role, params.pit, params.vol, path)
+            pitchShift.pitchShiftAsync(path + result)
             result = config.homeUrl + '/tts/v1/' +  result
             break;
 
