@@ -1,6 +1,5 @@
 var arango = require('arangojs');
 var config = require('../config')
-const arangoDbBase = require("./arangoDbBase.js")
 const logger = require('../utils/logger').logger('arangoDb');
 var db = null 
 const  userIdsCollection = "userIds"
