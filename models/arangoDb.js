@@ -1,5 +1,6 @@
 var arango = require('arangojs');
 var config = require('../config')
+const arangoDbBase = require("./arangoDbBase.js")
 const logger = require('../utils/logger').logger('arangoDb');
 var db = null 
 const  userIdsCollection = "userIds"
@@ -7,11 +8,7 @@ const  userIdsCollection = "userIds"
 function getDb(){
     logger.info("read config ", JSON.stringify(config))
     if(db == null){
-        Database = arango.Database;
-        db = new Database(`http://${config.arangoHost}:${config.arangoPort}`);
-        db.useDatabase('waterDrop');
-        db.useBasicAuth(config.arangoUser, config.arangoPassword)
-        logger.info("arango db init success")
+        db = arangoDbBase.getDb('waterDrop')
     }
     return db
 }
@@ -60,56 +57,23 @@ async function addNewUser(darwinId, openId){
 
 //////////////////////////////////////////////////////////////////
 async function queryDocs(aql){
-    logger.info("qery aql is: ", aql)
-    return await db.query(aql).then(cursor => cursor.all())
-    .then(docs => {
-        return docs
-    },
-    err => {
-        logger.error('Failed to fetch agent document:')
-        return []
-    })
+    return await arangoDbBase.queryDocs(db, aql)
 }
 
 
 //////////////////////////////////////////////////////////////////
 async function querySingleDoc(aql){
-    logger.info("query aql is: ", aql)
-    return await db.query(aql).then(cursor => cursor.all())
-    .then(docs => {
-        if(docs.length == 0){
-            return null
-        }else{
-            return docs[0]
-        }
-    },
-    err => {
-        logger.error('Failed to fetch agent document:')
-        return null
-    })
+    return await arangoDbBase.querySingleDoc(db, aql)
 }
 
 //////////////////////////////////////////////////////////////////
 async function saveDoc(collectionName, doc){
-    var collection  = db.collection(collectionName)
-    return await collection.save(doc).then(
-        meta => { logger.info('Document saved:', meta._key); return meta._key },
-        err => { logger.error('Failed to save document:', err); return "" }
-    );
+    return await arangoDbBase.saveDoc(db, collectionName, doc)
 }
 
 //////////////////////////////////////////////////////////////////
 async function updateDoc(aql){
-    logger.info("update aql is :", aql)
-    return await db.query(aql).then(cursor => cursor.all())
-    .then(result => {
-        logger.info(`update doc success`)
-        return true
-    },
-    err => {
-        logger.error('Failed to update doc')
-        return false
-    })
+    return await arangoDbBase.updateDoc(db, aql)
 }
 
 module.exports={
