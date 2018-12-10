@@ -1,6 +1,8 @@
 const shell = require('shelljs')
 const path = require("path")
 
+const logger = require('./logger').logger('pitch-shift');
+
 function tmpLameOutFile (file) {
   return path.join(path.dirname(file), path.basename(file, '.mp3') + 'lame.wav')
 }
@@ -26,7 +28,7 @@ function pitchShiftAsync(file) {
         if (code === 1) {
           resolve({code, stdout, stderr})
         } else {
-          reject(stderr)
+          log.error(`throw the error, errcode is ${code}, err output is ${stderr}`)
         }
       })
   })
