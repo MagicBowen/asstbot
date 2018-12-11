@@ -114,7 +114,7 @@ var _event_score_rule={
           score:  20},
         { start: 21,
           end: 100000,
-          score:  20}
+          score:  30}
     ],
     "dictation": [
         { start: 1,
