@@ -9,6 +9,21 @@ var arangoDb = require("../models/arango.js")
 var integral = require("../models/integral.js")
 const logger = require('../utils/logger').logger('gateway');
 
+const pt = require('promise-timeout');
+
+function getTtsResult(text, speed, role, pit, vol) {
+    var path = 'static/tts/v1/'
+    return new Promise((resolve, reject) =>{
+        pt.timeout(tts.getAudio(text, speed, role, pit, vol, path), 1000)
+            .then((result) => {
+                resolve(config.homeUrl + '/tts/v1/' +  result)
+            })
+            .catch((err) => {
+                resolve('https://www.xiaodamp.cn/resource/audio/parrot/parrot-greeting-1.mp3')
+            })
+    })
+}
+
 function convert_to_openId(userId){
     var openId = (userId.length == 28) ? userId : userId.replace("_D_", "-")
     return openId
@@ -166,9 +181,7 @@ const apiHandle = async (req) => {
             break;
 
         case 'get-text-tts':
-            var path = 'static/tts/v1/'
-            result = await TTS.getAudio(params.text, params.speed, params.role, params.pit, params.vol, path)
-            result = config.homeUrl + '/tts/v1/' +  result
+            result = await getTtsResult(params.text, params.speed, params.role, params.pit, params.vol)
             break;
 
         default:
