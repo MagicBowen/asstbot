@@ -19,7 +19,7 @@ function getTtsResult(text, speed, role, pit, vol) {
                 resolve(config.homeUrl + '/tts/v1/' +  result)
             })
             .catch((err) => {
-                resolve('https://www.xiaodamp.cn/resource/audio/parrot/parrot-greeting-1.mp3')
+                resolve('https://www.xiaodamp.cn/resource/audio/parrot/parrot-default.mp3')
             })
     })
 }
