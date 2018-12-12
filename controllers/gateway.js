@@ -14,7 +14,7 @@ const pt = require('promise-timeout');
 function getTtsResult(text, speed, role, pit, vol) {
     var path = 'static/tts/v1/'
     return new Promise((resolve, reject) =>{
-        pt.timeout(tts.getAudio(text, speed, role, pit, vol, path), 1000)
+        pt.timeout(TTS.getAudio(text, speed, role, pit, vol, path), 1000)
             .then((result) => {
                 resolve(config.homeUrl + '/tts/v1/' +  result)
             })
