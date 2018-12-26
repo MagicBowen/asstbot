@@ -34,6 +34,7 @@ function buildFeedbackDoc(userId, userInfo, content, contectWay){
     doc.userInfo.asstBot = userInfo.asstBot
     doc.content = content
     doc.contectWay = contectWay
+    doc.date = getlocalDateString()
     return doc
 }
 
