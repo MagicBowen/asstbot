@@ -418,9 +418,6 @@ function getIdName(userType, skill){
     if(userType == 'dingdong'){
         return getIdNameForDingDong(skill)
     }
-    if(userType == 'aligenie') {
-        return 'aligenieOpenId'
-    }
     return userType + "Id"
 }
 
